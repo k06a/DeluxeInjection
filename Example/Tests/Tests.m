@@ -6,7 +6,27 @@
 //  Copyright (c) 2016 Anton Bukov. All rights reserved.
 //
 
-@import XCTest;
+#import <XCTest/XCTest.h>
+#import <DeluxeInjection/DeluxeInjection.h>
+
+@protocol TestProtocol <NSObject>
+
+@end
+
+@interface TestType : NSObject
+
+@property (strong, nonatomic) NSMutableArray<DIInject> *array;
+@property (strong, nonatomic) id<TestProtocol,DIInject> protocolObject;
+@property (strong, nonatomic) NSMutableArray<NSString *><DILazy> *lazyArray;
+@property (strong, nonatomic) NSMutableDictionary<NSString *, NSString *><DILazy> *lazyDict;
+
+@end
+
+@implementation TestType
+
+@end
+
+//
 
 @interface Tests : XCTestCase
 
@@ -26,9 +46,64 @@
     [super tearDown];
 }
 
-- (void)testExample
+- (void)testInjectByClass
 {
-    XCTFail(@"No implementation for \"%s\"", __PRETTY_FUNCTION__);
+    NSArray *answer1 = @[@1,@2,@3];
+    NSArray *answer2 = @[@4,@5,@6];
+
+    [DeluxeInjection inject:^id(id target, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *protocols) {
+        if (propertyClass == [NSMutableArray class]) {
+            return [answer1 mutableCopy];
+        }
+        return nil;
+    }];
+    
+    TestType *test = [[TestType alloc] init];
+    XCTAssertEqualObjects(test.array, answer1);
+    test.array = nil;
+    XCTAssertEqualObjects(test.array, answer1);
+    test.array = [answer2 mutableCopy];
+    XCTAssertEqualObjects(test.array, answer2);
+}
+
+- (void)testInjectByProtocol
+{
+    id answer1 = @777;
+    
+    [DeluxeInjection inject:^id(id target, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *protocols) {
+        if ([protocols containsObject:@protocol(TestProtocol)]) {
+            return [NSObject new];
+        }
+        return nil;
+    }];
+    
+    TestType *test = [[TestType alloc] init];
+    XCTAssertNotNil(test.protocolObject);
+    test.protocolObject = nil;
+    XCTAssertNotNil(test.protocolObject);
+    test.protocolObject = answer1;
+    XCTAssertEqualObjects(test.protocolObject, answer1);
+}
+
+- (void)testLazy
+{
+    TestType *test = [[TestType alloc] init];
+    [DeluxeInjection lazy];
+    
+    XCTAssertNotNil(test.lazyArray);
+    XCTAssertNotNil(test.lazyDict);
+    test.lazyArray = nil;
+    test.lazyDict = nil;
+    XCTAssertNotNil(test.lazyArray);
+    XCTAssertNotNil(test.lazyDict);
+}
+
+- (void)testPreformance {
+    [self measureBlock:^{
+        [DeluxeInjection inject:^id (id target, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
+            return nil;
+        }];
+    }];
 }
 
 @end
