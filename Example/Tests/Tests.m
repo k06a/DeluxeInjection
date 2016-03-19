@@ -137,7 +137,7 @@
 - (void)testLazy
 {
     TestType *test = [[TestType alloc] init];
-    [DeluxeInjection lazy];
+    [DeluxeInjection lazyInject];
     
     XCTAssertNotNil(test.lazyArray);
     XCTAssertNotNil(test.lazyDict);

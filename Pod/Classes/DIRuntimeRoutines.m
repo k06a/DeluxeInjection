@@ -139,7 +139,9 @@ void DIRuntimeEnumeratePropertySetter(objc_property_t property, void (^block)(SE
         block(NSSelectorFromString([NSString stringWithUTF8String:value]));
         free(value);
     } else {
-        block(NSSelectorFromString([@"set" stringByAppendingString:[[NSString stringWithUTF8String:property_getName(property)] capitalizedString]]));
+        NSString *str = [NSString stringWithUTF8String:property_getName(property)];
+        str = [NSString stringWithFormat:@"set%@%@",[[str substringToIndex:1] uppercaseString], [str substringFromIndex:1]];
+        block(NSSelectorFromString(str));
     }
 }
 

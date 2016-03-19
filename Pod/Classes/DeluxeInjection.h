@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - Protocols for mark injection
+#pragma mark - Protocols for explicit mark injections
 
 @protocol DIInject <NSObject>
 
@@ -72,6 +72,36 @@ typedef BOOL (^DIPropertyFilter)(Class targetClass, NSString *propertyName, Clas
 
 @interface DeluxeInjection : NSObject
 
+#pragma mark Single property injectors
+
+/**
+ *  Check if \c property of \c class is injected
+ *
+ *  @param class  Class of property to check
+ *  @param getter Class property to check
+ *
+ *  @return \c YES if injected, otherwise \c NO
+ */
++ (BOOL)checkInjected:(Class)class getter:(SEL)getter;
+
+/**
+ *  Inject concrete property
+ *
+ *  @param class  Class of property to inject
+ *  @param getter Class property to inject
+ */
++ (void)inject:(Class)class getter:(SEL)getter block:(DIGetter)block;
+
+/**
+ *  Deinject concrete property injection
+ *
+ *  @param class  Class of property to deinject
+ *  @param getter Class property to deinject
+ */
++ (void)deinject:(Class)class getter:(SEL)getter;
+
+#pragma mark Mass injectors / deinjectors
+
 /**
  *  Inject \b values into class properties marked explicitly with \c <DIInject> protocol.
  *
@@ -101,24 +131,6 @@ typedef BOOL (^DIPropertyFilter)(Class targetClass, NSString *propertyName, Clas
 + (void)forceInjectBlock:(DIPropertyGetterBlock)block;
 
 /**
- *  Check if \c property of \c class is injected
- *
- *  @param class  Class of property to check
- *  @param getter Class property to check
- *
- *  @return \c YES if injected, otherwise \c NO
- */
-+ (BOOL)checkInjected:(Class)class getter:(SEL)getter;
-
-/**
- *  Deinject concrete property injection
- *
- *  @param class  Class of property to deinject
- *  @param getter Class property to deinject
- */
-+ (void)deinject:(Class)class getter:(SEL)getter;
-
-/**
  *  Deinject some injections marked explicitly with \c <DIInject> protocol.
  *
  *  @param block Block to determine which injections to deinject, will be called for all previously injected properties. Returns \c BOOL which means to deinject or \b not to deinject.
@@ -138,17 +150,22 @@ typedef BOOL (^DIPropertyFilter)(Class targetClass, NSString *propertyName, Clas
 + (void)forceDeinject:(DIPropertyFilter)block;
 
 /**
- *  Deinject all injections even \b not marked explicitly with \c <DIInject> protocol.
+ *  Deinject all injections and marked explicitly with \c <DIInject> and \c <DILazy> protocols.
  */
 + (void)forceDeinjectAll;
 
 /**
  *  Inject properties marked with \c <DILazy> protocol using block: \code ^{ return [[class alloc] init]; } \endcode
  */
-+ (void)lazy;
++ (void)lazyInject;
 
 /**
- *  Overriden \c debugDescription to see tree of classes and injected properties
+ *  Deinject all injections marked explicitly with \c <DILazy> protocol.
+ */
++ (void)lazyDeinject;
+
+/**
+ *  Overriden \c debugDescription method to see tree of classes and injected properties
  *
  *  @return String with injections info
  */
