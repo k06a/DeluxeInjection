@@ -15,8 +15,11 @@
 
 @interface TestType : NSObject
 
-@property (strong, nonatomic) NSMutableArray<DIInject> *array;
+@property (strong, nonatomic) NSMutableArray<DIInject> *classObject;
 @property (strong, nonatomic) id<TestProtocol,DIInject> protocolObject;
+@property (strong, nonatomic) NSMutableArray *forceClassObject;
+@property (strong, nonatomic) id<TestProtocol> forceProtocolObject;
+
 @property (strong, nonatomic) NSMutableArray<NSString *><DILazy> *lazyArray;
 @property (strong, nonatomic) NSMutableDictionary<NSString *, NSString *><DILazy> *lazyDict;
 
@@ -59,11 +62,11 @@
     }];
     
     TestType *test = [[TestType alloc] init];
-    XCTAssertEqualObjects(test.array, answer1);
-    test.array = nil;
-    XCTAssertEqualObjects(test.array, answer1);
-    test.array = [answer2 mutableCopy];
-    XCTAssertEqualObjects(test.array, answer2);
+    XCTAssertEqualObjects(test.classObject, answer1);
+    test.classObject = nil;
+    XCTAssertEqualObjects(test.classObject, answer1);
+    test.classObject = [answer2 mutableCopy];
+    XCTAssertEqualObjects(test.classObject, answer2);
 }
 
 - (void)testInjectByProtocol
@@ -83,6 +86,52 @@
     XCTAssertNotNil(test.protocolObject);
     test.protocolObject = answer1;
     XCTAssertEqualObjects(test.protocolObject, answer1);
+}
+
+- (void)testInjectBlock
+{
+    NSArray *answer1 = @[@1,@2,@3];
+    NSArray *answer2 = @[@4,@5,@6];
+    
+    [DeluxeInjection injectBlock:^DIGetter (Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
+        if (propertyClass == [NSMutableArray class]) {
+            return ^id(id self, SEL _cmd) {
+                return [answer1 mutableCopy];
+            };
+        }
+        return nil;
+    }];
+    
+    XCTAssertTrue([DeluxeInjection checkInjected:[TestType class] getter:@selector(classObject)]);
+    XCTAssertFalse([DeluxeInjection checkInjected:[TestType class] getter:@selector(protocolObject)]);
+    XCTAssertFalse([DeluxeInjection checkInjected:[TestType class] getter:@selector(forceClassObject)]);
+    XCTAssertFalse([DeluxeInjection checkInjected:[TestType class] getter:@selector(forceProtocolObject)]);
+    
+    TestType *test = [[TestType alloc] init];
+    XCTAssertEqualObjects(test.classObject, answer1);
+    test.classObject = nil;
+    XCTAssertEqualObjects(test.classObject, answer1);
+    test.classObject = [answer2 mutableCopy];
+    XCTAssertEqualObjects(test.classObject, answer2);
+}
+
+- (void)testDeinjectAll
+{
+    [DeluxeInjection injectBlock:^DIGetter (Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
+        if (propertyClass == [NSMutableArray class]) {
+            return ^id(id self, SEL _cmd) {
+                return @[];
+            };
+        }
+        return nil;
+    }];
+    
+    [DeluxeInjection deinjectAll];
+    
+    XCTAssertFalse([DeluxeInjection checkInjected:[TestType class] getter:@selector(classObject)]);
+    XCTAssertFalse([DeluxeInjection checkInjected:[TestType class] getter:@selector(protocolObject)]);
+    XCTAssertFalse([DeluxeInjection checkInjected:[TestType class] getter:@selector(forceClassObject)]);
+    XCTAssertFalse([DeluxeInjection checkInjected:[TestType class] getter:@selector(forceProtocolObject)]);
 }
 
 - (void)testLazy

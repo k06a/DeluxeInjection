@@ -2,7 +2,7 @@
 //  DIRuntimeRoutines.m
 //  MLWorks
 //
-//  Created by Антон Буков on 18.03.16.
+//  Created by Anton Bukov on 18.03.16.
 //
 //
 
@@ -110,12 +110,17 @@ void DIRuntimeEnumerateProtocolProperties(Protocol *protocol, BOOL required, BOO
     free(properties);
 }
 
-void DIRuntimeEnumeratePropertyAttribute(objc_property_t property, char *attrribute, void (^block)(char *value)) {
+NSString *DIRuntimeEnumeratePropertyAttribute(objc_property_t property, char *attrribute, void (^block)(NSString *value)) {
     char *value = property_copyAttributeValue(property, attrribute);
+    NSString *str = nil;
     if (value) {
-        block(value);
+        str = [NSString stringWithUTF8String:value];
+        free(value);
+        if (block) {
+            block(str);
+        }
     }
-    free(value);
+    return str;
 }
 
 void DIRuntimeEnumeratePropertyGetter(objc_property_t property, void (^block)(SEL getter)) {

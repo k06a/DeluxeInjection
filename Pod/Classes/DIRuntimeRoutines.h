@@ -2,7 +2,7 @@
 //  DIRuntimeRoutines.h
 //  MLWorks
 //
-//  Created by Антон Буков on 18.03.16.
+//  Created by Anton Bukov on 18.03.16.
 //
 //
 
@@ -21,7 +21,7 @@ void DIRuntimeEnumerateClassProtocolsWithParents(Class class, void (^block)(Prot
 void DIRuntimeEnumerateProtocolSuperprotocols(Protocol *protocol, void (^block)(Protocol *superprotocol));
 void DIRuntimeEnumerateProtocolProperties(Protocol *protocol, BOOL required, BOOL instance, void (^block)(objc_property_t property));
 
-void DIRuntimeEnumeratePropertyAttribute(objc_property_t property, char *attrribute, void (^block)(char *value));
+NSString *DIRuntimeEnumeratePropertyAttribute(objc_property_t property, char *attrribute, void (^ _Nullable block)(NSString *value));
 void DIRuntimeEnumeratePropertyGetter(objc_property_t property, void (^block)(SEL getter));
 void DIRuntimeEnumeratePropertySetter(objc_property_t property, void (^block)(SEL setter));
 void DIRuntimeEnumeratePropertyType(objc_property_t property, void (^block)(Class class, NSSet<Protocol *> *protocols));
