@@ -138,7 +138,7 @@ SEL DIRuntimeGetPropertySetter(objc_property_t property) {
         return sel;
     }
     NSString *str = [NSString stringWithUTF8String:property_getName(property)];
-    str = [NSString stringWithFormat:@"set%@%@",[[str substringToIndex:1] uppercaseString], [str substringFromIndex:1]];
+    str = [NSString stringWithFormat:@"set%@%@:",[[str substringToIndex:1] uppercaseString], [str substringFromIndex:1]];
     return NSSelectorFromString(str);
 }
 

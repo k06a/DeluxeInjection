@@ -118,18 +118,21 @@ Network *network = [Network alloc] initWithSettings: ... ];
 
 Also you are able to use methods `injectBlock:` and `forceInjectBlock:` to return `DIResult` block, which will be called for each object while its getter access when instance variable is nil. Blcok injection may increase your app performance, if you care a lot about this.
 
-For example this usage will inject only properties of types `NSMutableArray` and `NSMutableDictionary` with 2 prepared objects:
+For example this usage will inject only properties of types `NSMutableArray` and `NSMutableDictionary` with 2 prepared objects using two different ways short and long:
 
 ```objective-c
 [DeluxeInjection injectBlock:^DIGetter (Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
     if (propertyClass == [NSMutableArray class]) {
-        return ^id(id self, SEL _cmd) {
+        return DIGetterIfIvarisNil(^id(id self) {
             return [arrayMock1 mutableCopy];
-        };
+        });
     }
     if (propertyClass == [NSMutableDictionary class]) {
-        return ^id(id self, SEL _cmd) {
-            return [dictMock2 mutableCopy];
+        return ^id(id self, id *ivar) {
+            if (*ivar == nil) {
+                *ivar = [dictMock2 mutableCopy];
+            }
+            return *ivar;
         };
     }
     return nil;

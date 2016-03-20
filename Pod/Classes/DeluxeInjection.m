@@ -9,6 +9,8 @@
 #import "DIRuntimeRoutines.h"
 #import "DeluxeInjection.h"
 
+//
+
 static NSMutableDictionary<Class, NSMutableDictionary<NSString *, NSValue *> *> *injectionsBackup;
 
 static IMP DIInjectionsBackupRead(Class class, SEL selector) {
@@ -20,6 +22,7 @@ static void DIInjectionsBackupWrite(Class class, SEL selector, IMP imp) {
     if (injectionsBackup == nil) {
         injectionsBackup = [NSMutableDictionary dictionary];
     }
+    
     if (injectionsBackup[class] == nil) {
         injectionsBackup[(id)class] = [NSMutableDictionary dictionary];
     }
@@ -50,6 +53,7 @@ static void DIAssociatesWrite(Class class, SEL selector, id object) {
     if (associates == nil) {
         associates = [NSMutableDictionary dictionary];
     }
+    
     if (associates[class] == nil) {
         associates[(id)class] = [NSMutableDictionary dictionary];
     }
@@ -72,9 +76,9 @@ static void DIAssociatesRemove(Class class, SEL selector) {
 //
 
 DIGetter DIGetterIfIvarIsNil(DIGetterWithoutIvar getter) {
-    return ^id(id self, SEL _cmd, id *ivar) {
+    return ^id(id self, id *ivar) {
         if (*ivar == nil) {
-            *ivar = getter(self, _cmd);
+            *ivar = getter(self);
         }
         return *ivar;
     };
@@ -83,6 +87,15 @@ DIGetter DIGetterIfIvarIsNil(DIGetterWithoutIvar getter) {
 //
 
 @implementation DeluxeInjection
+
+- (id)getterExample {
+    return nil;
+}
+
+- (void)setterExample:(id)value {
+    return;
+}
+
 
 #pragma mark - Private
 
@@ -111,25 +124,24 @@ DIGetter DIGetterIfIvarIsNil(DIGetterWithoutIvar getter) {
         }
         
         SEL getter = DIRuntimeGetPropertyGetter(property);
-        Method getterMethod = class_getInstanceMethod(class, getter);
-        IMP getterMethodImp = method_getImplementation(getterMethod);
         
         NSString *propertyIvarStr = DIRuntimeGetPropertyAttribute(property, "V");
         Ivar propertyIvar = propertyIvarStr ? class_getInstanceVariable(class, propertyIvarStr.UTF8String) : nil;
         NSString *key = propertyIvar ? [NSString stringWithUTF8String:ivar_getName(propertyIvar)] : nil;
         
+        BOOL associationNeeded = (key == nil);
         SEL associationKey = NSSelectorFromString([@"di_" stringByAppendingString:propertyName]);
         objc_AssociationPolicy associationPolicy = DIRuntimePropertyAssociationPolicy(property);
         
-        id (^newGetterBlock)(id,SEL) = ^id(id self, SEL _cmd){
+        id (^newGetterBlock)(id) = ^id(id self){
             id ivar = nil;
-            if (key) {
+            if (!associationNeeded) {
                 ivar = [self valueForKey:key];
             } else {
                 ivar = objc_getAssociatedObject(self, associationKey);
             }
-            blockToInject(self, _cmd, &ivar);
-            if (key) {
+            blockToInject(self, &ivar);
+            if (!associationNeeded) {
                 [self setValue:ivar forKey:key];
             } else {
                 DIAssociatesWrite(class, getter, self);
@@ -138,10 +150,24 @@ DIGetter DIGetterIfIvarIsNil(DIGetterWithoutIvar getter) {
             return ivar;
         };
         
-        IMP newImp = imp_implementationWithBlock(newGetterBlock);
-        const char *types = method_getTypeEncoding(getterMethod);
+        IMP newGetterImp = imp_implementationWithBlock(newGetterBlock);
+        Method getterMethod = class_getInstanceMethod(class, getter);
+        const char *getterTypes = method_getTypeEncoding(getterMethod);
+        IMP getterMethodImp = method_getImplementation(getterMethod);
         DIInjectionsBackupWrite(class, getter, getterMethodImp);
-        class_replaceMethod(class, getter, newImp, types);
+        class_replaceMethod(class, getter, newGetterImp, getterTypes);
+        
+        if (associationNeeded) {
+            void (^newSetterBlock)(id,id) = ^void(id self, id newValue) {
+                objc_setAssociatedObject(self, associationKey, newValue, associationPolicy);
+            };
+            
+            SEL setter = DIRuntimeGetPropertySetter(property);
+            IMP newSetterImp = imp_implementationWithBlock(newSetterBlock);
+            Method setterMethod = class_getInstanceMethod(self, @selector(setterExample:));
+            const char *setterTypes = method_getTypeEncoding(setterMethod);
+            class_addMethod(class, setter, newSetterImp, setterTypes);
+        }
     });
 }
 
@@ -185,6 +211,22 @@ DIGetter DIGetterIfIvarIsNil(DIGetterWithoutIvar getter) {
     
     DIRuntimeEnumerateClassProperties(class, ^(objc_property_t property) {
         if (getter == DIRuntimeGetPropertyGetter(property)) {
+            NSString *propertyIvarStr = DIRuntimeGetPropertyAttribute(property, "V");
+            if (propertyIvarStr == nil) {
+                SEL setter = DIRuntimeGetPropertySetter(property);
+                void (^newSetterBlock)(id,id) = ^void(id self, id newValue) {
+                    [self doesNotRecognizeSelector:setter];
+                };
+                
+                // Remove setter
+                IMP newSetterImp = imp_implementationWithBlock(newSetterBlock);
+                Method setterMethod = class_getInstanceMethod(self, @selector(setterExample:));
+                const char *setterTypes = method_getTypeEncoding(setterMethod);
+                IMP replacedImp = class_replaceMethod(class, setter, newSetterImp, setterTypes);
+                imp_removeBlock(replacedImp);
+            }
+            
+            // Remove association
             NSString *propertyName = [NSString stringWithUTF8String:property_getName(property)];
             SEL associationKey = NSSelectorFromString([@"di_" stringByAppendingString:propertyName]);
             objc_AssociationPolicy associationPolicy = DIRuntimePropertyAssociationPolicy(property);
@@ -192,20 +234,35 @@ DIGetter DIGetterIfIvarIsNil(DIGetterWithoutIvar getter) {
                 objc_setAssociatedObject(object, associationKey, nil, associationPolicy);
             }
             DIAssociatesRemove(class, getter);
+            
+            // Restore or remove getter
+            if (propertyIvarStr == nil) {
+                id (^newGetterBlock)(id) = ^id(id self) {
+                    [self doesNotRecognizeSelector:getter];
+                    return nil;
+                };
+                
+                IMP newGetterImp = imp_implementationWithBlock(newGetterBlock);
+                Method getterMethod = class_getInstanceMethod(self, @selector(getterExample));
+                const char *getterTypes = method_getTypeEncoding(getterMethod);
+                IMP replacedImp = class_replaceMethod(class, getter, newGetterImp, getterTypes);
+                imp_removeBlock(replacedImp);
+            } else {
+                Method method = class_getInstanceMethod(class, getter);
+                const char *types = method_getTypeEncoding(method);
+                IMP oldImp = DIInjectionsBackupRead(class, getter);
+                DIInjectionsBackupWrite(class, getter, nil);
+                IMP replacedImp = class_replaceMethod(class, getter, oldImp, types);
+                imp_removeBlock(replacedImp);
+            }
         }
     });
-    
-    Method method = class_getInstanceMethod(class, getter);
-    const char *types = method_getTypeEncoding(method);
-    IMP oldImp = DIInjectionsBackupRead(class, getter);
-    DIInjectionsBackupWrite(class, getter, nil);
-    class_replaceMethod(class, getter, oldImp, types);
 }
 
 
 + (void)inject:(DIPropertyGetter)block {
     [self inject:^DIGetter (Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
-        return DIGetterIfIvarIsNil(^id(id self, SEL _cmd) {
+        return DIGetterIfIvarIsNil(^id(id self) {
             return block(targetClass, propertyName, propertyClass, propertyProtocols);
         });
     } conformingProtocol:@protocol(DIInject)];
@@ -217,7 +274,7 @@ DIGetter DIGetterIfIvarIsNil(DIGetterWithoutIvar getter) {
 
 + (void)forceInject:(DIPropertyGetter)block {
     [self inject:^DIGetter (Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
-        return DIGetterIfIvarIsNil(^id(id self, SEL _cmd) {
+        return DIGetterIfIvarIsNil(^id(id self) {
             return block(targetClass, propertyName, propertyClass, propertyProtocols);
         });
     } conformingProtocol:nil];
@@ -249,7 +306,7 @@ DIGetter DIGetterIfIvarIsNil(DIGetterWithoutIvar getter) {
 
 + (void)lazyInject {
     [self inject:^DIGetter (id target, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
-        return DIGetterIfIvarIsNil(^id(id self, SEL _cmd) {
+        return DIGetterIfIvarIsNil(^id(id self) {
             return [[propertyClass alloc] init];
         });
     } conformingProtocol:@protocol(DILazy)];
