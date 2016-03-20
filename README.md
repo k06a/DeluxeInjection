@@ -28,7 +28,7 @@ Just one keyword will do this for you:
 @end
 ```
 
-And block to will be called for all class properties marked with `<DIInject>`:
+And block to be called for all classes properties marked with `<DIInject>`:
 
 ```objective-c
 Feedabck *feedback = [Feedback alloc] initWithSettings: ... ];
@@ -116,19 +116,19 @@ Network *network = [Network alloc] initWithSettings: ... ];
 
 #### Blocks injection
 
-Also you are able to use methods `injectBlock:` and `forceInjectBlock:` to return `DIResult` block to provide getter block. You may wanna use this methods if wanna make a decision to return value on target object. Maybe return different mutable copies or etc.
+Also you are able to use methods `injectBlock:` and `forceInjectBlock:` to return `DIResult` block to provide injected getter block. You may wanna use this methods if wanna make a decision to return value on target object. Maybe return different mutable copies for different targets or etc.
 
 For example this usage will inject only properties of types `NSMutableArray` and `NSMutableDictionary` with 2 prepared objects using two different ways short and long:
 
 ```objective-c
 [DeluxeInjection injectBlock:^DIGetter (Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
     if (propertyClass == [NSMutableArray class]) {
-        return DIGetterIfIvarisNil(^id(id self) {
+        return DIGetterIfIvarisNil(^id(id target) {
             return [arrayMock1 mutableCopy];
         });
     }
     if (propertyClass == [NSMutableDictionary class]) {
-        return ^id(id self, id *ivar) {
+        return ^id(id target, id *ivar) {
             if (*ivar == nil) {
                 *ivar = [dictMock2 mutableCopy];
             }

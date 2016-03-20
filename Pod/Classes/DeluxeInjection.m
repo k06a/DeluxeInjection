@@ -76,9 +76,9 @@ static void DIAssociatesRemove(Class class, SEL selector) {
 //
 
 DIGetter DIGetterIfIvarIsNil(DIGetterWithoutIvar getter) {
-    return ^id(id self, id *ivar) {
+    return ^id(id target, id *ivar) {
         if (*ivar == nil) {
-            *ivar = getter(self);
+            *ivar = getter(target);
         }
         return *ivar;
     };
@@ -111,6 +111,8 @@ DIGetter DIGetterIfIvarIsNil(DIGetterWithoutIvar getter) {
 
 @implementation DeluxeInjection
 
+#pragma mark - Sample getter and setter
+
 - (id)getterExample {
     return nil;
 }
@@ -118,7 +120,6 @@ DIGetter DIGetterIfIvarIsNil(DIGetterWithoutIvar getter) {
 - (void)setterExample:(id)value {
     return;
 }
-
 
 #pragma mark - Private
 
@@ -156,19 +157,19 @@ DIGetter DIGetterIfIvarIsNil(DIGetterWithoutIvar getter) {
         SEL associationKey = NSSelectorFromString([@"di_" stringByAppendingString:propertyName]);
         objc_AssociationPolicy associationPolicy = DIRuntimePropertyAssociationPolicy(property);
         
-        id (^newGetterBlock)(id) = ^id(id self){
+        id (^newGetterBlock)(id) = ^id(id target){
             id ivar = nil;
             if (!associationNeeded) {
-                ivar = [self valueForKey:key];
+                ivar = [target valueForKey:key];
             } else {
-                ivar = objc_getAssociatedObject(self, associationKey);
+                ivar = objc_getAssociatedObject(target, associationKey);
             }
-            id result = blockToInject(self, &ivar);
+            id result = blockToInject(target, &ivar);
             if (!associationNeeded) {
-                [self setValue:ivar forKey:key];
+                [target setValue:ivar forKey:key];
             } else {
-                DIAssociatesWrite(class, getter, self);
-                objc_setAssociatedObject(self, associationKey, ivar, associationPolicy);
+                DIAssociatesWrite(class, getter, target);
+                objc_setAssociatedObject(target, associationKey, ivar, associationPolicy);
             }
             return result;
         };
@@ -184,8 +185,8 @@ DIGetter DIGetterIfIvarIsNil(DIGetterWithoutIvar getter) {
         }
         
         if (associationNeeded) {
-            void (^newSetterBlock)(id,id) = ^void(id self, id newValue) {
-                objc_setAssociatedObject(self, associationKey, newValue, associationPolicy);
+            void (^newSetterBlock)(id,id) = ^void(id target, id newValue) {
+                objc_setAssociatedObject(target, associationKey, newValue, associationPolicy);
             };
             
             SEL setter = DIRuntimeGetPropertySetter(property);
@@ -241,8 +242,8 @@ DIGetter DIGetterIfIvarIsNil(DIGetterWithoutIvar getter) {
             NSString *propertyIvarStr = DIRuntimeGetPropertyAttribute(property, "V");
             if (propertyIvarStr == nil) {
                 SEL setter = DIRuntimeGetPropertySetter(property);
-                void (^newSetterBlock)(id,id) = ^void(id self, id newValue) {
-                    [self doesNotRecognizeSelector:setter];
+                void (^newSetterBlock)(id,id) = ^void(id target, id newValue) {
+                    [target doesNotRecognizeSelector:setter];
                 };
                 
                 // Remove setter
@@ -264,8 +265,8 @@ DIGetter DIGetterIfIvarIsNil(DIGetterWithoutIvar getter) {
             
             // Restore or remove getter
             if (propertyIvarStr == nil) {
-                id (^newGetterBlock)(id) = ^id(id self) {
-                    [self doesNotRecognizeSelector:getter];
+                id (^newGetterBlock)(id) = ^id(id target) {
+                    [target doesNotRecognizeSelector:getter];
                     return nil;
                 };
                 
@@ -293,7 +294,7 @@ DIGetter DIGetterIfIvarIsNil(DIGetterWithoutIvar getter) {
         if (value == [DIDoNotInject it]) {
             return nil;
         }
-        return ^id(id self, id *ivar) {
+        return ^id(id target, id *ivar) {
             return value;
         };
     } conformingProtocol:@protocol(DIInject)];
@@ -309,7 +310,7 @@ DIGetter DIGetterIfIvarIsNil(DIGetterWithoutIvar getter) {
         if (value == [DIDoNotInject it]) {
             return nil;
         }
-        return ^id(id self, id *ivar) {
+        return ^id(id target, id *ivar) {
             return value;
         };
     } conformingProtocol:nil];
@@ -341,7 +342,7 @@ DIGetter DIGetterIfIvarIsNil(DIGetterWithoutIvar getter) {
 
 + (void)lazyInject {
     [self inject:^DIGetter (Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
-        return DIGetterIfIvarIsNil(^id(id self) {
+        return DIGetterIfIvarIsNil(^id(id target) {
             return [[propertyClass alloc] init];
         });
     } conformingProtocol:@protocol(DILazy)];

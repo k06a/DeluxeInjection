@@ -102,7 +102,7 @@
     
     [DeluxeInjection injectBlock:^DIGetter (Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
         if (propertyClass == [NSMutableArray class]) {
-            return DIGetterIfIvarIsNil(^id(id self) {
+            return DIGetterIfIvarIsNil(^id(id target) {
                 return [answer1 mutableCopy];
             });
         }
@@ -134,12 +134,12 @@
     
     [DeluxeInjection injectBlock:^DIGetter (Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
         if (propertyClass == [NSMutableArray class]) {
-            return DIGetterIfIvarIsNil(^id(id self) {
+            return DIGetterIfIvarIsNil(^id(id target) {
                 return [answer1 mutableCopy];
             });
         }
         if ([propertyProtocols containsObject:@protocol(TestProtocol)]) {
-            return DIGetterIfIvarIsNil(^id(id self) {
+            return DIGetterIfIvarIsNil(^id(id target) {
                 return [answer1 mutableCopy];
             });
         }
@@ -173,7 +173,7 @@
     
     [DeluxeInjection injectBlock:^DIGetter(Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *protocols) {
         if (propertyClass == [NSMutableArray class]) {
-            return DIGetterIfIvarIsNil(^id (id self) {
+            return DIGetterIfIvarIsNil(^id (id target) {
                 return [answer1 mutableCopy];
             });
         }

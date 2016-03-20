@@ -25,21 +25,21 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Block to be injected instead of property getter
  *
- *  @param self Receiver of selector
+ *  @param target Receiver of selector
  *
  *  @return Injected value or \c nil
  */
-typedef id _Nullable (^DIGetterWithoutIvar)(id self);
+typedef id _Nullable (^DIGetterWithoutIvar)(id target);
 
 /**
  *  Block to be injected instead of property getter
  *
- *  @param self Receiver of selector
+ *  @param target Receiver of selector
  *  @param ivar Pointer to instance variable
  *
  *  @return Injected value or \c [DIDoNotInject \c it] instance to not inject this property
  */
-typedef id _Nullable (^DIGetter)(id self, id _Nullable * _Nonnull ivar);
+typedef id _Nullable (^DIGetter)(id target, id _Nullable * _Nonnull ivar);
 
 /**
  *  Block to be injected for property
@@ -80,9 +80,9 @@ typedef BOOL (^DIPropertyFilter)(Class targetClass, NSString *propertyName, Clas
 /**
  *  Transforms getter block without \c ivar argument to block with \c ivar argument this way:
  *  \code
- *return ^id(id self, id *ivar) {
+ *return ^id(id target, id *ivar) {
  *    if (*ivar == nil) {
- *        *ivar = getter(self);
+ *        *ivar = getter(target);
  *    }
  *    return *ivar;
  *};
