@@ -86,6 +86,29 @@ DIGetter DIGetterIfIvarIsNil(DIGetterWithoutIvar getter) {
 
 //
 
+@implementation DIDoNotInject
+
++ (instancetype)new {
+    return [super new];
+}
+
+- (instancetype)init {
+    return [super init];
+}
+
++ (instancetype)it {
+    static DIDoNotInject *notInject;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        notInject = [[self alloc] init];
+    });
+    return notInject;
+}
+
+@end
+
+//
+
 @implementation DeluxeInjection
 
 - (id)getterExample {
@@ -118,7 +141,7 @@ DIGetter DIGetterIfIvarIsNil(DIGetterWithoutIvar getter) {
         NSString *propertyName = [NSString stringWithUTF8String:property_getName(property)];
         if (blockFactory) {
             blockToInject = blockFactory(class, propertyName, propertyClass, propertyProtocols);
-            if (!blockToInject) {
+            if (!blockToInject || (id)blockToInject == [DIDoNotInject it]) {
                 return;
             }
         }
@@ -140,14 +163,14 @@ DIGetter DIGetterIfIvarIsNil(DIGetterWithoutIvar getter) {
             } else {
                 ivar = objc_getAssociatedObject(self, associationKey);
             }
-            blockToInject(self, &ivar);
+            id result = blockToInject(self, &ivar);
             if (!associationNeeded) {
                 [self setValue:ivar forKey:key];
             } else {
                 DIAssociatesWrite(class, getter, self);
                 objc_setAssociatedObject(self, associationKey, ivar, associationPolicy);
             }
-            return ivar;
+            return result;
         };
         
         IMP newGetterImp = imp_implementationWithBlock(newGetterBlock);
@@ -262,9 +285,13 @@ DIGetter DIGetterIfIvarIsNil(DIGetterWithoutIvar getter) {
 
 + (void)inject:(DIPropertyGetter)block {
     [self inject:^DIGetter (Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
-        return DIGetterIfIvarIsNil(^id(id self) {
-            return block(targetClass, propertyName, propertyClass, propertyProtocols);
-        });
+        id value = block(targetClass, propertyName, propertyClass, propertyProtocols);
+        if (value == [DIDoNotInject it]) {
+            return nil;
+        }
+        return ^id(id self, id *ivar) {
+            return value;
+        };
     } conformingProtocol:@protocol(DIInject)];
 }
 
@@ -274,9 +301,13 @@ DIGetter DIGetterIfIvarIsNil(DIGetterWithoutIvar getter) {
 
 + (void)forceInject:(DIPropertyGetter)block {
     [self inject:^DIGetter (Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
-        return DIGetterIfIvarIsNil(^id(id self) {
-            return block(targetClass, propertyName, propertyClass, propertyProtocols);
-        });
+        id value = block(targetClass, propertyName, propertyClass, propertyProtocols);
+        if (value == [DIDoNotInject it]) {
+            return nil;
+        }
+        return ^id(id self, id *ivar) {
+            return value;
+        };
     } conformingProtocol:nil];
 }
 
@@ -305,7 +336,7 @@ DIGetter DIGetterIfIvarIsNil(DIGetterWithoutIvar getter) {
 }
 
 + (void)lazyInject {
-    [self inject:^DIGetter (id target, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
+    [self inject:^DIGetter (Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
         return DIGetterIfIvarIsNil(^id(id self) {
             return [[propertyClass alloc] init];
         });

@@ -60,11 +60,11 @@
     NSArray *answer1 = @[@1,@2,@3];
     NSArray *answer2 = @[@4,@5,@6];
 
-    [DeluxeInjection inject:^id(id target, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
+    [DeluxeInjection inject:^id(Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
         if (propertyClass == [NSMutableArray class]) {
             return [answer1 mutableCopy];
         }
-        return nil;
+        return [DIDoNotInject it];
     }];
     
     TestType *test = [[TestType alloc] init];
@@ -72,18 +72,19 @@
     test.classObject = nil;
     XCTAssertEqualObjects(test.classObject, answer1);
     test.classObject = [answer2 mutableCopy];
-    XCTAssertEqualObjects(test.classObject, answer2);
+    XCTAssertEqualObjects(test.classObject, answer1);
 }
 
 - (void)testInjectByProtocol
 {
     id answer1 = @777;
+    id answer2 = @666;
     
-    [DeluxeInjection inject:^id(id target, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
+    [DeluxeInjection inject:^id(Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
         if ([propertyProtocols containsObject:@protocol(TestProtocol)]) {
-            return [NSObject new];
+            return answer2;
         }
-        return nil;
+        return [DIDoNotInject it];
     }];
     
     TestType *test = [[TestType alloc] init];
@@ -91,7 +92,7 @@
     test.protocolObject = nil;
     XCTAssertNotNil(test.protocolObject);
     test.protocolObject = answer1;
-    XCTAssertEqualObjects(test.protocolObject, answer1);
+    XCTAssertEqualObjects(test.protocolObject, answer2);
 }
 
 - (void)testInjectBlock
@@ -126,6 +127,11 @@
     NSArray *answer1 = @[@1,@2,@3];
     NSArray *answer2 = @[@4,@5,@6];
     
+    TestType *test = [[TestType alloc] init];
+    
+    XCTAssertTrue([test respondsToSelector:@selector(dynamicClassObject)]);
+    XCTAssertTrue([test respondsToSelector:@selector(dynamicProtocolObject)]);
+    
     [DeluxeInjection injectBlock:^DIGetter (Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
         if (propertyClass == [NSMutableArray class]) {
             return DIGetterIfIvarIsNil(^id(id self) {
@@ -140,8 +146,6 @@
         return nil;
     }];
 
-    TestType *test = [[TestType alloc] init];
-    
     test.dynamicClassObject = [answer2 mutableCopy];
     test.dynamicProtocolObject = [answer2 mutableCopy];
     
@@ -167,7 +171,7 @@
     NSArray *answer1 = @[@1,@2,@3];
     NSArray *answer2 = @[@4,@5,@6];
     
-    [DeluxeInjection injectBlock:^DIGetter(id target, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *protocols) {
+    [DeluxeInjection injectBlock:^DIGetter(Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *protocols) {
         if (propertyClass == [NSMutableArray class]) {
             return DIGetterIfIvarIsNil(^id (id self) {
                 return [answer1 mutableCopy];
@@ -187,12 +191,13 @@
 - (void)testInjectDynamicByProtocol
 {
     id answer1 = @777;
+    id answer2 = @666;
     
-    [DeluxeInjection inject:^id(id target, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *protocols) {
+    [DeluxeInjection inject:^id(Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *protocols) {
         if ([protocols containsObject:@protocol(TestProtocol)]) {
-            return [NSObject new];
+            return answer2;
         }
-        return nil;
+        return [DIDoNotInject it];
     }];
     
     TestType *test = [[TestType alloc] init];
@@ -200,7 +205,7 @@
     test.dynamicProtocolObject = nil;
     XCTAssertNotNil(test.dynamicProtocolObject);
     test.dynamicProtocolObject = answer1;
-    XCTAssertEqualObjects(test.dynamicProtocolObject, answer1);
+    XCTAssertEqualObjects(test.dynamicProtocolObject, answer2);
 }
 
 - (void)testLazy
@@ -216,10 +221,18 @@
     XCTAssertNotNil(test.lazyDict);
 }
 
-- (void)testPreformance {
+- (void)testInjectPreformance {
     [self measureBlock:^{
-        [DeluxeInjection inject:^id (id target, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
+        [DeluxeInjection inject:^id (Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
             return nil;
+        }];
+    }];
+}
+
+- (void)testForceInjectPreformance {
+    [self measureBlock:^{
+        [DeluxeInjection forceInject:^id (Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
+            return [DIDoNotInject it];
         }];
     }];
 }

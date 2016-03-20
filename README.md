@@ -28,21 +28,21 @@ Just one keyword will do this for you:
 @end
 ```
 
-And block wich will be called for each object of SomeClass on first `feedback` access:
+And block to will be called for all class properties marked with `<DIInject>`:
 
 ```objective-c
 Feedabck *feedback = [Feedback alloc] initWithSettings: ... ];
-[DeluxeInjection inject:^(id target, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *protocols) {
+[DeluxeInjection inject:^(Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *protocols) {
     if (propertyClass == [Feedback class]) {
     	return feedback;
     }
-    return nil;
+    return [DIDoNotInject it];
 }];
 ```
 
-Sure this block will be called inside getter iff `_feedback == nil`. And you is allowed to make a decision a return to value based on all this stuff:
+And you is allowed to make a decision a return to value based on all this stuff:
 
-* Target object pointer – `id target`
+* Target class for injection – `Class targetClass`
 * Property name in string representation – `NSString *propertyName`
 * Class of property – `Class propertyClass`, will be at least NSObject
 * Set of property protocols – `NSSet<Protocol *> *protocols`, including all superprotocols
@@ -106,17 +106,17 @@ You can inject any class property you want ether without `DIInject` specificatio
 ...
 
 Network *network = [Network alloc] initWithSettings: ... ];
-[DeluxeInjection forceInject:^id(id target, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *protocols) {
+[DeluxeInjection forceInject:^id(Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *protocols) {
     if ([target isKindOfClass:[TestClass class]] && propertyClass == [Network class]) {
     	return network;
     }
-    return nil;
+    return [DIDoNotInject it];
 }];
 ```
 
 #### Blocks injection
 
-Also you are able to use methods `injectBlock:` and `forceInjectBlock:` to return `DIResult` block, which will be called for each object while its getter access when instance variable is nil. Blcok injection may increase your app performance, if you care a lot about this.
+Also you are able to use methods `injectBlock:` and `forceInjectBlock:` to return `DIResult` block to provide getter block. You may wanna use this methods if wanna make a decision to return value on target object. Maybe return different mutable copies or etc.
 
 For example this usage will inject only properties of types `NSMutableArray` and `NSMutableDictionary` with 2 prepared objects using two different ways short and long:
 
@@ -135,7 +135,7 @@ For example this usage will inject only properties of types `NSMutableArray` and
             return *ivar;
         };
     }
-    return nil;
+    return nil; // It is also safe to return [DIDoNotInject it] :)
 }];
 ```
 

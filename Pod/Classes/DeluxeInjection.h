@@ -37,24 +37,24 @@ typedef id _Nullable (^DIGetterWithoutIvar)(id self);
  *  @param self Receiver of selector
  *  @param ivar Pointer to instance variable
  *
- *  @return Injected value or \c nil
+ *  @return Injected value or \c [DIDoNotInject \c it] instance to not inject this property
  */
 typedef id _Nullable (^DIGetter)(id self, id _Nullable * _Nonnull ivar);
 
 /**
  *  Block to be injected for property
  *
- *  @param target            Object with injected property
+ *  @param targetClass       Class to be injected
  *  @param propertyName      Injected property name
  *  @param propertyClass     Class of injected property, at least NSObject
  *  @param propertyProtocols Set of property protocols including all superprotocols
  *
  *  @return Injected value or \c nil
  */
-typedef id _Nullable (^DIPropertyGetter)(id target, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols);
+typedef id _Nullable (^DIPropertyGetter)(Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols);
 
 /**
- *  Block to get injectable block for property
+ *  Block to get injectable block as getter for property
  *
  *  @param targetClass       Class to be injected
  *  @param propertyName      Property name to be injected
@@ -93,6 +93,22 @@ typedef BOOL (^DIPropertyFilter)(Class targetClass, NSString *propertyName, Clas
  *  @return Block with \c ivar argument
  */
 DIGetter DIGetterIfIvarIsNil(DIGetterWithoutIvar getter);
+
+#pragma mark - Helper class to show what to not inject
+
+@interface DIDoNotInject : NSObject
+
+/**
+ *  Shared instance to show which injections to skip as return value in \c inject: and \c forceInject: methods
+ *
+ *  @return Share instance of helper class
+ */
++ (instancetype)it;
+
++ (instancetype)new NS_UNAVAILABLE;
+- (instancetype)init NS_DESIGNATED_INITIALIZER;
+
+@end
 
 #pragma mark - Main injection class
 
