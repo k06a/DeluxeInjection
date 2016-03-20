@@ -127,11 +127,6 @@
     NSArray *answer1 = @[@1,@2,@3];
     NSArray *answer2 = @[@4,@5,@6];
     
-    TestType *test = [[TestType alloc] init];
-    
-    XCTAssertTrue([test respondsToSelector:@selector(dynamicClassObject)]);
-    XCTAssertTrue([test respondsToSelector:@selector(dynamicProtocolObject)]);
-    
     [DeluxeInjection injectBlock:^DIGetter (Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
         if (propertyClass == [NSMutableArray class]) {
             return DIGetterIfIvarIsNil(^id(id target) {
@@ -146,24 +141,34 @@
         return nil;
     }];
 
+    TestType *test = [[TestType alloc] init];
+    
     test.dynamicClassObject = [answer2 mutableCopy];
     test.dynamicProtocolObject = [answer2 mutableCopy];
     
     XCTAssertEqualObjects(test.dynamicClassObject, answer2);
     XCTAssertEqualObjects(test.dynamicProtocolObject, answer2);
     
+    XCTAssertTrue([DeluxeInjection checkInjected:[TestType class] getter:@selector(classObject)]);
+    XCTAssertTrue([DeluxeInjection checkInjected:[TestType class] getter:@selector(protocolObject)]);
+    XCTAssertTrue([DeluxeInjection checkInjected:[TestType class] getter:@selector(lazyArray)]);
+    XCTAssertTrue([DeluxeInjection checkInjected:[TestType class] getter:@selector(lazyDict)]);
+    XCTAssertTrue([DeluxeInjection checkInjected:[TestType class] getter:@selector(dynamicClassObject)]);
+    XCTAssertTrue([DeluxeInjection checkInjected:[TestType class] getter:@selector(dynamicProtocolObject)]);
+    
     [DeluxeInjection rejectAll];
     
-    // Need to find way to test "unrecognized selector sent to instance"
-    //test.dynamicClassObject = nil;
-    //test.dynamicProtocolObject = nil;
-    //XCTAssertEqualObjects(test.dynamicClassObject, answer2);
-    //XCTAssertEqualObjects(test.dynamicProtocolObject, answer2);
+    XCTAssertThrows(test.dynamicClassObject);
+    XCTAssertThrows(test.dynamicProtocolObject);
+    XCTAssertThrows(test.dynamicClassObject = nil);
+    XCTAssertThrows(test.dynamicProtocolObject = nil);
     
     XCTAssertFalse([DeluxeInjection checkInjected:[TestType class] getter:@selector(classObject)]);
     XCTAssertFalse([DeluxeInjection checkInjected:[TestType class] getter:@selector(protocolObject)]);
     XCTAssertFalse([DeluxeInjection checkInjected:[TestType class] getter:@selector(forceClassObject)]);
     XCTAssertFalse([DeluxeInjection checkInjected:[TestType class] getter:@selector(forceProtocolObject)]);
+    XCTAssertFalse([DeluxeInjection checkInjected:[TestType class] getter:@selector(dynamicClassObject)]);
+    XCTAssertFalse([DeluxeInjection checkInjected:[TestType class] getter:@selector(dynamicProtocolObject)]);
 }
 
 - (void)testInjectDynamicByClass

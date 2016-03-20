@@ -9,6 +9,8 @@
 #import "DIRuntimeRoutines.h"
 #import "DeluxeInjection.h"
 
+static void *DIContext = &DIContext;
+
 //
 
 static NSMutableDictionary<Class, NSMutableDictionary<NSString *, NSValue *> *> *injectionsBackup;
@@ -178,7 +180,7 @@ DIGetter DIGetterIfIvarIsNil(DIGetterWithoutIvar getter) {
         Method getterMethod = class_getInstanceMethod(class, getter);
         const char *getterTypes = method_getTypeEncoding(getterMethod);
         IMP getterMethodImp = method_getImplementation(getterMethod);
-        DIInjectionsBackupWrite(class, getter, getterMethodImp);
+        DIInjectionsBackupWrite(class, getter, getterMethodImp ?: (IMP)DIContext);
         IMP replacedImp = class_replaceMethod(class, getter, newGetterImp, getterTypes);
         if (associationNeeded) {
             imp_removeBlock(replacedImp);
@@ -273,12 +275,16 @@ DIGetter DIGetterIfIvarIsNil(DIGetterWithoutIvar getter) {
                 IMP newGetterImp = imp_implementationWithBlock(newGetterBlock);
                 Method getterMethod = class_getInstanceMethod(self, @selector(getterExample));
                 const char *getterTypes = method_getTypeEncoding(getterMethod);
+                DIInjectionsBackupWrite(class, getter, nil);
                 IMP replacedImp = class_replaceMethod(class, getter, newGetterImp, getterTypes);
                 imp_removeBlock(replacedImp);
             } else {
                 Method method = class_getInstanceMethod(class, getter);
                 const char *types = method_getTypeEncoding(method);
                 IMP oldImp = DIInjectionsBackupRead(class, getter);
+                if (oldImp == DIContext) {
+                    oldImp = nil;
+                }
                 DIInjectionsBackupWrite(class, getter, nil);
                 IMP replacedImp = class_replaceMethod(class, getter, oldImp, types);
                 imp_removeBlock(replacedImp);
@@ -359,9 +365,14 @@ DIGetter DIGetterIfIvarIsNil(DIGetterWithoutIvar getter) {
         NSMutableString *str = [NSMutableString stringWithString:@" injected:\n"];
         for (Class class in injectionsBackup) {
             [str appendFormat:@"%@ properties to class %@:\n", @(injectionsBackup[class].count), class];
-            NSInteger i = 0;
+            NSInteger i = 1;
             for (NSString *selStr in injectionsBackup[class]) {
-                [str appendFormat:@"\t#%@ @selector(%@)\n", @(i++), selStr];
+                NSArray *objects = DIAssociatesRead(class, NSSelectorFromString(selStr));
+                if (objects) {
+                    [str appendFormat:@"\t%@. @selector(%@) associated with %@ object(s)\n", @(i++), selStr, @(objects.count)];
+                } else {
+                    [str appendFormat:@"\t%@. @selector(%@)\n", @(i++), selStr];
+                }
             }
         }
         return str;
