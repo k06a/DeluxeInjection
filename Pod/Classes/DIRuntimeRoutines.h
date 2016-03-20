@@ -26,4 +26,6 @@ SEL DIRuntimeGetPropertyGetter(objc_property_t property);
 SEL DIRuntimeGetPropertySetter(objc_property_t property);
 void DIRuntimeGetPropertyType(objc_property_t property, void (^block)(Class class, NSSet<Protocol *> *protocols));
 
+objc_AssociationPolicy DIRuntimePropertyAssociationPolicy(objc_property_t property);
+
 NS_ASSUME_NONNULL_END

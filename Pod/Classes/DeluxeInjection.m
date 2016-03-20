@@ -39,6 +39,38 @@ static void DIInjectionsBackupWrite(Class class, SEL selector, IMP imp) {
 
 //
 
+static NSMutableDictionary<Class, NSMutableDictionary<NSString *, NSHashTable *> *> *associates;
+
+static NSArray *DIAssociatesRead(Class class, SEL selector) {
+    NSHashTable *hashTable = associates[class][NSStringFromSelector(selector)];
+    return hashTable.allObjects;
+}
+
+static void DIAssociatesWrite(Class class, SEL selector, id object) {
+    if (associates == nil) {
+        associates = [NSMutableDictionary dictionary];
+    }
+    if (associates[class] == nil) {
+        associates[(id)class] = [NSMutableDictionary dictionary];
+    }
+    
+    NSString *selectorKey = NSStringFromSelector(selector);
+    if (associates[class][selectorKey] == nil) {
+        associates[class][selectorKey] = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory|NSPointerFunctionsOpaquePersonality];
+    }
+    
+    if (object) {
+        [associates[class][selectorKey] addObject:object];
+    }
+}
+
+static void DIAssociatesRemove(Class class, SEL selector) {
+    NSString *selectorKey = NSStringFromSelector(selector);
+    [associates[class] removeObjectForKey:selectorKey];
+}
+
+//
+
 DIGetter DIGetterIfIvarIsNil(DIGetterWithoutIvar getter) {
     return ^id(id self, SEL _cmd, id *ivar) {
         if (*ivar == nil) {
@@ -70,14 +102,8 @@ DIGetter DIGetterIfIvarIsNil(DIGetterWithoutIvar getter) {
     __block DIGetter blockToInject = block;
     
     DIRuntimeGetPropertyType(property, ^(Class propertyClass, NSSet<Protocol *> * propertyProtocols) {
-        NSString *propertyIvarStr = DIRuntimeGetPropertyAttribute(property, "V");
-        if (!propertyIvarStr) {
-            return;
-        }
-        Ivar propertyIvar = class_getInstanceVariable(class, propertyIvarStr.UTF8String);
-        
+        NSString *propertyName = [NSString stringWithUTF8String:property_getName(property)];
         if (blockFactory) {
-            NSString *propertyName = [NSString stringWithUTF8String:property_getName(property)];
             blockToInject = blockFactory(class, propertyName, propertyClass, propertyProtocols);
             if (!blockToInject) {
                 return;
@@ -88,11 +114,27 @@ DIGetter DIGetterIfIvarIsNil(DIGetterWithoutIvar getter) {
         Method getterMethod = class_getInstanceMethod(class, getter);
         IMP getterMethodImp = method_getImplementation(getterMethod);
         
-        NSString *key = [NSString stringWithUTF8String:ivar_getName(propertyIvar)];
+        NSString *propertyIvarStr = DIRuntimeGetPropertyAttribute(property, "V");
+        Ivar propertyIvar = propertyIvarStr ? class_getInstanceVariable(class, propertyIvarStr.UTF8String) : nil;
+        NSString *key = propertyIvar ? [NSString stringWithUTF8String:ivar_getName(propertyIvar)] : nil;
+        
+        SEL associationKey = NSSelectorFromString([@"di_" stringByAppendingString:propertyName]);
+        objc_AssociationPolicy associationPolicy = DIRuntimePropertyAssociationPolicy(property);
+        
         id (^newGetterBlock)(id,SEL) = ^id(id self, SEL _cmd){
-            id ivar = [self valueForKey:key];
+            id ivar = nil;
+            if (key) {
+                ivar = [self valueForKey:key];
+            } else {
+                ivar = objc_getAssociatedObject(self, associationKey);
+            }
             blockToInject(self, _cmd, &ivar);
-            [self setValue:ivar forKey:key];
+            if (key) {
+                [self setValue:ivar forKey:key];
+            } else {
+                DIAssociatesWrite(class, getter, self);
+                objc_setAssociatedObject(self, associationKey, ivar, associationPolicy);
+            }
             return ivar;
         };
         
@@ -140,6 +182,18 @@ DIGetter DIGetterIfIvarIsNil(DIGetterWithoutIvar getter) {
     if (!DIInjectionsBackupRead(class, getter)) {
         return;
     }
+    
+    DIRuntimeEnumerateClassProperties(class, ^(objc_property_t property) {
+        if (getter == DIRuntimeGetPropertyGetter(property)) {
+            NSString *propertyName = [NSString stringWithUTF8String:property_getName(property)];
+            SEL associationKey = NSSelectorFromString([@"di_" stringByAppendingString:propertyName]);
+            objc_AssociationPolicy associationPolicy = DIRuntimePropertyAssociationPolicy(property);
+            for (id object in DIAssociatesRead(class, getter)) {
+                objc_setAssociatedObject(object, associationKey, nil, associationPolicy);
+            }
+            DIAssociatesRemove(class, getter);
+        }
+    });
     
     Method method = class_getInstanceMethod(class, getter);
     const char *types = method_getTypeEncoding(method);

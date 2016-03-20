@@ -173,3 +173,28 @@ void DIRuntimeGetPropertyType(objc_property_t property, void (^block)(Class clas
     
     block(class, protocols);
 }
+
+objc_AssociationPolicy DIRuntimePropertyAssociationPolicy(objc_property_t property) {
+    if (DIRuntimeGetPropertyAttribute(property, "N") != nil) {
+        if (DIRuntimeGetPropertyAttribute(property, "W")) {
+            return OBJC_ASSOCIATION_ASSIGN; // Weaks are not supported
+        }
+        if (DIRuntimeGetPropertyAttribute(property, "C") != nil) {
+            return OBJC_ASSOCIATION_COPY_NONATOMIC;
+        }
+        if (DIRuntimeGetPropertyAttribute(property, "&") != nil) {
+            return OBJC_ASSOCIATION_RETAIN_NONATOMIC;
+        }
+    } else {
+        if (DIRuntimeGetPropertyAttribute(property, "W")) {
+            return OBJC_ASSOCIATION_ASSIGN; // Weaks are not supported
+        }
+        if (DIRuntimeGetPropertyAttribute(property, "C") != nil) {
+            return OBJC_ASSOCIATION_COPY;
+        }
+        if (DIRuntimeGetPropertyAttribute(property, "&") != nil) {
+            return OBJC_ASSOCIATION_RETAIN;
+        }
+    }
+    return OBJC_ASSOCIATION_ASSIGN;
+}
