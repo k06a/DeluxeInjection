@@ -21,9 +21,9 @@ void DIRuntimeEnumerateClassProtocolsWithParents(Class class, void (^block)(Prot
 void DIRuntimeEnumerateProtocolSuperprotocols(Protocol *protocol, void (^block)(Protocol *superprotocol));
 void DIRuntimeEnumerateProtocolProperties(Protocol *protocol, BOOL required, BOOL instance, void (^block)(objc_property_t property));
 
-NSString *DIRuntimeEnumeratePropertyAttribute(objc_property_t property, char *attrribute, void (^ _Nullable block)(NSString *value));
-void DIRuntimeEnumeratePropertyGetter(objc_property_t property, void (^block)(SEL getter));
-void DIRuntimeEnumeratePropertySetter(objc_property_t property, void (^block)(SEL setter));
-void DIRuntimeEnumeratePropertyType(objc_property_t property, void (^block)(Class class, NSSet<Protocol *> *protocols));
+NSString *DIRuntimeGetPropertyAttribute(objc_property_t property, char *attrribute);
+SEL DIRuntimeGetPropertyGetter(objc_property_t property);
+SEL DIRuntimeGetPropertySetter(objc_property_t property);
+void DIRuntimeGetPropertyType(objc_property_t property, void (^block)(Class class, NSSet<Protocol *> *protocols));
 
 NS_ASSUME_NONNULL_END

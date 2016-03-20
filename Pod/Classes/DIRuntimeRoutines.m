@@ -110,42 +110,39 @@ void DIRuntimeEnumerateProtocolProperties(Protocol *protocol, BOOL required, BOO
     free(properties);
 }
 
-NSString *DIRuntimeEnumeratePropertyAttribute(objc_property_t property, char *attrribute, void (^block)(NSString *value)) {
+NSString *DIRuntimeGetPropertyAttribute(objc_property_t property, char *attrribute) {
     char *value = property_copyAttributeValue(property, attrribute);
     NSString *str = nil;
     if (value) {
         str = [NSString stringWithUTF8String:value];
         free(value);
-        if (block) {
-            block(str);
-        }
     }
     return str;
 }
 
-void DIRuntimeEnumeratePropertyGetter(objc_property_t property, void (^block)(SEL getter)) {
+SEL DIRuntimeGetPropertyGetter(objc_property_t property) {
     char *value = property_copyAttributeValue(property, "G");
     if (value) {
-        block(NSSelectorFromString([NSString stringWithUTF8String:value]));
+        SEL sel = NSSelectorFromString([NSString stringWithUTF8String:value]);
         free(value);
-    } else {
-        block(NSSelectorFromString([NSString stringWithUTF8String:property_getName(property)]));
+        return sel;
     }
+    return NSSelectorFromString([NSString stringWithUTF8String:property_getName(property)]);
 }
 
-void DIRuntimeEnumeratePropertySetter(objc_property_t property, void (^block)(SEL setter)) {
+SEL DIRuntimeGetPropertySetter(objc_property_t property) {
     char *value = property_copyAttributeValue(property, "S");
     if (value) {
-        block(NSSelectorFromString([NSString stringWithUTF8String:value]));
+        SEL sel = NSSelectorFromString([NSString stringWithUTF8String:value]);
         free(value);
-    } else {
-        NSString *str = [NSString stringWithUTF8String:property_getName(property)];
-        str = [NSString stringWithFormat:@"set%@%@",[[str substringToIndex:1] uppercaseString], [str substringFromIndex:1]];
-        block(NSSelectorFromString(str));
+        return sel;
     }
+    NSString *str = [NSString stringWithUTF8String:property_getName(property)];
+    str = [NSString stringWithFormat:@"set%@%@",[[str substringToIndex:1] uppercaseString], [str substringFromIndex:1]];
+    return NSSelectorFromString(str);
 }
 
-void DIRuntimeEnumeratePropertyType(objc_property_t property, void (^block)(Class class, NSSet<Protocol *> *protocols)) {
+void DIRuntimeGetPropertyType(objc_property_t property, void (^block)(Class class, NSSet<Protocol *> *protocols)) {
     char *value = property_copyAttributeValue(property, "T");
     NSString *type = [NSString stringWithUTF8String:value];
     free(value);
