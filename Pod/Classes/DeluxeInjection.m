@@ -39,6 +39,17 @@ static void DIInjectionsBackupWrite(Class class, SEL selector, IMP imp) {
 
 //
 
+DIGetter DIGetterIfIvarIsNil(DIGetterWithoutIvar getter) {
+    return ^id(id self, SEL _cmd, id *ivar) {
+        if (*ivar == nil) {
+            *ivar = getter(self, _cmd);
+        }
+        return *ivar;
+    };
+}
+
+//
+
 @implementation DeluxeInjection
 
 #pragma mark - Private
@@ -55,11 +66,8 @@ static void DIInjectionsBackupWrite(Class class, SEL selector, IMP imp) {
     });
 }
 
-+ (void)inject:(Class)class property:(objc_property_t)property block:(DIGetter)block filterBlock:(DIPropertyGetterBlock)filterBlock {
++ (void)inject:(Class)class property:(objc_property_t)property block:(DIGetter)block blockFactory:(DIPropertyGetterBlock)blockFactory {
     __block DIGetter blockToInject = block;
-    
-    SEL getter = DIRuntimeGetPropertyGetter(property);
-    SEL setter = DIRuntimeGetPropertySetter(property);
     
     DIRuntimeGetPropertyType(property, ^(Class propertyClass, NSSet<Protocol *> * propertyProtocols) {
         NSString *propertyIvarStr = DIRuntimeGetPropertyAttribute(property, "V");
@@ -68,37 +76,24 @@ static void DIInjectionsBackupWrite(Class class, SEL selector, IMP imp) {
         }
         Ivar propertyIvar = class_getInstanceVariable(class, propertyIvarStr.UTF8String);
         
-        NSString *key = [NSString stringWithUTF8String:ivar_getName(propertyIvar)];
-        NSString *propertyName = [NSString stringWithUTF8String:property_getName(property)];
-        
-        if (filterBlock) {
-            blockToInject = filterBlock(class, propertyName, propertyClass, propertyProtocols);
+        if (blockFactory) {
+            NSString *propertyName = [NSString stringWithUTF8String:property_getName(property)];
+            blockToInject = blockFactory(class, propertyName, propertyClass, propertyProtocols);
             if (!blockToInject) {
                 return;
             }
         }
         
+        SEL getter = DIRuntimeGetPropertyGetter(property);
         Method getterMethod = class_getInstanceMethod(class, getter);
         IMP getterMethodImp = method_getImplementation(getterMethod);
-        id(*getterMethodImpFunc)(id,SEL) = (void *)getterMethodImp;
         
-        Method setterMethod = class_getInstanceMethod(class, setter);
-        IMP setterMethodImp = method_getImplementation(setterMethod);
-        id(*setterMethodImpFunc)(id,SEL,id) = (void *)setterMethodImp;
-        
+        NSString *key = [NSString stringWithUTF8String:ivar_getName(propertyIvar)];
         id (^newGetterBlock)(id,SEL) = ^id(id self, SEL _cmd){
-            id value = getterMethodImpFunc(self, _cmd);
-            if (value == nil) {
-                value = blockToInject(self, _cmd);
-                if (value) {
-                    if (setterMethodImpFunc) {
-                        setterMethodImpFunc(self, _cmd, value);
-                    } else {
-                        [self setValue:value forKey:key];
-                    }
-                }
-            }
-            return value;
+            id ivar = [self valueForKey:key];
+            blockToInject(self, _cmd, &ivar);
+            [self setValue:ivar forKey:key];
+            return ivar;
         };
         
         IMP newImp = imp_implementationWithBlock(newGetterBlock);
@@ -110,7 +105,7 @@ static void DIInjectionsBackupWrite(Class class, SEL selector, IMP imp) {
 
 + (void)inject:(DIPropertyGetterBlock)block conformingProtocol:(Protocol *)protocol {
     [self enumerateAllClassProperties:^(Class class, objc_property_t property) {
-        [self inject:class property:property block:nil filterBlock:block];
+        [self inject:class property:property block:nil blockFactory:block];
     } conformingProtocol:protocol];
 }
 
@@ -136,7 +131,7 @@ static void DIInjectionsBackupWrite(Class class, SEL selector, IMP imp) {
     DIRuntimeEnumerateClassProperties(class, ^(objc_property_t property) {
         SEL propertyGetter = DIRuntimeGetPropertyGetter(property);
         if (getter == propertyGetter) {
-            [self inject:class property:property block:block filterBlock:nil];
+            [self inject:class property:property block:block blockFactory:nil];
         }
     });
 }
@@ -156,9 +151,9 @@ static void DIInjectionsBackupWrite(Class class, SEL selector, IMP imp) {
 
 + (void)inject:(DIPropertyGetter)block {
     [self inject:^DIGetter (Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
-        return ^id(id self, SEL _cmd) {
+        return DIGetterIfIvarIsNil(^id(id self, SEL _cmd) {
             return block(targetClass, propertyName, propertyClass, propertyProtocols);
-        };
+        });
     } conformingProtocol:@protocol(DIInject)];
 }
 
@@ -168,9 +163,9 @@ static void DIInjectionsBackupWrite(Class class, SEL selector, IMP imp) {
 
 + (void)forceInject:(DIPropertyGetter)block {
     [self inject:^DIGetter (Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
-        return ^id(id self, SEL _cmd) {
+        return DIGetterIfIvarIsNil(^id(id self, SEL _cmd) {
             return block(targetClass, propertyName, propertyClass, propertyProtocols);
-        };
+        });
     } conformingProtocol:nil];
 }
 
@@ -200,9 +195,9 @@ static void DIInjectionsBackupWrite(Class class, SEL selector, IMP imp) {
 
 + (void)lazyInject {
     [self inject:^DIGetter (id target, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
-        return ^id(id self, SEL _cmd) {
+        return DIGetterIfIvarIsNil(^id(id self, SEL _cmd) {
             return [[propertyClass alloc] init];
-        };
+        });
     } conformingProtocol:@protocol(DILazy)];
 }
 

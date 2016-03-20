@@ -95,9 +95,9 @@
     
     [DeluxeInjection injectBlock:^DIGetter (Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
         if (propertyClass == [NSMutableArray class]) {
-            return ^id(id self, SEL _cmd) {
+            return DIGetterIfIvarIsNil(^id(id self, SEL _cmd) {
                 return [answer1 mutableCopy];
-            };
+            });
         }
         return nil;
     }];
@@ -119,9 +119,9 @@
 {
     [DeluxeInjection injectBlock:^DIGetter (Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
         if (propertyClass == [NSMutableArray class]) {
-            return ^id(id self, SEL _cmd) {
+            return DIGetterIfIvarIsNil(^id(id self, SEL _cmd) {
                 return @[];
-            };
+            });
         }
         return nil;
     }];

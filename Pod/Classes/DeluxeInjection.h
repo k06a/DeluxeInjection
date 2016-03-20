@@ -30,7 +30,18 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @return Injected value or \c nil
  */
-typedef id _Nullable (^DIGetter)(id self, SEL _cmd);
+typedef id _Nullable (^DIGetterWithoutIvar)(id self, SEL _cmd);
+
+/**
+ *  Block to be injected instead of property getter
+ *
+ *  @param self Receiver of selector
+ *  @param _cmd Getter selector
+ *  @param ivar Pointer to instance variable
+ *
+ *  @return Injected value or \c nil
+ */
+typedef id _Nullable (^DIGetter)(id self, SEL _cmd, id _Nullable * _Nonnull ivar);
 
 /**
  *  Block to be injected for property
@@ -67,6 +78,23 @@ typedef DIGetter _Nullable (^DIPropertyGetterBlock)(Class targetClass, NSString 
  *  @return \c YES to inject/reject \c propertyName of \c targetClass or NO to not inject/reject
  */
 typedef BOOL (^DIPropertyFilter)(Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols);
+
+/**
+ *  Transforms getter block without \c ivar argument to block with \c ivar argument this way:
+ *  \code
+ *return ^id(id self, SEL _cmd, id *ivar) {
+ *    if (*ivar == nil) {
+ *        *ivar = getter(self, _cmd);
+ *    }
+ *    return *ivar;
+ *};
+ *  \endcode
+ *
+ *  @param getter Block without \c ivar argument
+ *
+ *  @return Block with \c ivar argument
+ */
+DIGetter DIGetterIfIvarIsNil(DIGetterWithoutIvar getter);
 
 #pragma mark - Main injection class
 
@@ -112,7 +140,7 @@ typedef BOOL (^DIPropertyFilter)(Class targetClass, NSString *propertyName, Clas
 /**
  *  Inject \b getters into class properties marked explicitly with \c <DIInject> protocol.
  *
- *  @param block Block to be called once for every marked property of all classes. Block should return \c DIGetter block to be called for each object on injection or \c nil if no injection required for this property.
+ *  @param block Block to be called once for every marked property of all classes. Block should return \c DIGetter block to be called as getter for each object on injection or \c nil if no injection required for this property.
  */
 + (void)injectBlock:(DIPropertyGetterBlock)block;
 
@@ -126,7 +154,7 @@ typedef BOOL (^DIPropertyFilter)(Class targetClass, NSString *propertyName, Clas
 /**
  *  Force inject \b getters into class properties even \b not marked explicitly with \c <DIInject> protocol.
  *
- *  @param block Block to be called once for every marked property of all classes. Block should return \c DIGetter block to be called for each object on injection or \c nil if no property injection required for this property.
+ *  @param block Block to be called once for every marked property of all classes. Block should return \c DIGetter block to be called as getter for each object on injection or \c nil if no property injection required for this property.
  */
 + (void)forceInjectBlock:(DIPropertyGetterBlock)block;
 

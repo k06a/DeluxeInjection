@@ -212,6 +212,11 @@ You can see parameters description right in source code comments.
    + (NSString *)debugDescription;
    ```
 
+15. Transforms getter block without \c ivar argument to block with \c ivar argument
+   ```objective-c
+   DIGetter DIGetterIfIvarIsNil(DIGetterWithoutIvar getter);
+   ```
+
 ## Performance and Testing
 
 Enumeration of 15.000 classes during injection tooks 0.022 sec. You can find this performance test and other tests in Example project. I am planning to add as many tests as possible to detect all possible problems.
