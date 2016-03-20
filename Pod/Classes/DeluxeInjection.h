@@ -199,12 +199,12 @@ DIGetter DIGetterIfIvarIsNil(DIGetterWithoutIvar getter);
 /**
  *  Inject properties marked with \c <DILazy> protocol using block: \code ^{ return [[class alloc] init]; } \endcode
  */
-+ (void)lazyInject;
++ (void)injectLazy;
 
 /**
  *  Reject all injections marked explicitly with \c <DILazy> protocol.
  */
-+ (void)lazyReject;
++ (void)rejectLazy;
 
 /**
  *  Overriden \c debugDescription method to see tree of classes and injected properties

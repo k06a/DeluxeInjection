@@ -346,7 +346,7 @@ DIGetter DIGetterIfIvarIsNil(DIGetterWithoutIvar getter) {
     } conformingProtocol:nil];
 }
 
-+ (void)lazyInject {
++ (void)injectLazy {
     [self inject:^DIGetter (Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
         return DIGetterIfIvarIsNil(^id(id target) {
             return [[propertyClass alloc] init];
@@ -354,7 +354,7 @@ DIGetter DIGetterIfIvarIsNil(DIGetterWithoutIvar getter) {
     } conformingProtocol:@protocol(DILazy)];
 }
 
-+ (void)lazyReject {
++ (void)rejectLazy {
     [self reject:^BOOL(Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
         return YES;
     } conformingProtocol:@protocol(DILazy)];

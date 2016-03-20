@@ -5,6 +5,17 @@
 [![License](https://img.shields.io/cocoapods/l/DeluxeInjection.svg?style=flat)](http://cocoapods.org/pods/DeluxeInjection)
 [![Platform](https://img.shields.io/cocoapods/p/DeluxeInjection.svg?style=flat)](http://cocoapods.org/pods/DeluxeInjection)
 
+## Features
+
+1. Autoinjection as first-class feature
+2. Force injection for any property of any class
+3. Lazy properties initialization feature
+3. Both *value-* and *block-*injection supported
+4. Inject both *ivar*-backed and `@dynamic` properties (over association)
+5. Easily access *ivar* inside injected getter
+
+*Propeties with both `@dynamic` and `weak` are not supported yet, coming soon. Are you really need them?*
+
 ## Usage
 
 #### Auto injection
@@ -89,7 +100,7 @@ Sure it works with generic types:
 
 This all will be done after calling this:
 ```objective-c
-[DeluxeInjection lazy];
+[DeluxeInjection injectLazy];
 ```
 
 #### Force injection
@@ -116,14 +127,14 @@ Network *network = [Network alloc] initWithSettings: ... ];
 
 #### Blocks injection
 
-Also you are able to use methods `injectBlock:` and `forceInjectBlock:` to return `DIResult` block to provide injected getter block. You may wanna use this methods if wanna make a decision to return value on target object. Maybe return different mutable copies for different targets or etc.
+You are also able to use methods `injectBlock:` and `forceInjectBlock:` to return `DIResult` block to provide injected getter block or `nil` otherwise. You may wanna use this methods if wanna make a decision to return value on target object. Maybe return different mutable copies for different targets or etc.
 
 For example this usage will inject only properties of types `NSMutableArray` and `NSMutableDictionary` with 2 prepared objects using two different ways short and long:
 
 ```objective-c
 [DeluxeInjection injectBlock:^DIGetter (Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
     if (propertyClass == [NSMutableArray class]) {
-        return DIGetterIfIvarisNil(^id(id target) {
+        return DIGetterIfIvarIsNil(^id(id target) {
             return [arrayMock1 mutableCopy];
         });
     }
@@ -202,12 +213,12 @@ You can see parameters description right in source code comments.
 
 12. Inject properties marked with `<DILazy>` protocol using block: `^{ return [[class alloc] init]; }`
    ```objective-c
-   + (void)lazy;
+   + (void)injectLazy;
    ```
    
 13. Reject all injections marked explicitly with `<DILazy>` protocol.
    ```objective-c
-   + (void)lazyReject;
+   + (void)rejectLazy;
    ```
 
 14. Overriden `debugDescription` method to see tree of classes and injected properties
