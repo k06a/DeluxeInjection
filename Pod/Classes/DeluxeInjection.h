@@ -59,12 +59,12 @@ typedef DIGetter _Nullable (^DIPropertyGetterBlock)(Class targetClass, NSString 
 /**
  *  Block to filter properties to be injected or not
  *
- *  @param targetClass       Class to be injected/deinjected
- *  @param propertyName      Property name to be injected/deinjected
- *  @param propertyClass     Class of property to be injected/deinjected, at least NSObject
+ *  @param targetClass       Class to be injected/rejected
+ *  @param propertyName      Property name to be injected/rejected
+ *  @param propertyClass     Class of property to be injected/rejected, at least NSObject
  *  @param propertyProtocols Set of property protocols including all superprotocols
  *
- *  @return \c YES to inject/deinject \c propertyName of \c targetClass or NO to not inject/deinject
+ *  @return \c YES to inject/reject \c propertyName of \c targetClass or NO to not inject/reject
  */
 typedef BOOL (^DIPropertyFilter)(Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols);
 
@@ -93,14 +93,14 @@ typedef BOOL (^DIPropertyFilter)(Class targetClass, NSString *propertyName, Clas
 + (void)inject:(Class)class getter:(SEL)getter block:(DIGetter)block;
 
 /**
- *  Deinject concrete property injection
+ *  Reject concrete property injection
  *
- *  @param class  Class of property to deinject
- *  @param getter Class property to deinject
+ *  @param class  Class of property to reject
+ *  @param getter Class property to reject
  */
-+ (void)deinject:(Class)class getter:(SEL)getter;
++ (void)reject:(Class)class getter:(SEL)getter;
 
-#pragma mark Mass injectors / deinjectors
+#pragma mark Mass injectors / rejectors
 
 /**
  *  Inject \b values into class properties marked explicitly with \c <DIInject> protocol.
@@ -131,28 +131,28 @@ typedef BOOL (^DIPropertyFilter)(Class targetClass, NSString *propertyName, Clas
 + (void)forceInjectBlock:(DIPropertyGetterBlock)block;
 
 /**
- *  Deinject some injections marked explicitly with \c <DIInject> protocol.
+ *  Reject some injections marked explicitly with \c <DIInject> protocol.
  *
- *  @param block Block to determine which injections to deinject, will be called for all previously injected properties. Returns \c BOOL which means to deinject or \b not to deinject.
+ *  @param block Block to determine which injections to reject, will be called for all previously injected properties. Returns \c BOOL which means to reject or \b not to reject.
  */
-+ (void)deinject:(DIPropertyFilter)block;
++ (void)reject:(DIPropertyFilter)block;
 
 /**
- *  Deinject all injections marked explicitly with \c <DIInject> protocol.
+ *  Reject all injections marked explicitly with \c <DIInject> protocol.
  */
-+ (void)deinjectAll;
++ (void)rejectAll;
 
 /**
- *  Deinject some injections even \b not marked explicitly with \c <DIInject> protocol.
+ *  Reject some injections even \b not marked explicitly with \c <DIInject> protocol.
  *
- *  @param block Block to determine which injections to deinject, will be called for all previously injected properties. Returns \c BOOL which means to deinject or \b not to deinject.
+ *  @param block Block to determine which injections to reject, will be called for all previously injected properties. Returns \c BOOL which means to reject or \b not to reject.
  */
-+ (void)forceDeinject:(DIPropertyFilter)block;
++ (void)forceReject:(DIPropertyFilter)block;
 
 /**
- *  Deinject all injections and marked explicitly with \c <DIInject> and \c <DILazy> protocols.
+ *  Reject all injections and marked explicitly with \c <DIInject> and \c <DILazy> protocols.
  */
-+ (void)forceDeinjectAll;
++ (void)forceRejectAll;
 
 /**
  *  Inject properties marked with \c <DILazy> protocol using block: \code ^{ return [[class alloc] init]; } \endcode
@@ -160,9 +160,9 @@ typedef BOOL (^DIPropertyFilter)(Class targetClass, NSString *propertyName, Clas
 + (void)lazyInject;
 
 /**
- *  Deinject all injections marked explicitly with \c <DILazy> protocol.
+ *  Reject all injections marked explicitly with \c <DILazy> protocol.
  */
-+ (void)lazyDeinject;
++ (void)lazyReject;
 
 /**
  *  Overriden \c debugDescription method to see tree of classes and injected properties

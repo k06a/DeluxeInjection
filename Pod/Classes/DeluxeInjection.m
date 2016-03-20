@@ -116,13 +116,13 @@ static void DIInjectionsBackupWrite(Class class, SEL selector, IMP imp) {
     } conformingProtocol:protocol];
 }
 
-+ (void)deinject:(DIPropertyFilter)block conformingProtocol:(Protocol *)protocol {
++ (void)reject:(DIPropertyFilter)block conformingProtocol:(Protocol *)protocol {
     [self enumerateAllClassProperties:^(Class class, objc_property_t property) {
         DIRuntimeEnumeratePropertyGetter(property, ^(SEL getter) {
             DIRuntimeEnumeratePropertyType(property, ^(Class propertyClass, NSSet<Protocol *> * propertyProtocols) {
                 NSString *propertyName = [NSString stringWithUTF8String:property_getName(property)];
                 if (block(class, propertyName, propertyClass, propertyProtocols)) {
-                    [self deinject:class getter:getter];
+                    [self reject:class getter:getter];
                 }
             });
         });
@@ -145,7 +145,7 @@ static void DIInjectionsBackupWrite(Class class, SEL selector, IMP imp) {
     });
 }
 
-+ (void)deinject:(Class)class getter:(SEL)getter {
++ (void)reject:(Class)class getter:(SEL)getter {
     if (!DIInjectionsBackupRead(class, getter)) {
         return;
     }
@@ -182,22 +182,22 @@ static void DIInjectionsBackupWrite(Class class, SEL selector, IMP imp) {
     [self inject:block conformingProtocol:nil];
 }
 
-+ (void)deinject:(DIPropertyFilter)block {
-    [self deinject:block conformingProtocol:@protocol(DIInject)];
++ (void)reject:(DIPropertyFilter)block {
+    [self reject:block conformingProtocol:@protocol(DIInject)];
 }
 
-+ (void)deinjectAll {
-    [self deinject:^BOOL(Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
++ (void)rejectAll {
+    [self reject:^BOOL(Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
         return YES;
     } conformingProtocol:@protocol(DIInject)];
 }
 
-+ (void)forceDeinject:(DIPropertyFilter)block {
-    [self deinject:block conformingProtocol:nil];
++ (void)forceReject:(DIPropertyFilter)block {
+    [self reject:block conformingProtocol:nil];
 }
 
-+ (void)forceDeinjectAll {
-    [self deinject:^BOOL(Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
++ (void)forceRejectAll {
+    [self reject:^BOOL(Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
         return YES;
     } conformingProtocol:nil];
 }
@@ -210,8 +210,8 @@ static void DIInjectionsBackupWrite(Class class, SEL selector, IMP imp) {
     } conformingProtocol:@protocol(DILazy)];
 }
 
-+ (void)lazyDeinject {
-    [self deinject:^BOOL(Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
++ (void)lazyReject {
+    [self reject:^BOOL(Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
         return YES;
     } conformingProtocol:@protocol(DILazy)];
 }

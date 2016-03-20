@@ -152,9 +152,9 @@ You can see parameters description right in source code comments.
    + (void)inject:(Class)class getter:(SEL)getter block:(DIGetter)block;
       ```
 
-3. Deinject concrete property injection
+3. Reject concrete property injection
    ```objective-c
-   + (void)deinject:(Class)class getter:(SEL)getter;
+   + (void)reject:(Class)class getter:(SEL)getter;
    ```
 
 4. Inject **values** into class properties marked explicitly with `<DIInject>` protocol.
@@ -177,24 +177,24 @@ You can see parameters description right in source code comments.
    + (void)forceInjectBlock:(DIPropertyGetterBlock)block;
      ```
 
-8. Deinject some injections marked explicitly with `<DIInject>` protocol.
+8. Reject some injections marked explicitly with `<DIInject>` protocol.
    ```objective-c
-   + (void)deinject:(DIPropertyFilter)block;
+   + (void)reject:(DIPropertyFilter)block;
    ```
 
-9. Deinject all injections marked explicitly with `<DIInject>` protocol.
+9. Reject all injections marked explicitly with `<DIInject>` protocol.
    ```objective-c
-   + (void)deinjectAll;
+   + (void)rejectAll;
    ```
 
-10. Deinject some injections even **not** marked explicitly with `<DIInject>` protocol.
+10. Reject some injections even **not** marked explicitly with `<DIInject>` protocol.
    ```objective-c
-   + (void)forceDeinject:(DIPropertyFilter)block;
+   + (void)forceReject:(DIPropertyFilter)block;
    ```
 
-11.  Deinject **all** injections and marked explicitly with `<DIInject>` and `<DILazy>` protocols.
+11.  Reject **all** injections and marked explicitly with `<DIInject>` and `<DILazy>` protocols.
    ```objective-c
-   + (void)forceDeinjectAll;
+   + (void)forceRejectAll;
    ```
 
 12. Inject properties marked with `<DILazy>` protocol using block: `^{ return [[class alloc] init]; }`
@@ -202,9 +202,9 @@ You can see parameters description right in source code comments.
    + (void)lazy;
    ```
    
-13. Deinject all injections marked explicitly with `<DILazy>` protocol.
+13. Reject all injections marked explicitly with `<DILazy>` protocol.
    ```objective-c
-   + (void)lazyDeinject;
+   + (void)lazyReject;
    ```
 
 14. Overriden `debugDescription` method to see tree of classes and injected properties

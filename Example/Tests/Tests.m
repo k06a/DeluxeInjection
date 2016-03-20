@@ -115,7 +115,7 @@
     XCTAssertEqualObjects(test.classObject, answer2);
 }
 
-- (void)testDeinjectAll
+- (void)testRejectAll
 {
     [DeluxeInjection injectBlock:^DIGetter (Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
         if (propertyClass == [NSMutableArray class]) {
@@ -126,7 +126,7 @@
         return nil;
     }];
     
-    [DeluxeInjection deinjectAll];
+    [DeluxeInjection rejectAll];
     
     XCTAssertFalse([DeluxeInjection checkInjected:[TestType class] getter:@selector(classObject)]);
     XCTAssertFalse([DeluxeInjection checkInjected:[TestType class] getter:@selector(protocolObject)]);
