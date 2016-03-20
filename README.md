@@ -47,11 +47,11 @@ Feedabck *feedback = [Feedback alloc] initWithSettings: ... ];
     if (propertyClass == [Feedback class]) {
     	return feedback;
     }
-    return [DIDoNotInject it];
+    return [DIDoNotInject it]; // Special value to skip injection for propertyName of targetClass
 }];
 ```
 
-And you is allowed to make a decision a return to value based on all this stuff:
+And you is allowed to make a decision to return value based on all this stuff:
 
 * Target class for injection – `Class targetClass`
 * Property name in string representation – `NSString *propertyName`
@@ -91,7 +91,7 @@ Just one keyword will do this for you:
 @end
 ```
 
-Sure it works with generic types:
+Of course this will work for generic types:
 
 ```objective-c
 @property (strong, nonatomic) NSMutableArray<NSString *><DILazy> *items;
@@ -99,13 +99,14 @@ Sure it works with generic types:
 ```
 
 This all will be done after calling this:
+
 ```objective-c
 [DeluxeInjection injectLazy];
 ```
 
 #### Force injection
 
-You can inject any class property you want ether without `DIInject` specification using `forceInject:`:
+You can force inject any property of any class even without `DIInject` specification using `forceInject:` method:
 
 ```objective-c
 @interface TestClass : SomeSuperclass
@@ -121,7 +122,7 @@ Network *network = [Network alloc] initWithSettings: ... ];
     if ([target isKindOfClass:[TestClass class]] && propertyClass == [Network class]) {
     	return network;
     }
-    return [DIDoNotInject it];
+    return [DIDoNotInject it]; // Special value to skip injection for propertyName of targetClass
 }];
 ```
 
@@ -129,7 +130,7 @@ Network *network = [Network alloc] initWithSettings: ... ];
 
 You are also able to use methods `injectBlock:` and `forceInjectBlock:` to return `DIResult` block to provide injected getter block or `nil` otherwise. You may wanna use this methods if wanna make a decision to return value on target object. Maybe return different mutable copies for different targets or etc.
 
-For example this usage will inject only properties of types `NSMutableArray` and `NSMutableDictionary` with 2 prepared objects using two different ways short and long:
+For example this will inject only properties of types `NSMutableArray` and `NSMutableDictionary` with 2 prepared objects using two different but equal ways:
 
 ```objective-c
 [DeluxeInjection injectBlock:^DIGetter (Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
@@ -146,15 +147,15 @@ For example this usage will inject only properties of types `NSMutableArray` and
             return *ivar;
         };
     }
-    return nil; // It is also safe to return [DIDoNotInject it] :)
+    return nil; // It is also safe to return a [DIDoNotInject it] here :)
 }];
 ```
 
-Whole block will be called once and returned `DIResult` blocks will be called each time instance variable will need new non-nil value.
+Whole block will be called once for each property of each class. Returned `DIResult` blocks will be used as injected getter. Helper function `DIGetterIfIvarIsNil` allows to skip boilerplate *if-ivar-is-nil-then-assing-ivar-and-return-ivar*.
 
 #### All methods documentation
 
-You can see parameters description right in source code comments.
+You can see methods and arguments dicumentation right in Xcode.
 
 1. Check if property of class is injected
    ```objective-c
@@ -233,7 +234,7 @@ You can see parameters description right in source code comments.
 
 ## Performance and Testing
 
-Enumeration of 15.000 classes during injection tooks 0.022 sec. You can find this performance test and other tests in Example project. I am planning to add as many tests as possible to detect all possible problems.
+Enumeration of 15.000 classes during injection tooks 0.022 sec. You can find this performance test and other tests in Example project. I am planning to add as many tests as possible to detect all possible problems. May be you wanna help me with tests?
 
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
 
@@ -248,8 +249,17 @@ pod 'DeluxeInjection'
 
 ## Author
 
-Anton Bukov, k06aaa@gmail.com
+Anton Bukov
+k06aaa@gmail.com
+https://twitter.com/k06a
 
 ## License
 
 DeluxeInjection is available under the MIT license. See the LICENSE file for more info.
+
+## Contribution
+
+1. Fork repository
+2. Create new branch from master
+3. Commit to your newly created branch
+4. Open Pull Request and we will talk :)
