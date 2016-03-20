@@ -178,7 +178,10 @@ DIGetter DIGetterIfIvarIsNil(DIGetterWithoutIvar getter) {
         const char *getterTypes = method_getTypeEncoding(getterMethod);
         IMP getterMethodImp = method_getImplementation(getterMethod);
         DIInjectionsBackupWrite(class, getter, getterMethodImp);
-        class_replaceMethod(class, getter, newGetterImp, getterTypes);
+        IMP replacedImp = class_replaceMethod(class, getter, newGetterImp, getterTypes);
+        if (associationNeeded) {
+            imp_removeBlock(replacedImp);
+        }
         
         if (associationNeeded) {
             void (^newSetterBlock)(id,id) = ^void(id self, id newValue) {
@@ -189,7 +192,8 @@ DIGetter DIGetterIfIvarIsNil(DIGetterWithoutIvar getter) {
             IMP newSetterImp = imp_implementationWithBlock(newSetterBlock);
             Method setterMethod = class_getInstanceMethod(self, @selector(setterExample:));
             const char *setterTypes = method_getTypeEncoding(setterMethod);
-            class_addMethod(class, setter, newSetterImp, setterTypes);
+            IMP replacedImp = class_replaceMethod(class, setter, newSetterImp, setterTypes);
+            imp_removeBlock(replacedImp);
         }
     });
 }
