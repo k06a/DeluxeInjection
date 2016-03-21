@@ -293,16 +293,15 @@ DIGetter DIGetterIfIvarIsNil(DIGetterWithoutIvar getter) {
     });
 }
 
-
 + (void)inject:(DIPropertyGetter)block {
     [self inject:^DIGetter (Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
         id value = block(targetClass, propertyName, propertyClass, propertyProtocols);
         if (value == [DIDoNotInject it]) {
             return nil;
         }
-        return ^id(id target, id *ivar) {
+        return DIGetterIfIvarIsNil(^id(id target) {
             return value;
-        };
+        });
     } conformingProtocol:@protocol(DIInject)];
 }
 
@@ -316,9 +315,9 @@ DIGetter DIGetterIfIvarIsNil(DIGetterWithoutIvar getter) {
         if (value == [DIDoNotInject it]) {
             return nil;
         }
-        return ^id(id target, id *ivar) {
+        return DIGetterIfIvarIsNil(^id(id target) {
             return value;
-        };
+        });
     } conformingProtocol:nil];
 }
 

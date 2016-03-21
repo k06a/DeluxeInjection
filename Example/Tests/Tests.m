@@ -43,18 +43,6 @@
 
 @implementation Tests
 
-- (void)setUp
-{
-    [super setUp];
-    // Put setup code here. This method is called before the invocation of each test method in the class.
-}
-
-- (void)tearDown
-{
-    // Put teardown code here. This method is called after the invocation of each test method in the class.
-    [super tearDown];
-}
-
 - (void)testInjectByClass
 {
     NSArray *answer1 = @[@1,@2,@3];
@@ -69,9 +57,9 @@
     
     TestType *test = [[TestType alloc] init];
     XCTAssertEqualObjects(test.classObject, answer1);
-    test.classObject = nil;
-    XCTAssertEqualObjects(test.classObject, answer1);
     test.classObject = [answer2 mutableCopy];
+    XCTAssertEqualObjects(test.classObject, answer2);
+    test.classObject = nil;
     XCTAssertEqualObjects(test.classObject, answer1);
 }
 
@@ -82,17 +70,17 @@
     
     [DeluxeInjection inject:^id(Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
         if ([propertyProtocols containsObject:@protocol(TestProtocol)]) {
-            return answer2;
+            return answer1;
         }
         return [DIDoNotInject it];
     }];
     
     TestType *test = [[TestType alloc] init];
-    XCTAssertNotNil(test.protocolObject);
-    test.protocolObject = nil;
-    XCTAssertNotNil(test.protocolObject);
-    test.protocolObject = answer1;
+    XCTAssertEqualObjects(test.protocolObject, answer1);
+    test.protocolObject = answer2;
     XCTAssertEqualObjects(test.protocolObject, answer2);
+    test.protocolObject = nil;
+    XCTAssertEqualObjects(test.protocolObject, answer1);
 }
 
 - (void)testInjectBlock
@@ -116,10 +104,10 @@
     
     TestType *test = [[TestType alloc] init];
     XCTAssertEqualObjects(test.classObject, answer1);
-    test.classObject = nil;
-    XCTAssertEqualObjects(test.classObject, answer1);
     test.classObject = [answer2 mutableCopy];
     XCTAssertEqualObjects(test.classObject, answer2);
+    test.classObject = nil;
+    XCTAssertEqualObjects(test.classObject, answer1);
 }
 
 - (void)testRejectAll
@@ -148,6 +136,11 @@
     
     XCTAssertEqualObjects(test.dynamicClassObject, answer2);
     XCTAssertEqualObjects(test.dynamicProtocolObject, answer2);
+
+    XCTAssertNoThrow(test.dynamicClassObject);
+    XCTAssertNoThrow(test.dynamicProtocolObject);
+    XCTAssertNoThrow(test.dynamicClassObject = nil);
+    XCTAssertNoThrow(test.dynamicProtocolObject = nil);
     
     XCTAssertTrue([DeluxeInjection checkInjected:[TestType class] getter:@selector(classObject)]);
     XCTAssertTrue([DeluxeInjection checkInjected:[TestType class] getter:@selector(protocolObject)]);
@@ -187,10 +180,10 @@
     
     TestType *test = [[TestType alloc] init];
     XCTAssertEqualObjects(test.dynamicClassObject, answer1);
-    test.dynamicClassObject = nil;
-    XCTAssertEqualObjects(test.dynamicClassObject, answer1);
     test.dynamicClassObject = [answer2 mutableCopy];
     XCTAssertEqualObjects(test.dynamicClassObject, answer2);
+    test.dynamicClassObject = nil;
+    XCTAssertEqualObjects(test.dynamicClassObject, answer1);
 }
 
 - (void)testInjectDynamicByProtocol
@@ -200,17 +193,17 @@
     
     [DeluxeInjection inject:^id(Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *protocols) {
         if ([protocols containsObject:@protocol(TestProtocol)]) {
-            return answer2;
+            return answer1;
         }
         return [DIDoNotInject it];
     }];
     
     TestType *test = [[TestType alloc] init];
-    XCTAssertNotNil(test.dynamicProtocolObject);
-    test.dynamicProtocolObject = nil;
-    XCTAssertNotNil(test.dynamicProtocolObject);
-    test.dynamicProtocolObject = answer1;
+    XCTAssertEqualObjects(test.dynamicProtocolObject, answer1);
+    test.dynamicProtocolObject = answer2;
     XCTAssertEqualObjects(test.dynamicProtocolObject, answer2);
+    test.dynamicProtocolObject = nil;
+    XCTAssertEqualObjects(test.dynamicProtocolObject, answer1);
 }
 
 - (void)testLazy
