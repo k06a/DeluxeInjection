@@ -155,7 +155,7 @@ Whole block will be called once for each property of each class. Returned `DIRes
 
 #### All methods documentation
 
-You can see methods and arguments dicumentation right in Xcode.
+You can see methods and arguments documentation right in Xcode.
 
 1. Check if property of class is injected
    ```objective-c
@@ -212,7 +212,7 @@ You can see methods and arguments dicumentation right in Xcode.
    + (void)forceRejectAll;
    ```
 
-12. Inject properties marked with `<DILazy>` protocol using block: `^{ return [[class alloc] init]; }`
+12. Inject properties marked with `<DILazy>` protocol using block: `^{ if (_ivar == nil) { _ivar = [[propertyClass alloc] init]; return _ivar; }`
    ```objective-c
    + (void)injectLazy;
    ```
@@ -227,7 +227,7 @@ You can see methods and arguments dicumentation right in Xcode.
    + (NSString *)debugDescription;
    ```
 
-15. Transforms getter block without \c ivar argument to block with \c ivar argument
+15. Transforms getter block without `ivar` argument to block with `ivar` argument
    ```objective-c
    DIGetter DIGetterIfIvarIsNil(DIGetterWithoutIvar getter);
    ```
