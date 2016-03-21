@@ -1,0 +1,14 @@
+PODS:
+  - DeluxeInjection (0.1.0)
+
+DEPENDENCIES:
+  - DeluxeInjection (from `../`)
+
+EXTERNAL SOURCES:
+  DeluxeInjection:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  DeluxeInjection: f2d6b6eaf9e8354ce8fa8d95143e8bdd811af55b
+
+COCOAPODS: 0.39.0
