@@ -48,11 +48,11 @@
     NSArray *answer1 = @[@1,@2,@3];
     NSArray *answer2 = @[@4,@5,@6];
 
-    [DeluxeInjection inject:^id(Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
+    [DeluxeInjection inject:^id(Class targetClass, SEL getter, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
         if (propertyClass == [NSMutableArray class]) {
             return [answer1 mutableCopy];
         }
-        return [DIDoNotInject it];
+        return [DeluxeInjection doNotInject];
     }];
     
     TestType *test = [[TestType alloc] init];
@@ -68,11 +68,11 @@
     id answer1 = @777;
     id answer2 = @666;
     
-    [DeluxeInjection inject:^id(Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
+    [DeluxeInjection inject:^id(Class targetClass, SEL getter, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
         if ([propertyProtocols containsObject:@protocol(TestProtocol)]) {
             return answer1;
         }
-        return [DIDoNotInject it];
+        return [DeluxeInjection doNotInject];
     }];
     
     TestType *test = [[TestType alloc] init];
@@ -88,7 +88,7 @@
     NSArray *answer1 = @[@1,@2,@3];
     NSArray *answer2 = @[@4,@5,@6];
     
-    [DeluxeInjection injectBlock:^DIGetter (Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
+    [DeluxeInjection injectBlock:^DIGetter (Class targetClass, SEL getter, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
         if (propertyClass == [NSMutableArray class]) {
             return DIGetterIfIvarIsNil(^id(id target) {
                 return [answer1 mutableCopy];
@@ -115,7 +115,7 @@
     NSArray *answer1 = @[@1,@2,@3];
     NSArray *answer2 = @[@4,@5,@6];
     
-    [DeluxeInjection injectBlock:^DIGetter (Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
+    [DeluxeInjection injectBlock:^DIGetter (Class targetClass, SEL getter, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
         if (propertyClass == [NSMutableArray class]) {
             return DIGetterIfIvarIsNil(^id(id target) {
                 return [answer1 mutableCopy];
@@ -169,7 +169,7 @@
     NSArray *answer1 = @[@1,@2,@3];
     NSArray *answer2 = @[@4,@5,@6];
     
-    [DeluxeInjection injectBlock:^DIGetter(Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *protocols) {
+    [DeluxeInjection injectBlock:^DIGetter(Class targetClass, SEL getter, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *protocols) {
         if (propertyClass == [NSMutableArray class]) {
             return DIGetterIfIvarIsNil(^id (id target) {
                 return [answer1 mutableCopy];
@@ -191,11 +191,11 @@
     id answer1 = @777;
     id answer2 = @666;
     
-    [DeluxeInjection inject:^id(Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *protocols) {
+    [DeluxeInjection inject:^id(Class targetClass, SEL getter, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *protocols) {
         if ([protocols containsObject:@protocol(TestProtocol)]) {
             return answer1;
         }
-        return [DIDoNotInject it];
+        return [DeluxeInjection doNotInject];
     }];
     
     TestType *test = [[TestType alloc] init];
@@ -221,7 +221,7 @@
 
 - (void)testInjectPreformance {
     [self measureBlock:^{
-        [DeluxeInjection inject:^id (Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
+        [DeluxeInjection inject:^id (Class targetClass, SEL getter, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
             return nil;
         }];
     }];
@@ -229,8 +229,8 @@
 
 - (void)testForceInjectPreformance {
     [self measureBlock:^{
-        [DeluxeInjection forceInject:^id (Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
-            return [DIDoNotInject it];
+        [DeluxeInjection forceInject:^id (Class targetClass, SEL getter, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
+            return [DeluxeInjection doNotInject];
         }];
     }];
 }

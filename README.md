@@ -48,7 +48,7 @@ Feedabck *feedback = [Feedback alloc] initWithSettings: ... ];
     if (propertyClass == [Feedback class]) {
     	return feedback;
     }
-    return [DIDoNotInject it]; // Special value to skip injection for propertyName of targetClass
+    return [DeluxeInjection doNotInject]; // Special value to skip injection for propertyName of targetClass
 }];
 ```
 
@@ -123,7 +123,7 @@ Network *network = [Network alloc] initWithSettings: ... ];
     if ([target isKindOfClass:[TestClass class]] && propertyClass == [Network class]) {
     	return network;
     }
-    return [DIDoNotInject it]; // Special value to skip injection for propertyName of targetClass
+    return [DeluxeInjection doNotInject]; // Special value to skip injection for propertyName of targetClass
 }];
 ```
 
@@ -148,7 +148,7 @@ For example this will inject only properties of types `NSMutableArray` and `NSMu
             return *ivar;
         };
     }
-    return nil; // It is also safe to return a [DIDoNotInject it] here :)
+    return nil; // It is also safe to return a [DeluxeInjection doNotInject] here :)
 }];
 ```
 
