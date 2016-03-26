@@ -46,6 +46,10 @@ void DIRuntimeEnumerateClassProperties(Class class, void (^block)(objc_property_
     free(properties);
 }
 
+objc_property_t DIRuntimeEnumerateClassGetProperty(Class class, NSString *propertyName) {
+    return class_getProperty(class, propertyName.UTF8String);
+}
+
 void DIRuntimeEnumerateClassIvars(Class class, void (^block)(Ivar ivar)) {
     unsigned int ivarsCount;
     Ivar* ivars = class_copyIvarList(class, &ivarsCount);
@@ -120,6 +124,10 @@ NSString *DIRuntimeGetPropertyAttribute(objc_property_t property, char *attrribu
     return str;
 }
 
+BOOL DIRuntimeGetPropertyIsWeak(objc_property_t property) {
+    return DIRuntimeGetPropertyAttribute(property, "W") != nil;
+}
+
 SEL DIRuntimeGetPropertyGetter(objc_property_t property) {
     char *value = property_copyAttributeValue(property, "G");
     if (value) {
@@ -177,7 +185,7 @@ void DIRuntimeGetPropertyType(objc_property_t property, void (^block)(Class clas
 objc_AssociationPolicy DIRuntimePropertyAssociationPolicy(objc_property_t property) {
     if (DIRuntimeGetPropertyAttribute(property, "N") != nil) {
         if (DIRuntimeGetPropertyAttribute(property, "W")) {
-            return OBJC_ASSOCIATION_ASSIGN; // Weaks are not supported
+            return OBJC_ASSOCIATION_RETAIN; // Weaks are not supported
         }
         if (DIRuntimeGetPropertyAttribute(property, "C") != nil) {
             return OBJC_ASSOCIATION_COPY_NONATOMIC;
@@ -187,7 +195,7 @@ objc_AssociationPolicy DIRuntimePropertyAssociationPolicy(objc_property_t proper
         }
     } else {
         if (DIRuntimeGetPropertyAttribute(property, "W")) {
-            return OBJC_ASSOCIATION_ASSIGN; // Weaks are not supported
+            return OBJC_ASSOCIATION_RETAIN; // Weaks are not supported
         }
         if (DIRuntimeGetPropertyAttribute(property, "C") != nil) {
             return OBJC_ASSOCIATION_COPY;

@@ -22,6 +22,7 @@
 
 @property (strong, nonatomic) NSMutableArray<DIInject> *dynamicClassObject;
 @property (strong, nonatomic) id<TestProtocol,DIInject> dynamicProtocolObject;
+@property (weak, nonatomic) NSString *dynamicWeakObject;
 
 @property (strong, nonatomic) NSMutableArray<NSString *><DILazy> *lazyArray;
 @property (strong, nonatomic) NSMutableDictionary<NSString *, NSString *><DILazy> *lazyDict;
@@ -35,6 +36,7 @@
 
 @dynamic dynamicClassObject;
 @dynamic dynamicProtocolObject;
+@dynamic dynamicWeakObject;
 
 @end
 
@@ -207,6 +209,28 @@
     XCTAssertEqualObjects(test.dynamicProtocolObject, answer2);
     test.dynamicProtocolObject = nil;
     XCTAssertEqualObjects(test.dynamicProtocolObject, answer1);
+}
+
+- (void)testDynamicWeak {
+    __weak id weakAnswer = nil;
+    TestType *test = [[TestType alloc] init];
+    @autoreleasepool {
+        id answer1 = [@[@1,@2,@3,@4,@5] mutableCopy];
+        
+        [DeluxeInjection forceInject:^id(Class targetClass, SEL getter, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *protocols) {
+            if ([propertyName isEqualToString:NSStringFromSelector(@selector(dynamicWeakObject))]) {
+                return answer1;
+            }
+            return [DeluxeInjection doNotInject];
+        }];
+        
+        weakAnswer = answer1;
+        test.dynamicWeakObject = answer1;
+        XCTAssertEqualObjects(weakAnswer, answer1);
+        XCTAssertEqualObjects(test.dynamicWeakObject, answer1);
+    }
+    XCTAssertNil(weakAnswer);
+    XCTAssertNil(test.dynamicWeakObject);
 }
 
 - (void)testLazy

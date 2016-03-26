@@ -6,6 +6,7 @@
 //
 //
 
+#import "DIRuntimeRoutines.h"
 #import "DIForceInject.h"
 
 @implementation DeluxeInjection (DIForceInject)
@@ -16,9 +17,18 @@
         if (value == [DeluxeInjection doNotInject]) {
             return nil;
         }
-        return @[DIGetterIfIvarIsNil(^id(id target) {
-            return value;
-        }), [DeluxeInjection doNotInject]];
+        
+        objc_property_t property = DIRuntimeEnumerateClassGetProperty(targetClass, propertyName);
+        if (DIRuntimeGetPropertyIsWeak(property)) {
+            __weak id weakValue = value;
+            return @[DIGetterIfIvarIsNil(^id(id target) {
+                return weakValue;
+            }), [DeluxeInjection doNotInject]];
+        } else {
+            return @[DIGetterIfIvarIsNil(^id(id target) {
+                return value;
+            }), [DeluxeInjection doNotInject]];
+        }
     } conformingProtocol:nil];
 }
 

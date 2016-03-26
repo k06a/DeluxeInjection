@@ -135,6 +135,19 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
 
 //
 
+@interface DIWeakWrapper : NSObject {
+    @public
+    __weak id object;
+}
+
+@end
+
+@implementation DIWeakWrapper
+
+@end
+
+//
+
 @implementation DeluxeInjection
 
 #pragma mark - Sample getter and setter
@@ -194,30 +207,49 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
         BOOL associationNeeded = (key == nil);
         SEL associationKey = NSSelectorFromString([@"DI_" stringByAppendingString:propertyName]);
         objc_AssociationPolicy associationPolicy = DIRuntimePropertyAssociationPolicy(property);
+        BOOL weakAssociation = DIRuntimeGetPropertyAttribute(property, "W");
         
         id (^newGetterBlock)(id) = nil;
         if (getterToInject) {
             if (!associationNeeded) {
                 newGetterBlock = ^id(id target){
                     id ivar = [target valueForKey:key];
-                    __weak id oldIvar = ivar;
                     id result = getterToInject(target, &ivar);
-                    if (ivar != oldIvar) {
-                        [target setValue:ivar forKey:key];
-                    }
+                    [target setValue:ivar forKey:key];
                     return result;
                 };
             } else {
-                newGetterBlock = ^id(id target){
-                    id ivar = objc_getAssociatedObject(target, associationKey);
-                    BOOL ivarWasNil = (ivar == nil);
-                    id result = getterToInject(target, &ivar);
-                    if (ivar && ivarWasNil) {
-                        DIAssociatesWrite(class, getter, target);
-                    }
-                    objc_setAssociatedObject(target, associationKey, ivar, associationPolicy);
-                    return result;
-                };
+                if (weakAssociation) {
+                    newGetterBlock = ^id(id target){
+                        DIWeakWrapper *wrapper = objc_getAssociatedObject(target, associationKey);
+                        BOOL wrapperWasNil = (wrapper == nil);
+                        if (wrapper == nil) {
+                            wrapper = [[DIWeakWrapper alloc] init];
+                        }
+                        id ivar = ((DIWeakWrapper *)wrapper)->object;
+                        BOOL ivarWasNil = (ivar == nil);
+                        id result = getterToInject(target, &ivar);
+                        if (ivar && ivarWasNil) {
+                            DIAssociatesWrite(class, getter, target);
+                        }
+                        wrapper->object = ivar;
+                        if (wrapperWasNil) {
+                            objc_setAssociatedObject(target, associationKey, wrapper, associationPolicy);
+                        }
+                        return result;
+                    };
+                } else {
+                    newGetterBlock = ^id(id target){
+                        id ivar = objc_getAssociatedObject(target, associationKey);
+                        BOOL ivarWasNil = (ivar == nil);
+                        id result = getterToInject(target, &ivar);
+                        if (ivar && ivarWasNil) {
+                            DIAssociatesWrite(class, getter, target);
+                        }
+                        objc_setAssociatedObject(target, associationKey, ivar, associationPolicy);
+                        return result;
+                    };
+                }
             }
         }
         
@@ -230,15 +262,29 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
                     [target setValue:ivar forKey:key];
                 };
             } else {
-                newSetterBlock = ^void(id target, id newValue){
-                    id ivar = objc_getAssociatedObject(target, associationKey);
-                    BOOL ivarWasNil = (ivar == nil);
-                    setterToInject(target, &ivar, newValue);
-                    if (ivar && ivarWasNil) {
-                        DIAssociatesWrite(class, getter, target);
-                    }
-                    objc_setAssociatedObject(target, associationKey, ivar, associationPolicy);
-                };
+                if (weakAssociation) {
+                    newSetterBlock = ^void(id target, id newValue){
+                        DIWeakWrapper *wrapper = objc_getAssociatedObject(target, associationKey) ?: [[DIWeakWrapper alloc] init];
+                        id ivar = wrapper->object;
+                        BOOL ivarWasNil = (ivar == nil);
+                        setterToInject(target, &ivar, newValue);
+                        if (ivar && ivarWasNil) {
+                            DIAssociatesWrite(class, getter, target);
+                        }
+                        wrapper->object = ivar;
+                        objc_setAssociatedObject(target, associationKey, wrapper, associationPolicy);
+                    };
+                } else {
+                    newSetterBlock = ^void(id target, id newValue){
+                        id ivar = objc_getAssociatedObject(target, associationKey);
+                        BOOL ivarWasNil = (ivar == nil);
+                        setterToInject(target, &ivar, newValue);
+                        if (ivar && ivarWasNil) {
+                            DIAssociatesWrite(class, getter, target);
+                        }
+                        objc_setAssociatedObject(target, associationKey, ivar, associationPolicy);
+                    };
+                }
             }
         }
         
@@ -256,9 +302,17 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
         
         // If need association and not have setter so we need implement simple setter
         if (associationNeeded && !newSetterBlock) {
-            newSetterBlock = ^void(id target, id newValue) {
-                objc_setAssociatedObject(target, associationKey, newValue, associationPolicy);
-            };
+            if (weakAssociation) {
+                newSetterBlock = ^void(id target, id newValue) {
+                    DIWeakWrapper *wrapper = objc_getAssociatedObject(target, associationKey) ?: [[DIWeakWrapper alloc] init];
+                    wrapper->object = newValue;
+                    objc_setAssociatedObject(target, associationKey, wrapper, associationPolicy);
+                };
+            } else {
+                newSetterBlock = ^void(id target, id newValue) {
+                    objc_setAssociatedObject(target, associationKey, newValue, associationPolicy);
+                };
+            }
         }
         
         if (newSetterBlock) {
