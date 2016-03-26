@@ -172,6 +172,10 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
         NSString *propertyName = [NSString stringWithUTF8String:property_getName(property)];
         if (blockFactory) {
             NSArray *blocks = blockFactory(class, getter, setter, propertyName, propertyClass, propertyProtocols);
+            NSAssert(blocks == nil || blocks == [DeluxeInjection doNotInject] ||
+                     ([blocks isKindOfClass:[NSArray class]] && blocks.count == 2),
+                     @"Provide nil, [DeluxeInjection doNotInject] or array with getter and setter blocks");
+            
             if (blocks.firstObject && blocks.firstObject != [DeluxeInjection doNotInject]) {
                 getterToInject = blocks.firstObject;
             }
@@ -188,7 +192,7 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
         NSString *key = propertyIvar ? [NSString stringWithUTF8String:ivar_getName(propertyIvar)] : nil;
         
         BOOL associationNeeded = (key == nil);
-        SEL associationKey = NSSelectorFromString([@"di_" stringByAppendingString:propertyName]);
+        SEL associationKey = NSSelectorFromString([@"DI_" stringByAppendingString:propertyName]);
         objc_AssociationPolicy associationPolicy = DIRuntimePropertyAssociationPolicy(property);
         
         id (^newGetterBlock)(id) = nil;
@@ -327,7 +331,7 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
     NSArray *associated = DIAssociatesRead(class, getter);
     if (associated) {
         NSString *propertyName = [NSString stringWithUTF8String:property_getName(property)];
-        SEL associationKey = NSSelectorFromString([@"di_" stringByAppendingString:propertyName]);
+        SEL associationKey = NSSelectorFromString([@"DI_" stringByAppendingString:propertyName]);
         objc_AssociationPolicy associationPolicy = DIRuntimePropertyAssociationPolicy(property);
         for (id object in associated) {
             objc_setAssociatedObject(object, associationKey, nil, associationPolicy);
