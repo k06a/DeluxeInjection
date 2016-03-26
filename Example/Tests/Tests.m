@@ -26,6 +26,9 @@
 @property (strong, nonatomic) NSMutableArray<NSString *><DILazy> *lazyArray;
 @property (strong, nonatomic) NSMutableDictionary<NSString *, NSString *><DILazy> *lazyDict;
 
+@property (strong, nonatomic) NSNumber<DIDefaults> *defaultsNumber;
+@property (strong, nonatomic) NSString<DIDefaults> *defaultsString;
+
 @end
 
 @implementation TestType
@@ -217,6 +220,27 @@
     test.lazyDict = nil;
     XCTAssertNotNil(test.lazyArray);
     XCTAssertNotNil(test.lazyDict);
+}
+
+- (void)testDefaults
+{
+    id answer1 = @777;
+    id answer2 = @"abc";
+    
+    NSString *key1 = NSStringFromSelector(@selector(defaultsNumber));
+    NSString *key2 = NSStringFromSelector(@selector(defaultsString));
+    
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:key1];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:key2];
+    
+    TestType *test = [[TestType alloc] init];
+    [DeluxeInjection injectDefaults];
+    
+    test.defaultsNumber = answer1;
+    test.defaultsString = answer2;
+    
+    XCTAssertEqualObjects(answer1, [[NSUserDefaults standardUserDefaults] objectForKey:key1]);
+    XCTAssertEqualObjects(answer2, [[NSUserDefaults standardUserDefaults] objectForKey:key2]);
 }
 
 - (void)testInjectPreformance {

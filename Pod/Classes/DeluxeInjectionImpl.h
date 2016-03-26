@@ -107,6 +107,12 @@ typedef NSArray *_Nullable (^DIPropertyBlock)(Class targetClass, SEL getter, SEL
 typedef BOOL (^DIPropertyFilter)(Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols);
 
 /**
+ *  Helper methods to create DIGetter and DISetter with Xcode autocomplete :)
+ */
+DIGetter DIGetterMake(DIGetter getter);
+DISetter DISetterMake(DISetter setter);
+
+/**
  *  Transforms getter block without \c ivar argument to block with \c ivar argument this way:
  *  \code
  *return ^id(id target, id *ivar) {

@@ -3,6 +3,7 @@
 #import "DeluxeInjection.h"
 #import "DeluxeInjectionImpl.h"
 #import "DeluxeInjectionPlugin.h"
+#import "DIDefaults.h"
 #import "DIForceInject.h"
 #import "DIInject.h"
 #import "DILazy.h"

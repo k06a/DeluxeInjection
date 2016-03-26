@@ -10,3 +10,4 @@
 #import "DIForceInject.h"
 #import "DIInject.h"
 #import "DILazy.h"
+#import "DIDefaults.h"

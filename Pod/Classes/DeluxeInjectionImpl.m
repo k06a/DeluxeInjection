@@ -94,6 +94,14 @@ static void DIAssociatesRemove(Class class, SEL getter) {
 
 //
 
+DIGetter DIGetterMake(DIGetter getter) {
+    return getter;
+}
+
+DISetter DISetterMake(DISetter setter) {
+    return setter;
+}
+
 DIGetter DIGetterIfIvarIsNil(DIGetterWithoutIvar getter) {
     return ^id(id target, id *ivar) {
         if (*ivar == nil) {
