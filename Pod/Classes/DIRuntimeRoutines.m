@@ -151,7 +151,7 @@ void DIRuntimeGetPropertyType(objc_property_t property, void (^block)(Class clas
         type = [type substringWithRange:NSMakeRange(2, type.length - 3)];
     }
     
-    Class class = [NSObject class];
+    Class class = nil;
     NSUInteger location = [type rangeOfString:@"<"].location;
     if (location != 0 && location != NSNotFound) {
         class = NSClassFromString([type substringToIndex:location]);

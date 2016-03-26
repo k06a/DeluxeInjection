@@ -47,7 +47,7 @@ typedef id _Nullable (^DIGetterWithoutIvar)(id target);
  *
  *  @param targetClass       Class to be injected
  *  @param propertyName      Injected property name
- *  @param propertyClass     Class of injected property, at least NSObject
+ *  @param propertyClass     Class of injected property, may be \c nil in case of type \c id
  *  @param propertyProtocols Set of property protocols including all superprotocols
  *
  *  @return Injected value or \c nil
@@ -60,7 +60,7 @@ typedef id _Nullable (^DIPropertyGetter)(Class targetClass, SEL getter, NSString
  *  @param targetClass       Class to be injected
  *  @param getter            Selector of getter method
  *  @param propertyName      Property name to be injected
- *  @param propertyClass     Class of property to be injected, at least NSObject
+ *  @param propertyClass     Class of property to be injected, may be \c nil in case of type \c id
  *  @param propertyProtocols Set of property protocols including all superprotocols
  *
  *  @return Injectable block \c DIGetter or \c nil for skipping injection
@@ -73,7 +73,7 @@ typedef DIGetter _Nullable (^DIPropertyGetterBlock)(Class targetClass, SEL gette
  *  @param targetClass       Class to be injected
  *  @param setter            Selector of setter method
  *  @param propertyName      Property name to be injected
- *  @param propertyClass     Class of property to be injected, at least NSObject
+ *  @param propertyClass     Class of property to be injected, may be \c nil in case of type \c id
  *  @param propertyProtocols Set of property protocols including all superprotocols
  *
  *  @return Injectable block \c DISetter or \c [DeluxeInjecion \c doNotInject] for skipping injection
@@ -87,19 +87,19 @@ typedef DISetter _Nullable (^DIPropertySetterBlock)(Class targetClass, SEL sette
  *  @param getter            Selector of getter method
  *  @param setter            Selector of setter method
  *  @param propertyName      Property name to be injected
- *  @param propertyClass     Class of property to be injected, at least NSObject
+ *  @param propertyClass     Class of property to be injected, may be \c nil in case of type \c id
  *  @param propertyProtocols Set of property protocols including all superprotocols
  *
  *  @return Array of getter and settor injectable blocks or \c nil or \c [DeluxeInjecion \c doNotInject] for skipping injection
  */
-typedef NSArray *_Nullable (^DIPropertyBlock)(Class targetClass, SEL getter, SEL setter, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols);
+typedef NSArray *_Nullable (^DIPropertyBlock)(Class targetClass, SEL getter, SEL setter, NSString *propertyName, Class _Nullable propertyClass, NSSet<Protocol *> *propertyProtocols);
 
 /**
  *  Block to filter properties to be injected or not
  *
  *  @param targetClass       Class to be injected/rejected
  *  @param propertyName      Property name to be injected/rejected
- *  @param propertyClass     Class of property to be injected/rejected, at least NSObject
+ *  @param propertyClass     Class of property to be injected/rejected, may be \c nil in case of type \c id
  *  @param propertyProtocols Set of property protocols including all superprotocols
  *
  *  @return \c YES to inject/reject \c propertyName of \c targetClass or NO to not inject/reject

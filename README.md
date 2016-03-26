@@ -56,7 +56,7 @@ And you is allowed to make a decision to return value based on all this stuff:
 
 * Target class for injection – `Class targetClass`
 * Property name in string representation – `NSString *propertyName`
-* Class of property – `Class propertyClass`, will be at least NSObject
+* Class of property – `Class propertyClass`, may be *nil* in case of type *id*
 * Set of property protocols – `NSSet<Protocol *> *protocols`, including all superprotocols
 
 #### Laziness

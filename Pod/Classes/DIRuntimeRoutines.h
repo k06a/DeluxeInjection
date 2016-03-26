@@ -24,7 +24,7 @@ void DIRuntimeEnumerateProtocolProperties(Protocol *protocol, BOOL required, BOO
 NSString *DIRuntimeGetPropertyAttribute(objc_property_t property, char *attrribute);
 SEL DIRuntimeGetPropertyGetter(objc_property_t property);
 SEL DIRuntimeGetPropertySetter(objc_property_t property);
-void DIRuntimeGetPropertyType(objc_property_t property, void (^block)(Class class, NSSet<Protocol *> *protocols));
+void DIRuntimeGetPropertyType(objc_property_t property, void (^block)(Class _Nullable class, NSSet<Protocol *> *protocols));
 
 objc_AssociationPolicy DIRuntimePropertyAssociationPolicy(objc_property_t property);
 
