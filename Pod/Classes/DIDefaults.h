@@ -28,7 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @return Key to store in \c NSUserDefaults for propertyName of \c targetClass or \c nil to use \c propertyName
  */
-typedef NSString * _Nullable(^DIDefaultsKeyBlock)(Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols);
+typedef NSString * _Nullable (^DIDefaultsKeyBlock)(Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols);
 
 @interface DeluxeInjection (DIDefaults)
 

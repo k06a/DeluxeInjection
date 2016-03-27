@@ -6,6 +6,7 @@
 //
 //
 
+#import <objc/message.h>
 #import "DIRuntimeRoutines.h"
 #import "DeluxeInjection.h"
 
@@ -207,7 +208,7 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
         BOOL associationNeeded = (key == nil);
         SEL associationKey = NSSelectorFromString([@"DI_" stringByAppendingString:propertyName]);
         objc_AssociationPolicy associationPolicy = DIRuntimePropertyAssociationPolicy(property);
-        BOOL weakAssociation = DIRuntimeGetPropertyAttribute(property, "W");
+        BOOL weakAssociation = DIRuntimeGetPropertyIsWeak(property);
         
         id (^newGetterBlock)(id) = nil;
         if (getterToInject) {
