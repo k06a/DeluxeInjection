@@ -21,6 +21,8 @@
 
 #### Auto injection
 
+<img src="/images/AI.png" align="right" height="400px" hspace="10px" vspace="10px">
+
 First of all imagine what are you trying to inject?
 
 ```objective-c
@@ -60,6 +62,8 @@ And you is allowed to make a decision to return value based on all this stuff:
 * Set of property protocols – `NSSet<Protocol *> *protocols`, including all superprotocols
 
 #### Laziness
+
+<img src="/images/LI.png" align="right" height="400px" hspace="10px" vspace="10px">
 
 Do you really like this boilerplate?
 
@@ -106,6 +110,8 @@ This all will be done after calling this:
 ```
 
 #### Force injection
+
+<img src="/images/FI.png" align="right" height="400px" hspace="10px" vspace="10px">
 
 You can force inject any property of any class even without `DIInject` specification using `forceInject:` method:
 
