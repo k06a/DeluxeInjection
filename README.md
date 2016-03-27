@@ -15,8 +15,6 @@
 4. Inject both *ivar*-backed and `@dynamic` properties (over association)
 5. Easily access *ivar* inside injected getter
 
-*Propeties with both `@dynamic` and `weak` are not supported yet, coming soon. Are you really need them?*
-
 ## Usage
 
 #### Auto injection
@@ -28,7 +26,7 @@ First of all imagine what are you trying to inject?
 ```objective-c
 @interface SomeClass : SomeSuperclass
 
-@property (strong, nonatomic) Feedback *feedback;
+@property (nonatomic) Feedback *feedback;
 
 @end
 ```
@@ -37,7 +35,7 @@ Just one keyword will do this for you:
 ```objective-c
 @interface SomeClass : SomeSuperclass
 
-@property (strong, nonatomic) Feedback<DIInject> *feedback;
+@property (nonatomic) Feedback<DIInject> *feedback;
 
 @end
 ```
@@ -70,7 +68,7 @@ Do you really like this boilerplate?
 ```objective-c
 @interface SomeClass : SomeSuperclass
 
-@property (strong, nonatomic) NSMutableArray *items;
+@property (nonatomic) NSMutableArray *items;
 
 @end
 
@@ -91,7 +89,7 @@ Just one keyword will do this for you:
 ```objective-c
 @interface SomeClass : SomeSuperclass
 
-@property (strong, nonatomic) NSMutableArray<DILazy> *items;
+@property (nonatomic) NSMutableArray<DILazy> *items;
 
 @end
 ```
@@ -99,8 +97,8 @@ Just one keyword will do this for you:
 Of course this will work for generic types:
 
 ```objective-c
-@property (strong, nonatomic) NSMutableArray<NSString *><DILazy> *items;
-@property (strong, nonatomic) NSMutableDictionary<NSString *, NSString *><DILazy> *items;
+@property (nonatomic) NSMutableArray<NSString *><DILazy> *items;
+@property (nonatomic) NSMutableDictionary<NSString *, NSString *><DILazy> *items;
 ```
 
 This all will be done after calling this:
@@ -118,7 +116,7 @@ You can force inject any property of any class even without `DIInject` specifica
 ```objective-c
 @interface TestClass : SomeSuperclass
 
-@property (strong, nonatomic) Network *network;
+@property (nonatomic) Network *network;
 
 @end
 
