@@ -265,6 +265,12 @@
     
     XCTAssertEqualObjects(answer1, [[NSUserDefaults standardUserDefaults] objectForKey:key1]);
     XCTAssertEqualObjects(answer2, [[NSUserDefaults standardUserDefaults] objectForKey:key2]);
+    
+    test.defaultsNumber = nil;
+    test.defaultsString = nil;
+    
+    XCTAssertNil([[NSUserDefaults standardUserDefaults] objectForKey:key1]);
+    XCTAssertNil([[NSUserDefaults standardUserDefaults] objectForKey:key2]);
 }
 
 - (void)testInjectPreformance {

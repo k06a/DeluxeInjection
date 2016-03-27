@@ -10,37 +10,45 @@
 
 @implementation DeluxeInjection (DIDefaults)
 
-+ (void)injectDefaults {
-    [self injectDefaultsSynchronized:^BOOL(Class  _Nonnull __unsafe_unretained targetClass, NSString * _Nonnull propertyName, Class  _Nonnull __unsafe_unretained propertyClass, NSSet<Protocol *> * _Nonnull propertyProtocols) {
-        return NO;
-    }];
-}
+#pragma mark - Private
 
-+ (void)injectDefaultsSynchronized:(DIPropertyFilter)shouldSynchronize {
++ (void)injectDefaultsWithKey:(DIDefaultsKeyBlock)keyBlock forProtocol:(Protocol *)protocol withSync:(BOOL)withSync {
     [self inject:^NSArray *(Class targetClass, SEL getter, SEL setter, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
-        BOOL isSynchronized = shouldSynchronize(targetClass, propertyName, propertyClass, propertyProtocols);
+        NSString *key = keyBlock(targetClass, propertyName, propertyClass, propertyProtocols) ?: propertyName;
         return @[^id(id target, id *ivar) {
-            if (isSynchronized) {
+            if (withSync) {
                 [[NSUserDefaults standardUserDefaults] synchronize];
             }
-            return [[NSUserDefaults standardUserDefaults] valueForKey:propertyName];
+            return [[NSUserDefaults standardUserDefaults] objectForKey:key];
         }, ^(id target, id *ivar, id newValue) {
-            if (newValue) {
-                [[NSUserDefaults standardUserDefaults] setObject:newValue forKey:propertyName];
-            } else {
-                [[NSUserDefaults standardUserDefaults] removeObjectForKey:propertyName];
-            }
-            if (isSynchronized) {
+            [[NSUserDefaults standardUserDefaults] setValue:newValue forKey:key];
+            if (withSync) {
                 [[NSUserDefaults standardUserDefaults] synchronize];
             }
         }];
-    } conformingProtocol:@protocol(DIDefaults)];
+    } conformingProtocol:protocol];
+}
+
+#pragma mark - Public
+
++ (void)injectDefaults {
+    [self injectDefaultsWithKey:^NSString *(Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
+        return propertyName;
+    }];
+}
+
++ (void)injectDefaultsWithKey:(DIDefaultsKeyBlock)keyBlock {
+    [self injectDefaultsWithKey:keyBlock forProtocol:@protocol(DIDefaults) withSync:NO];
+    [self injectDefaultsWithKey:keyBlock forProtocol:@protocol(DIDefaultsSynchonized) withSync:YES];
 }
 
 + (void)rejectDefaults {
     [self reject:^BOOL(Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
         return YES;
     } conformingProtocol:@protocol(DIDefaults)];
+    [self reject:^BOOL(Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
+        return YES;
+    } conformingProtocol:@protocol(DIDefaultsSynchonized)];
 }
 
 @end

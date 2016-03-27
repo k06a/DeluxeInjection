@@ -129,7 +129,7 @@ Network *network = [Network alloc] initWithSettings: ... ];
 
 #### Blocks injection
 
-You are also able to use methods `injectBlock:` and `forceInjectBlock:` to return `DIResult` block to provide injected getter block or `nil` otherwise. You may wanna use this methods if wanna make a decision to return value on target object. Maybe return different mutable copies for different targets or etc.
+You are also able to use methods `injectBlock:` and `forceInjectBlock:` to return `DIGetter` block to provide injected getter block or `nil` otherwise. You may wanna use this methods if wanna make a decision to return value on target object. Maybe return different mutable copies for different targets or etc.
 
 For example this will inject only properties of types `NSMutableArray` and `NSMutableDictionary` with 2 prepared objects using two different but equal ways:
 
@@ -152,7 +152,7 @@ For example this will inject only properties of types `NSMutableArray` and `NSMu
 }];
 ```
 
-Whole block will be called once for each property of each class. Returned `DIResult` blocks will be used as injected getter. Helper function `DIGetterIfIvarIsNil` allows to skip boilerplate *if-ivar-is-nil-then-assing-ivar-and-return-ivar*.
+Whole block will be called once for each property of each class. Returned `DIGetter` blocks will be used as injected getter. Helper function `DIGetterIfIvarIsNil` allows to skip boilerplate *if-ivar-is-nil-then-assing-ivar-and-return-ivar*.
 
 #### All methods documentation
 
