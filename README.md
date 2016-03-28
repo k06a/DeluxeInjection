@@ -8,16 +8,15 @@
 
 ## Features
 
-1. Autoinjection as first-class feature
+1. Auto-injection as first-class feature
 2. Force injection for any property of any class
 3. Lazy properties initialization feature
-3. Both *value-* and *block-*injection supported
-4. Inject both *ivar*-backed and `@dynamic` properties (over association)
-5. Easily access *ivar* inside injected getter
+3. `NSUserDefaults`-backed properties feature
+4. Both *value-* and *getter-*injection supported
+5. Inject both *ivar*-backed and `@dynamic` properties (over association)
+6. Easily access *ivar*s inside injected getter
 
-## Usage
-
-#### Auto injection
+## Auto injection
 
 <img src="/images/AI.png" align="right" height="400px" hspace="10px" vspace="10px">
 
@@ -56,10 +55,39 @@ And you is allowed to make a decision to return value based on all this stuff:
 
 * Target class for injection – `Class targetClass`
 * Property name in string representation – `NSString *propertyName`
-* Class of property – `Class propertyClass`, may be *nil* in case of type *id*
+* Class of property – `Class propertyClass`, at least *NSObject*
 * Set of property protocols – `NSSet<Protocol *> *protocols`, including all superprotocols
 
-#### Laziness
+You are also able to use method `injectBlock:` to return `DIGetter` block to provide injected getter or nil to skip injection. You may wanna use this methods if wanna make a decision to return value on target object. Maybe return different mutable copies for different targets or etc. Following code will inject only properties of types `NSMutableArray` and `NSMutableDictionary` with 2 prepared objects using two different but equal ways:
+
+```objective-c
+NSArray *array1 = @[@1, @2, @3];
+NSDictionary *dict1 = @[@"key" : @"value"];
+
+[DeluxeInjection injectBlock:^DIGetter (Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
+
+    if (propertyClass == [NSMutableArray class]) {
+        return DIGetterIfIvarIsNil(^id(id target) {
+            return [array1 mutableCopy];
+        });
+    }
+    
+    if (propertyClass == [NSMutableDictionary class]) {
+        return ^id(id target, id *ivar) {
+            if (*ivar == nil) {
+                *ivar = [dict1 mutableCopy];
+            }
+            return *ivar;
+        };
+    }
+    
+    return nil; // It is also safe to return a [DeluxeInjection doNotInject] here :)
+}];
+```
+
+Whole block will be called once for each property of each class. Returned `DIGetter` blocks will be used as injected getter. Helper function `DIGetterIfIvarIsNil` allows to skip boilerplate *if-ivar-is-nil-then-assing-ivar-and-return-ivar*.
+
+## Laziness
 
 <img src="/images/LI.png" align="right" height="400px" hspace="10px" vspace="10px">
 
@@ -107,7 +135,7 @@ This all will be done after calling this:
 [DeluxeInjection injectLazy];
 ```
 
-#### Force injection
+## Force injection
 
 <img src="/images/FI.png" align="right" height="400px" hspace="10px" vspace="10px">
 
@@ -131,34 +159,13 @@ Network *network = [Network alloc] initWithSettings: ... ];
 }];
 ```
 
-#### Blocks injection
+You are also able to use method `forceInjectBlock:` to return `DIGetter` block to provide injected getter similar to method `injectBlock:`.
 
-You are also able to use methods `injectBlock:` and `forceInjectBlock:` to return `DIGetter` block to provide injected getter block or `nil` otherwise. You may wanna use this methods if wanna make a decision to return value on target object. Maybe return different mutable copies for different targets or etc.
+## Plugins
 
-For example this will inject only properties of types `NSMutableArray` and `NSMutableDictionary` with 2 prepared objects using two different but equal ways:
+Look at source code: `DIInject`, `DIForceInject`, `DILazy`, `DIDefaults` are implemented like separated plugins, so you can easily implement your own protocols and define injected getter and setter for each with easy access to arguments and *ivar* or associated value.
 
-```objective-c
-[DeluxeInjection injectBlock:^DIGetter (Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
-    if (propertyClass == [NSMutableArray class]) {
-        return DIGetterIfIvarIsNil(^id(id target) {
-            return [arrayMock1 mutableCopy];
-        });
-    }
-    if (propertyClass == [NSMutableDictionary class]) {
-        return ^id(id target, id *ivar) {
-            if (*ivar == nil) {
-                *ivar = [dictMock2 mutableCopy];
-            }
-            return *ivar;
-        };
-    }
-    return nil; // It is also safe to return a [DeluxeInjection doNotInject] here :)
-}];
-```
-
-Whole block will be called once for each property of each class. Returned `DIGetter` blocks will be used as injected getter. Helper function `DIGetterIfIvarIsNil` allows to skip boilerplate *if-ivar-is-nil-then-assing-ivar-and-return-ivar*.
-
-#### All methods documentation
+## All methods documentation
 
 You can see methods and arguments documentation right in Xcode.
 
@@ -177,6 +184,8 @@ You can see methods and arguments documentation right in Xcode.
    + (void)reject:(Class)class getter:(SEL)getter;
    ```
 
+   #### Auto-injection
+
 4. Inject **values** into class properties marked explicitly with `<DIInject>` protocol.
    ```objective-c
    + (void)inject:(DIPropertyGetter)block;
@@ -187,25 +196,27 @@ You can see methods and arguments documentation right in Xcode.
    + (void)injectBlock:(DIPropertyGetterBlock)block;
       ```
 
-6. Force inject **values** into class properties **not** marked explicitly with any of `<DI***>` protocols.
-   ```objective-c
-   + (void)forceInject:(DIPropertyGetter)block;
-   ```
-
-7. Force inject **getters** into class properties **not** marked explicitly with any of `<DI***>` protocols.
-   ```objective-c
-   + (void)forceInjectBlock:(DIPropertyGetterBlock)block;
-     ```
-
-8. Reject some injections marked explicitly with `<DIInject>` protocol.
+6. Reject some injections marked explicitly with `<DIInject>` protocol.
    ```objective-c
    + (void)reject:(DIPropertyFilter)block;
    ```
 
-9. Reject all injections marked explicitly with `<DIInject>` protocol.
+7. Reject all injections marked explicitly with `<DIInject>` protocol.
    ```objective-c
    + (void)rejectAll;
    ```
+
+   #### Force injections
+
+8. Force inject **values** into class properties **not** marked explicitly with any of `<DI***>` protocols.
+   ```objective-c
+   + (void)forceInject:(DIPropertyGetter)block;
+   ```
+
+9. Force inject **getters** into class properties **not** marked explicitly with any of `<DI***>` protocols.
+   ```objective-c
+   + (void)forceInjectBlock:(DIPropertyGetterBlock)block;
+     ```
 
 10. Reject some injections **not** marked explicitly with any of `<DI***>` protocols.
    ```objective-c
@@ -217,6 +228,8 @@ You can see methods and arguments documentation right in Xcode.
    + (void)forceRejectAll;
    ```
 
+   #### Lazy initializers injections
+
 12. Inject properties marked with `<DILazy>` protocol using block: `^{ if (_ivar == nil) { _ivar = [[propertyClass alloc] init]; return _ivar; }`
    ```objective-c
    + (void)injectLazy;
@@ -226,6 +239,8 @@ You can see methods and arguments documentation right in Xcode.
    ```objective-c
    + (void)rejectLazy;
    ```
+
+   #### Other methods
 
 14. Overriden `debugDescription` method to see tree of classes and injected properties
    ```objective-c

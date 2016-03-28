@@ -23,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @param targetClass       Class to be injected/rejected
  *  @param propertyName      Property name to be injected/rejected
- *  @param propertyClass     Class of property to be injected/rejected, may be \c nil in case of type \c id
+ *  @param propertyClass     Class of property to be injected/rejected, at least \c NSObject
  *  @param propertyProtocols Set of property protocols including all superprotocols
  *
  *  @return Key to store in \c NSUserDefaults for propertyName of \c targetClass or \c nil to use \c propertyName
