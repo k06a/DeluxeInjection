@@ -9,6 +9,10 @@
 #import "DIRuntimeRoutines.h"
 #import "DIInject.h"
 
+@implementation NSObject (DIInject)
+
+@end
+
 @implementation DeluxeInjection (DIInject)
 
 + (void)inject:(DIPropertyGetter)block {

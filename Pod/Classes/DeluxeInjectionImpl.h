@@ -132,24 +132,23 @@ DIGetter DIGetterIfIvarIsNil(DIGetterWithoutIvar getter);
  *  Helper to call supers getter method
  *
  *  @param target Target to call
- *  @param class  Class of current getter implementation
+ *  @param klass  Class of current getter implementation
  *  @param getter Selector to call
  *
  *  @return Return value be supers getter
  */
-id DIGetterSuperCall(id target, Class class, SEL getter);
+id DIGetterSuperCall(id target, Class klass, SEL getter);
 
 /**
  *  Helper to call supers setter method
  *
  *  @param target Target to call
- *  @param class  Class of current setter implementation
+ *  @param klass  Class of current setter implementation
  *  @param getter Selector to call
  *
  *  @return Return value be supers setter
  */
-void DISetterSuperCall(id target, Class class, SEL setter, id value);
-
+void DISetterSuperCall(id target, Class klass, SEL setter, id value);
 
 #pragma mark - Main injection class
 
@@ -165,38 +164,38 @@ void DISetterSuperCall(id target, Class class, SEL setter, id value);
 /**
  *  Check if \c property of \c class is injected
  *
- *  @param class  Class of property to check
+ *  @param klass  Class of property to check
  *  @param getter Class property to check
  *
  *  @return \c YES if injected, otherwise \c NO
  */
-+ (BOOL)checkInjected:(Class)class getter:(SEL)getter;
++ (BOOL)checkInjected:(Class)klass getter:(SEL)getter;
 
 /**
  *  Inject concrete property getter
  *
- *  @param class  Class of property to inject
+ *  @param klass  Class of property to inject
  *  @param getter Class property getter to inject
  *  @param getterBlock Block to be injected into getter
  */
-+ (void)inject:(Class)class getter:(SEL)getter getterBlock:(DIGetter)getterBlock;
++ (void)inject:(Class)klass getter:(SEL)getter getterBlock:(DIGetter)getterBlock;
 
 /**
  *  Inject concrete property setter
  *
- *  @param class  Class of property to inject
+ *  @param klass  Class of property to inject
  *  @param setter Class property setter to inject
  *  @param setterBlock Block to be injected into setter
  */
-+ (void)inject:(Class)class setter:(SEL)getter setterBlock:(DISetter)setterBlock;
++ (void)inject:(Class)klass setter:(SEL)getter setterBlock:(DISetter)setterBlock;
 
 /**
  *  Reject concrete property injection
  *
- *  @param class  Class of property to reject
+ *  @param klass  Class of property to reject
  *  @param getter Class property to reject
  */
-+ (void)reject:(Class)class getter:(SEL)getter;
++ (void)reject:(Class)klass getter:(SEL)getter;
 
 /**
  *  Overriden \c debugDescription method to see tree of classes and injected properties

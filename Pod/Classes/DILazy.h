@@ -14,6 +14,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface NSObject (DILazy) <DILazy>
+
+@end
+
 @interface DeluxeInjection (DILazy)
 
 /**

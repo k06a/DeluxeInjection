@@ -8,6 +8,10 @@
 
 #import "DILazy.h"
 
+@implementation NSObject (DILazy)
+
+@end
+
 @implementation DeluxeInjection (DILazy)
 
 + (void)injectLazy {

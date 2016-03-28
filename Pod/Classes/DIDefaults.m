@@ -8,6 +8,10 @@
 
 #import "DIDefaults.h"
 
+@implementation NSObject (DIDefaults)
+
+@end
+
 @implementation DeluxeInjection (DIDefaults)
 
 #pragma mark - Private

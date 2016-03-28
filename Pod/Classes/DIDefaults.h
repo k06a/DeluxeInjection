@@ -18,6 +18,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface NSObject (DIDefaults) <DIDefaults, DIDefaultsSync>
+
+@end
+
 /**
  *  Block to define custom key for properties to store in NSUserDefaults
  *

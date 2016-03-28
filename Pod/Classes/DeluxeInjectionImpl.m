@@ -96,11 +96,11 @@ static void DIAssociatesRemove(Class class, SEL getter) {
 //
 
 DIGetter DIGetterMake(DIGetter getter) {
-    return getter;
+    return [getter copy];
 }
 
 DISetter DISetterMake(DISetter setter) {
-    return setter;
+    return [setter copy];
 }
 
 DIGetter DIGetterIfIvarIsNil(DIGetterWithoutIvar getter) {
