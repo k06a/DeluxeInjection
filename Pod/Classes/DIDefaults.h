@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@protocol DIDefaultsSynchonized <NSObject>
+@protocol DIDefaultsSync <NSObject>
 
 @end
 
@@ -33,18 +33,18 @@ typedef NSString * _Nullable (^DIDefaultsKeyBlock)(Class targetClass, NSString *
 @interface DeluxeInjection (DIDefaults)
 
 /**
- *  Inject properties marked with \c <DIDefaults> and \c <DIDefaultsSynchonized> protocol using NSUserDefaults access
+ *  Inject properties marked with \c <DIDefaults> and \c <DIDefaultsSync> protocol using NSUserDefaults access
  */
 + (void)injectDefaults;
 
 /**
- *  Inject properties marked with \c <DIDefaults> and \c <DIDefaultsSynchonized> protocol
+ *  Inject properties marked with \c <DIDefaults> and \c <DIDefaultsSync> protocol
  *  using NSUserDefaults access with custom key provided by block
  */
 + (void)injectDefaultsWithKey:(DIDefaultsKeyBlock)keyBlock;
 
 /**
- *  Reject all injections marked explicitly with \c <DIDefaults> and \c <DIDefaultsSynchonized> protocol.
+ *  Reject all injections marked explicitly with \c <DIDefaults> and \c <DIDefaultsSync> protocol.
  */
 + (void)rejectDefaults;
 

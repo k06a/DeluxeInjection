@@ -39,7 +39,7 @@
 
 + (void)injectDefaultsWithKey:(DIDefaultsKeyBlock)keyBlock {
     [self injectDefaultsWithKey:keyBlock forProtocol:@protocol(DIDefaults) withSync:NO];
-    [self injectDefaultsWithKey:keyBlock forProtocol:@protocol(DIDefaultsSynchonized) withSync:YES];
+    [self injectDefaultsWithKey:keyBlock forProtocol:@protocol(DIDefaultsSync) withSync:YES];
 }
 
 + (void)rejectDefaults {
@@ -48,7 +48,7 @@
     } conformingProtocol:@protocol(DIDefaults)];
     [self reject:^BOOL(Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
         return YES;
-    } conformingProtocol:@protocol(DIDefaultsSynchonized)];
+    } conformingProtocol:@protocol(DIDefaultsSync)];
 }
 
 @end

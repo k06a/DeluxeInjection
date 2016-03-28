@@ -187,12 +187,12 @@ You can see methods and arguments documentation right in Xcode.
    + (void)injectBlock:(DIPropertyGetterBlock)block;
       ```
 
-6. Force inject **values** into class properties even **not** marked explicitly with `<DIInject>` protocol.
+6. Force inject **values** into class properties **not** marked explicitly with any of `<DI***>` protocols.
    ```objective-c
    + (void)forceInject:(DIPropertyGetter)block;
    ```
 
-7. Force inject **getters** into class properties even **not** marked explicitly with `<DIInject>` protocol.
+7. Force inject **getters** into class properties **not** marked explicitly with any of `<DI***>` protocols.
    ```objective-c
    + (void)forceInjectBlock:(DIPropertyGetterBlock)block;
      ```
@@ -207,12 +207,12 @@ You can see methods and arguments documentation right in Xcode.
    + (void)rejectAll;
    ```
 
-10. Reject some injections even **not** marked explicitly with `<DIInject>` protocol.
+10. Reject some injections **not** marked explicitly with any of `<DI***>` protocols.
    ```objective-c
    + (void)forceReject:(DIPropertyFilter)block;
    ```
 
-11.  Reject **all** injections and marked explicitly with `<DIInject>` and `<DILazy>` protocols.
+11.  Reject **all** injections **not** marked explicitly with any of `<DI***>` protocols.
    ```objective-c
    + (void)forceRejectAll;
    ```
