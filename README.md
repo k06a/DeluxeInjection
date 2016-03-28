@@ -307,7 +307,7 @@ You can see methods and arguments documentation right in Xcode.
 
 ## Performance and Testing
 
-Enumeration of 15.000 classes during auto-injection tooks only 0.025 sec. Performance will increase in future versions, it is one of first-class feature of library to be super-fast. You can find some performance test and other tests in Example project. I am planning to add as many tests as possible to detect all possible problems. May be you wanna help me with tests?
+Triple enumeration of 15.000 classes during lazy-injection, defaults-injection and auto-injection tooks 0.16 sec. Performance will increase in future versions, it is one of first-class feature of the library to be super-performant. You can find some performance test and other tests in Example project. I am planning to add as many tests as possible to detect all possible problems. May be you wanna help me with tests?
 
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
 

@@ -164,11 +164,14 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
 #pragma mark - Private
 
 + (void)enumerateAllClassProperties:(void(^)(Class class, objc_property_t property))block conformingProtocol:(Protocol *)protocol {
-    NSString *protocol_str = [NSString stringWithFormat:@"<%@>", NSStringFromProtocol(protocol)];
+    char protocol_str[1024];
+    const char *protocol_ptr = protocol_str;
+    sprintf(protocol_str, "<%s>", NSStringFromProtocol(protocol).UTF8String);
+    
     DIRuntimeEnumerateClasses(^(Class class) {
         DIRuntimeEnumerateClassProperties(class, ^(objc_property_t property) {
-            NSString *type = DIRuntimeGetPropertyAttribute(property, "T");
-            if (!protocol || [type rangeOfString:protocol_str].location != NSNotFound) {
+            const char *type = property_getAttributes(property);
+            if (!protocol || (type && strstr(type, protocol_ptr))) {
                 block(class, property);
             }
         });
