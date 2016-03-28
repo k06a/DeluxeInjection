@@ -161,6 +161,42 @@ Network *network = [Network alloc] initWithSettings: ... ];
 
 You are also able to use method `forceInjectBlock:` to return `DIGetter` block to provide injected getter similar to method `injectBlock:`.
 
+## *NSUserDefaults-*backed properties
+
+Wanna achieve this behavior with less boilerplate code?
+
+```objective-c
+@interface SomeClass : SomeSuperclass
+
+@property (nonatomic) NSString *username;
+
+@end
+
+@implementation SomeClass
+
+- (NSString *)username {
+    return [[NSUserDefaults standardUserDefaults] stringForKey:@"username"];
+}
+
+- (void)setUsername:(NSString *)username {
+    return [[NSUserDefaults standardUserDefaults] setValue:username forKey:@"username"];
+}
+
+@end
+```
+
+Just use `<DIDefaults>` or `<DIDefaultsSync>` protocols on property declaration:
+
+```objective-c
+@interface SomeClass : SomeSuperclass
+
+@property (nonatomic) NSString<DIDefaults> *username;
+
+@end
+```
+
+And do not forget to call injection before usage: `[DeluxeInjection injectDefaults];` You are also able to use `injectDefaultsWithKey:` to provide block to get custom key to use with user defaults. Also look at `<DIDefaultsSync>` to inject getter and setter with synchronization.
+
 ## Plugins
 
 Look at source code: `DIInject`, `DIForceInject`, `DILazy`, `DIDefaults` are implemented like separated plugins, so you can easily implement your own protocols and define injected getter and setter for each with easy access to arguments and *ivar* or associated value.
@@ -239,22 +275,39 @@ You can see methods and arguments documentation right in Xcode.
    ```objective-c
    + (void)rejectLazy;
    ```
+   
+   #### NSUserDefaults-backed properties
+
+14. Inject properties marked with `<DIDefaults>` or `<DIDefaultsSync>` protocol
+   ```objective-c
+   + (void)injectDefaults;
+   ```
+   
+15. Inject properties marked with `<DIDefaults>` or `<DIDefaultsSync>` protocol and provide block to generate custom key
+   ```objective-c
+   + (void)injectDefaultsWithKey:(DIDefaultsKeyBlock)keyBlock;
+   ```
+   
+16. Reject all injections marked explicitly with `<DIDefaults>` or `<DIDefaultsSync>` protocol.
+   ```objective-c
+   + (void)rejectDefaults;
+   ```
 
    #### Other methods
 
-14. Overriden `debugDescription` method to see tree of classes and injected properties
+17. Overriden `debugDescription` method to see tree of classes and injected properties
    ```objective-c
    + (NSString *)debugDescription;
    ```
 
-15. Transforms getter block without `ivar` argument to block with `ivar` argument
+18. Transforms getter block without `ivar` argument to block with `ivar` argument
    ```objective-c
    DIGetter DIGetterIfIvarIsNil(DIGetterWithoutIvar getter);
    ```
 
 ## Performance and Testing
 
-Enumeration of 15.000 classes during injection tooks 0.022 sec. You can find this performance test and other tests in Example project. I am planning to add as many tests as possible to detect all possible problems. May be you wanna help me with tests?
+Enumeration of 15.000 classes during auto-injection tooks only 0.025 sec. Performance will increase in future versions, it is one of first-class feature of library to be super-fast. You can find some performance test and other tests in Example project. I am planning to add as many tests as possible to detect all possible problems. May be you wanna help me with tests?
 
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
 
@@ -285,7 +338,14 @@ DeluxeInjection is available under the MIT license. See the LICENSE file for mor
 
 ## Contribution
 
-1. Fork repository
-2. Create new branch from master
-3. Commit to your newly created branch
+– Wanna really help to project?<br/>
+– Help me to add more test and divide them by plugins.
+
+– Found any bugs?<br/>
+– Feel free to open issue or discuss to me directly [@k06a](https://twitter.com/k06a)!
+
+Contribution workflow:<br/>
+1. Fork repository<br/>
+2. Create new branch from master<br/>
+3. Commit to your newly created branch<br/>
 4. Open Pull Request and we will talk :)
