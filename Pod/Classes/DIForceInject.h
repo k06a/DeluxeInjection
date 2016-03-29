@@ -6,7 +6,7 @@
 //
 //
 
-#import "DeluxeInjectionPlugin.h"
+#import "DeluxeInjectionImpl.h"
 
 @interface DeluxeInjection (DIForceInject)
 

@@ -6,7 +6,7 @@
 //
 //
 
-#import "DeluxeInjection.h"
+#import "DeluxeInjectionImpl.h"
 #import "DIForceInject.h"
 #import "DIInject.h"
 #import "DILazy.h"

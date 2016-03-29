@@ -6,6 +6,7 @@
 //
 //
 
+#import "DeluxeInjectionPlugin.h"
 #import "DIRuntimeRoutines.h"
 #import "DIInject.h"
 

@@ -6,12 +6,13 @@
 //
 //
 
-#import "DIRuntimeRoutines.h"
-#import "DIForceInject.h"
-
 #import "DIInject.h"
 #import "DILazy.h"
 #import "DIDefaults.h"
+
+#import "DeluxeInjectionPlugin.h"
+#import "DIRuntimeRoutines.h"
+#import "DIForceInject.h"
 
 static NSSet *excudeProtocols() {
     static NSSet *excudeProtocols;

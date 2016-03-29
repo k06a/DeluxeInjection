@@ -6,6 +6,7 @@
 //
 //
 
+#import "DeluxeInjectionPlugin.h"
 #import "DIDefaults.h"
 
 @implementation NSObject (DIDefaults)

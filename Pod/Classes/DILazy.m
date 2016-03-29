@@ -6,6 +6,7 @@
 //
 //
 
+#import "DeluxeInjectionPlugin.h"
 #import "DILazy.h"
 
 @implementation NSObject (DILazy)

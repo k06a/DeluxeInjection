@@ -6,7 +6,7 @@
 //
 //
 
-#import "DeluxeInjectionPlugin.h"
+#import "DeluxeInjectionImpl.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
