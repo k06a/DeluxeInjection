@@ -307,14 +307,13 @@ You can see methods and arguments documentation right in Xcode.
 
 ## Performance and Testing
 
-Triple enumeration of 15.000 classes during lazy-injection, defaults-injection and auto-injection tooks 0.16 sec. Performance will increase in future versions, it is one of first-class feature of the library to be super-performant. You can find some performance test and other tests in Example project. I am planning to add as many tests as possible to detect all possible problems. May be you wanna help me with tests?
+Four times enumeration of 15.000 classes during lazy-injection, defaults-injection and twice dependant auto-injection tooks 0.16 sec. Performance will increase in future versions, it is one of first-class feature of the library to be super-performant. You can find some performance test and other tests in Example project. I am planning to add as many tests as possible to detect all possible problems. May be you wanna help me with tests?
 
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
 
 ## Installation
 
-DeluxeInjection is available through [CocoaPods](http://cocoapods.org). To install
-it, simply add the following line to your Podfile:
+DeluxeInjection is available through [CocoaPods](http://cocoapods.org). To install it, simply add the following line to your Podfile:
 
 ```ruby
 pod 'DeluxeInjection'
