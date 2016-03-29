@@ -2,8 +2,7 @@
 //  DeluxeInjectionTests.m
 //  DeluxeInjectionTests
 //
-//  Created by Anton Bukov on 03/18/2016.
-//  Copyright (c) 2016 Anton Bukov. All rights reserved.
+//  Copyright (c) 2016 Anton Bukov <k06aaa@gmail.com>
 //
 
 #import <XCTest/XCTest.h>

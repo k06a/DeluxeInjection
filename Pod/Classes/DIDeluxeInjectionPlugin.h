@@ -1,5 +1,5 @@
 //
-//  DeluxeInjection.h
+//  DIDeluxeInjectionPlugin.h
 //  DeluxeInjection
 //
 //  Copyright (c) 2016 Anton Bukov <k06aaa@gmail.com>
@@ -17,13 +17,11 @@
 //  limitations under the License.
 //
 
-#ifndef __DELUXEINJECTION__
-#define __DELUXEINJECTION__
-
 #import "DIDeluxeInjection.h"
-#import "DIForceInject.h"
-#import "DIInject.h"
-#import "DILazy.h"
-#import "DIDefaults.h"
 
-#endif // __DELUXEINJECTION__
+@interface DeluxeInjection (Plugin)
+
++ (void)inject:(DIPropertyBlock)block conformingProtocol:(Protocol *)protocol;
++ (void)reject:(DIPropertyFilter)block conformingProtocol:(Protocol *)protocol;
+
+@end

@@ -1,8 +1,8 @@
 #import <UIKit/UIKit.h>
 
 #import "DeluxeInjection.h"
-#import "DeluxeInjectionImpl.h"
-#import "DeluxeInjectionPlugin.h"
+#import "DIDeluxeInjection.h"
+#import "DIDeluxeInjectionPlugin.h"
 #import "DIDefaults.h"
 #import "DIForceInject.h"
 #import "DIInject.h"

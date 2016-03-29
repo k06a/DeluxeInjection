@@ -1,10 +1,11 @@
 Pod::Spec.new do |s|
   s.name             = "DeluxeInjection"
-  s.version          = "0.1.3"
-  s.summary          = "Simplest DI implementation ever"
+  s.version          = "0.1.4"
+  s.summary          = "Simplest Objective-C Dependency Injection (DI:syringe:) implementation ever"
 
   s.description      = <<-DESC
-                       DeluxeInjection allows you simply to inject any property to any class by defining getter of this property within a block. This should be the simplest DI library.
+                       DeluxeInjection allows you simply inject any property of any class by defining value or
+                       getter of this property with a block. This should be the simplest DI library ever.
                        DESC
 
   s.homepage         = "https://github.com/k06a/DeluxeInjection"
