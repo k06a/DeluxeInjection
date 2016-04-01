@@ -24,15 +24,10 @@ void DIRuntimeEnumerateClasses(void (^block)(Class class)) {
 }
 
 void DIRuntimeEnumerateClassSubclasses(Class parentclass, void (^block)(Class class)) {
-    int classesCount = objc_getClassList(NULL, 0);
-    Class *classes = (Class *)malloc(classesCount * sizeof(Class));
-    objc_getClassList(classes, classesCount);
-    
-    for (int i = 0; i < classesCount; i++) {
-        Class class = classes[i];
-        
+    Class *classes = objc_copyClassList(NULL);
+    for (Class *cursor = classes; classes && *cursor; cursor++) {
         // Filter only NSObject subclasses
-        Class superclass = class;
+        Class superclass = *cursor;
         while (superclass && superclass != parentclass) {
             superclass = class_getSuperclass(superclass);
         }
@@ -40,20 +35,17 @@ void DIRuntimeEnumerateClassSubclasses(Class parentclass, void (^block)(Class cl
             continue;
         }
         
-        block(class);
+        block(*cursor);
     }
     
     free(classes);
 }
 
 void DIRuntimeEnumerateClassProperties(Class class, void (^block)(objc_property_t property)) {
-    unsigned int propertiesCount = 0;
-    objc_property_t *properties = class_copyPropertyList(class, &propertiesCount);
-    
-    for (int i = 0; i < propertiesCount; i++) {
-        block(properties[i]);
+    objc_property_t *properties = class_copyPropertyList(class, NULL);
+    for (objc_property_t *cursor = properties; properties && *cursor; cursor++) {
+        block(*cursor);
     }
-    
     free(properties);
 }
 
@@ -62,24 +54,18 @@ objc_property_t DIRuntimeEnumerateClassGetProperty(Class class, NSString *proper
 }
 
 void DIRuntimeEnumerateClassIvars(Class class, void (^block)(Ivar ivar)) {
-    unsigned int ivarsCount;
-    Ivar* ivars = class_copyIvarList(class, &ivarsCount);
-    
-    for(unsigned int i = 0; i < ivarsCount; ++i) {
-        block(ivars[i]);
+    Ivar* ivars = class_copyIvarList(class, NULL);
+    for (Ivar *cursor = ivars; ivars && *cursor; cursor++) {
+        block(*cursor);
     }
-    
     free(ivars);
 }
 
 void DIRuntimeEnumerateClassProtocols(Class class, void (^block)(Protocol *protocol)) {
-    unsigned int protocolsCount = 0;
-    __unsafe_unretained Protocol **protocols = class_copyProtocolList(class, &protocolsCount);
-    
-    for (int i = 0; i < protocolsCount; i++) {
-        block(protocols[i]);
+    __unsafe_unretained Protocol **protocols = class_copyProtocolList(class, NULL);
+    for (__unsafe_unretained Protocol **cursor = protocols; protocols && *cursor; cursor++) {
+        block(*cursor);
     }
-    
     free(protocols);
 }
 
@@ -101,27 +87,21 @@ void DIRuntimeEnumerateClassProtocolsWithParents(Class class, void (^block)(Prot
 }
 
 void DIRuntimeEnumerateProtocolSuperprotocols(Protocol *protocol, void (^block)(Protocol *superprotocol)) {
-    unsigned int protocolsCount = 0;
-    __unsafe_unretained Protocol **protocols = protocol_copyProtocolList(protocol, &protocolsCount);
-    
-    for (int i = 0; i < protocolsCount; i++) {
-        block(protocols[i]);
+    __unsafe_unretained Protocol **protocols = protocol_copyProtocolList(protocol, NULL);
+    for (__unsafe_unretained Protocol **cursor = protocols; protocols && *cursor; cursor++) {
+        block(*cursor);
     }
-    
     free(protocols);
 }
 
 void DIRuntimeEnumerateProtocolProperties(Protocol *protocol, BOOL required, BOOL instance, void (^block)(objc_property_t property)) {
-    unsigned int propertiesCount = 0;
-    objc_property_t *properties = protocol_copyPropertyList(protocol, &propertiesCount);
-    
-    for (int i = 0; i < propertiesCount; i++) {
-        objc_property_t property = protocol_getProperty(protocol, property_getName(properties[i]), required, instance);
+    objc_property_t *properties = protocol_copyPropertyList(protocol, NULL);
+    for (objc_property_t *cursor = properties; properties && *cursor; cursor++) {
+        objc_property_t property = protocol_getProperty(protocol, property_getName(*cursor), required, instance);
         if (property) {
             block(property);
         }
     }
-    
     free(properties);
 }
 

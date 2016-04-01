@@ -303,14 +303,16 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
         }
         
         if (getterToInject) {
-            IMP newGetterImp = imp_implementationWithBlock(newGetterBlock);
             Method getterMethod = class_getInstanceMethod(class, getter);
-            const char *getterTypes = method_getTypeEncoding(getterMethod);
-            IMP getterMethodImp = method_getImplementation(getterMethod);
-            DIInjectionsGettersBackupWrite(class, getter, getterMethodImp ?: (IMP)DINothingToRestore);
-            IMP replacedGetterImp = class_replaceMethod(class, getter, newGetterImp, getterTypes);
-            if (isAssociated) {
-                imp_removeBlock(replacedGetterImp);
+            if (!getterMethod || method_getNumberOfArguments(getterMethod) == 2) {
+                IMP newGetterImp = imp_implementationWithBlock(newGetterBlock);
+                const char *getterTypes = method_getTypeEncoding(getterMethod);
+                IMP getterMethodImp = method_getImplementation(getterMethod);
+                DIInjectionsGettersBackupWrite(class, getter, getterMethodImp ?: (IMP)DINothingToRestore);
+                IMP replacedGetterImp = class_replaceMethod(class, getter, newGetterImp, getterTypes);
+                if (isAssociated) {
+                    imp_removeBlock(replacedGetterImp);
+                }
             }
         }
         
@@ -330,14 +332,16 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
         }
         
         if (newSetterBlock) {
-            IMP newSetterImp = imp_implementationWithBlock(newSetterBlock);
-            Method setterMethod = class_getInstanceMethod(self, setter);
-            const char *setterTypes = method_getTypeEncoding(setterMethod);
-            IMP setterMethodImp = method_getImplementation(setterMethod);
-            DIInjectionsSettersBackupWrite(class, setter, setterMethodImp ?: (IMP)DINothingToRestore);
-            IMP replacedSetterImp = class_replaceMethod(class, setter, newSetterImp, setterTypes);
-            if (isAssociated) {
-                imp_removeBlock(replacedSetterImp);
+            Method setterMethod = class_getInstanceMethod(class, setter);
+            if (!setterMethod || method_getNumberOfArguments(setterMethod) == 3) {
+                IMP newSetterImp = imp_implementationWithBlock(newSetterBlock);
+                const char *setterTypes = method_getTypeEncoding(setterMethod);
+                IMP setterMethodImp = method_getImplementation(setterMethod);
+                DIInjectionsSettersBackupWrite(class, setter, setterMethodImp ?: (IMP)DINothingToRestore);
+                IMP replacedSetterImp = class_replaceMethod(class, setter, newSetterImp, setterTypes);
+                if (isAssociated) {
+                    imp_removeBlock(replacedSetterImp);
+                }
             }
         }
     });
