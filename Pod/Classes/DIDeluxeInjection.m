@@ -217,24 +217,23 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
         
         NSString *propertyIvarStr = DIRuntimeGetPropertyAttribute(property, "V");
         Ivar propertyIvar = propertyIvarStr ? class_getInstanceVariable(class, propertyIvarStr.UTF8String) : nil;
-        NSString *key = propertyIvar ? [NSString stringWithUTF8String:ivar_getName(propertyIvar)] : nil;
         
-        BOOL associationNeeded = (key == nil);
+        BOOL isAssociated = (propertyIvar == nil);
         SEL associationKey = NSSelectorFromString([@"DI_" stringByAppendingString:propertyName]);
         objc_AssociationPolicy associationPolicy = DIRuntimePropertyAssociationPolicy(property);
-        BOOL weakAssociation = DIRuntimeGetPropertyIsWeak(property);
+        BOOL isWeak = DIRuntimeGetPropertyIsWeak(property);
         
         id (^newGetterBlock)(id) = nil;
         if (getterToInject) {
-            if (!associationNeeded) {
+            if (!isAssociated) {
                 newGetterBlock = ^id(id target){
-                    id ivar = [target valueForKey:key];
+                    id ivar = object_getIvar(target, propertyIvar);
                     id result = getterToInject(target, &ivar);
-                    [target setValue:ivar forKey:key];
+                    object_setIvar(target, propertyIvar, ivar);
                     return result;
                 };
             } else {
-                if (weakAssociation) {
+                if (isWeak) {
                     newGetterBlock = ^id(id target){
                         DIWeakWrapper *wrapper = objc_getAssociatedObject(target, associationKey);
                         BOOL wrapperWasNil = (wrapper == nil);
@@ -270,14 +269,14 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
         
         void (^newSetterBlock)(id,id) = nil;
         if (setterToInject) {
-            if (!associationNeeded) {
+            if (!isAssociated) {
                 newSetterBlock = ^void(id target, id newValue){
-                    id ivar = [target valueForKey:key];
+                    id ivar = object_getIvar(target, propertyIvar);
                     setterToInject(target, &ivar, newValue);
-                    [target setValue:ivar forKey:key];
+                    object_setIvar(target, propertyIvar, ivar);
                 };
             } else {
-                if (weakAssociation) {
+                if (isWeak) {
                     newSetterBlock = ^void(id target, id newValue){
                         DIWeakWrapper *wrapper = objc_getAssociatedObject(target, associationKey) ?: [[DIWeakWrapper alloc] init];
                         id ivar = wrapper->object;
@@ -310,14 +309,14 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
             IMP getterMethodImp = method_getImplementation(getterMethod);
             DIInjectionsGettersBackupWrite(class, getter, getterMethodImp ?: (IMP)DINothingToRestore);
             IMP replacedGetterImp = class_replaceMethod(class, getter, newGetterImp, getterTypes);
-            if (associationNeeded) {
+            if (isAssociated) {
                 imp_removeBlock(replacedGetterImp);
             }
         }
         
         // If need association and not have setter so we need implement simple setter
-        if (associationNeeded && !newSetterBlock) {
-            if (weakAssociation) {
+        if (isAssociated && !newSetterBlock) {
+            if (isWeak) {
                 newSetterBlock = ^void(id target, id newValue) {
                     DIWeakWrapper *wrapper = objc_getAssociatedObject(target, associationKey) ?: [[DIWeakWrapper alloc] init];
                     wrapper->object = newValue;
@@ -337,7 +336,7 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
             IMP setterMethodImp = method_getImplementation(setterMethod);
             DIInjectionsSettersBackupWrite(class, setter, setterMethodImp ?: (IMP)DINothingToRestore);
             IMP replacedSetterImp = class_replaceMethod(class, setter, newSetterImp, setterTypes);
-            if (associationNeeded) {
+            if (isAssociated) {
                 imp_removeBlock(replacedSetterImp);
             }
         }
