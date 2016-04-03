@@ -304,15 +304,20 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
         
         if (getterToInject) {
             Method getterMethod = class_getInstanceMethod(class, getter);
-            if (!getterMethod || method_getNumberOfArguments(getterMethod) == 2) {
-                IMP newGetterImp = imp_implementationWithBlock(newGetterBlock);
-                const char *getterTypes = method_getTypeEncoding(getterMethod);
-                IMP getterMethodImp = method_getImplementation(getterMethod);
-                DIInjectionsGettersBackupWrite(class, getter, getterMethodImp ?: (IMP)DINothingToRestore);
-                IMP replacedGetterImp = class_replaceMethod(class, getter, newGetterImp, getterTypes);
-                if (isAssociated) {
-                    imp_removeBlock(replacedGetterImp);
-                }
+            if (getterMethod && method_getNumberOfArguments(getterMethod) != 0) {
+                NSAssert(method_getNumberOfArguments(getterMethod) == 2,
+                         @"Getter should not have any arguments");
+                NSAssert([DIRuntimeMethodGetReturnType(getterMethod) isEqualToString:@"@"],
+                         @"DeluxeInjection do not support non-object properties injections");
+            }
+            
+            IMP newGetterImp = imp_implementationWithBlock(newGetterBlock);
+            const char *getterTypes = method_getTypeEncoding(getterMethod);
+            IMP getterMethodImp = method_getImplementation(getterMethod);
+            DIInjectionsGettersBackupWrite(class, getter, getterMethodImp ?: (IMP)DINothingToRestore);
+            IMP replacedGetterImp = class_replaceMethod(class, getter, newGetterImp, getterTypes);
+            if (isAssociated) {
+                imp_removeBlock(replacedGetterImp);
             }
         }
         
@@ -333,15 +338,22 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
         
         if (newSetterBlock) {
             Method setterMethod = class_getInstanceMethod(class, setter);
-            if (!setterMethod || method_getNumberOfArguments(setterMethod) == 3) {
-                IMP newSetterImp = imp_implementationWithBlock(newSetterBlock);
-                const char *setterTypes = method_getTypeEncoding(setterMethod);
-                IMP setterMethodImp = method_getImplementation(setterMethod);
-                DIInjectionsSettersBackupWrite(class, setter, setterMethodImp ?: (IMP)DINothingToRestore);
-                IMP replacedSetterImp = class_replaceMethod(class, setter, newSetterImp, setterTypes);
-                if (isAssociated) {
-                    imp_removeBlock(replacedSetterImp);
-                }
+            if (setterMethod && method_getNumberOfArguments(setterMethod) != 0) {
+                NSAssert(method_getNumberOfArguments(setterMethod) == 3,
+                         @"Setter should have exactly one argument");
+                NSAssert([DIRuntimeMethodGetReturnType(setterMethod) isEqualToString:@"v"],
+                         @"DeluxeInjection do not support non-object properties injections");
+                NSAssert([DIRuntimeMethodGetArgumentType(setterMethod, 0) isEqualToString:@"@"],
+                         @"DeluxeInjection do not support non-object properties injections");
+            }
+            
+            IMP newSetterImp = imp_implementationWithBlock(newSetterBlock);
+            const char *setterTypes = method_getTypeEncoding(setterMethod);
+            IMP setterMethodImp = method_getImplementation(setterMethod);
+            DIInjectionsSettersBackupWrite(class, setter, setterMethodImp ?: (IMP)DINothingToRestore);
+            IMP replacedSetterImp = class_replaceMethod(class, setter, newSetterImp, setterTypes);
+            if (isAssociated) {
+                imp_removeBlock(replacedSetterImp);
             }
         }
     });

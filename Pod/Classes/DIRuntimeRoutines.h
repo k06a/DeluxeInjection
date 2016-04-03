@@ -38,7 +38,9 @@ BOOL DIRuntimeGetPropertyIsWeak(objc_property_t property);
 SEL DIRuntimeGetPropertyGetter(objc_property_t property);
 SEL DIRuntimeGetPropertySetter(objc_property_t property);
 void DIRuntimeGetPropertyType(objc_property_t property, void (^block)(Class _Nullable class, NSSet<Protocol *> *protocols));
-
 objc_AssociationPolicy DIRuntimePropertyAssociationPolicy(objc_property_t property);
+
+NSString *DIRuntimeMethodGetReturnType(Method method);
+NSString *DIRuntimeMethodGetArgumentType(Method method, NSUInteger index);
 
 NS_ASSUME_NONNULL_END

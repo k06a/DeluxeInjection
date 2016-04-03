@@ -107,12 +107,10 @@ void DIRuntimeEnumerateProtocolProperties(Protocol *protocol, BOOL required, BOO
 
 NSString *DIRuntimeGetPropertyAttribute(objc_property_t property, char *attrribute) {
     char *value = property_copyAttributeValue(property, attrribute);
-    NSString *str = nil;
     if (value) {
-        str = [NSString stringWithUTF8String:value];
-        free(value);
+        return [[NSString alloc] initWithBytesNoCopy:value length:strlen(value) encoding:NSUTF8StringEncoding freeWhenDone:YES];
     }
-    return str;
+    return nil;
 }
 
 BOOL DIRuntimeGetPropertyIsWeak(objc_property_t property) {
@@ -143,8 +141,7 @@ SEL DIRuntimeGetPropertySetter(objc_property_t property) {
 
 void DIRuntimeGetPropertyType(objc_property_t property, void (^block)(Class class, NSSet<Protocol *> *protocols)) {
     char *value = property_copyAttributeValue(property, "T");
-    NSString *type = [NSString stringWithUTF8String:value];
-    free(value);
+    NSString *type = [[NSString alloc] initWithBytesNoCopy:value length:(value ? strlen(value) : 0) encoding:NSUTF8StringEncoding freeWhenDone:YES];
     
     if ([type rangeOfString:@"@\""].location == 0) {
         type = [type substringWithRange:NSMakeRange(2, type.length - 3)];
@@ -176,7 +173,7 @@ void DIRuntimeGetPropertyType(objc_property_t property, void (^block)(Class clas
 objc_AssociationPolicy DIRuntimePropertyAssociationPolicy(objc_property_t property) {
     if (DIRuntimeGetPropertyAttribute(property, "N") != nil) {
         if (DIRuntimeGetPropertyAttribute(property, "W")) {
-            return OBJC_ASSOCIATION_RETAIN; // Weaks are not supported
+            return OBJC_ASSOCIATION_RETAIN; // Weaks are supported over boxing
         }
         if (DIRuntimeGetPropertyAttribute(property, "C") != nil) {
             return OBJC_ASSOCIATION_COPY_NONATOMIC;
@@ -186,7 +183,7 @@ objc_AssociationPolicy DIRuntimePropertyAssociationPolicy(objc_property_t proper
         }
     } else {
         if (DIRuntimeGetPropertyAttribute(property, "W")) {
-            return OBJC_ASSOCIATION_RETAIN; // Weaks are not supported
+            return OBJC_ASSOCIATION_RETAIN; // Weaks are supported over boxing
         }
         if (DIRuntimeGetPropertyAttribute(property, "C") != nil) {
             return OBJC_ASSOCIATION_COPY;
@@ -196,4 +193,14 @@ objc_AssociationPolicy DIRuntimePropertyAssociationPolicy(objc_property_t proper
         }
     }
     return OBJC_ASSOCIATION_ASSIGN;
+}
+
+NSString *DIRuntimeMethodGetReturnType(Method method) {
+    char *returnType = method_copyReturnType(method);
+    return [[NSString alloc] initWithBytesNoCopy:returnType length:(returnType ? strlen(returnType) : 0) encoding:NSUTF8StringEncoding freeWhenDone:YES];
+}
+
+NSString *DIRuntimeMethodGetArgumentType(Method method, NSUInteger index) {
+    char *argumentType = method_copyArgumentType(method, (unsigned int)(index + 2));
+    return [[NSString alloc] initWithBytesNoCopy:argumentType length:(argumentType ? strlen(argumentType) : 0) encoding:NSUTF8StringEncoding freeWhenDone:YES];
 }
