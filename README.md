@@ -6,6 +6,8 @@
 [![License](https://img.shields.io/cocoapods/l/DeluxeInjection.svg?style=flat)](http://cocoapods.org/pods/DeluxeInjection)
 [![Platform](https://img.shields.io/cocoapods/p/DeluxeInjection.svg?style=flat)](http://cocoapods.org/pods/DeluxeInjection)
 
+<img src="/images/Relax.png" align="right" height="300px" hspace="10px" vspace="10px">
+
 ## Features
 
 1. Auto-injection as first-class feature
