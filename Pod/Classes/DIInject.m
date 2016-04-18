@@ -17,8 +17,9 @@
 //  limitations under the License.
 //
 
+#import <RuntimeRoutines/RuntimeRoutines.h>
+
 #import "DIDeluxeInjectionPlugin.h"
-#import "DIRuntimeRoutines.h"
 #import "DIInject.h"
 
 @implementation NSObject (DIInject)
@@ -34,8 +35,8 @@
             return nil;
         }
         
-        objc_property_t property = DIRuntimeEnumerateClassGetProperty(targetClass, propertyName);
-        if (DIRuntimeGetPropertyIsWeak(property)) {
+        objc_property_t property = RRClassGetPropertyByName(targetClass, propertyName);
+        if (RRPropertyGetIsWeak(property)) {
             __weak id weakValue = value;
             return @[DIGetterIfIvarIsNil(^id(id target) {
                 return weakValue;

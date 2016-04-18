@@ -17,12 +17,13 @@
 //  limitations under the License.
 //
 
+#import <RuntimeRoutines/RuntimeRoutines.h>
+
 #import "DIInject.h"
 #import "DILazy.h"
 #import "DIDefaults.h"
 
 #import "DIDeluxeInjectionPlugin.h"
-#import "DIRuntimeRoutines.h"
 #import "DIForceInject.h"
 
 static NSSet *excudeProtocols() {
@@ -52,8 +53,8 @@ static NSSet *excudeProtocols() {
             return nil;
         }
         
-        objc_property_t property = DIRuntimeEnumerateClassGetProperty(targetClass, propertyName);
-        if (DIRuntimeGetPropertyIsWeak(property)) {
+        objc_property_t property = RRClassGetPropertyByName(targetClass, propertyName);
+        if (RRPropertyGetIsWeak(property)) {
             __weak id weakValue = value;
             return @[DIGetterIfIvarIsNil(^id(id target) {
                 return weakValue;

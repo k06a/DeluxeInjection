@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = "DeluxeInjection"
-  s.version          = "0.1.5"
+  s.version          = "0.1.6"
   s.summary          = "Simplest Objective-C Dependency Injection (DI:syringe:) implementation ever"
 
   s.description      = <<-DESC
@@ -18,4 +18,5 @@ Pod::Spec.new do |s|
   s.requires_arc = true
 
   s.source_files = 'Pod/Classes/**/*'
+  s.dependency 'RuntimeRoutines'
 end
