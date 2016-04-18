@@ -85,7 +85,9 @@ strip_invalid_archs() {
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "Pods-DeluxeInjection_Tests/DeluxeInjection.framework"
+  install_framework "Pods-DeluxeInjection_Tests/RuntimeRoutines.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "Pods-DeluxeInjection_Tests/DeluxeInjection.framework"
+  install_framework "Pods-DeluxeInjection_Tests/RuntimeRoutines.framework"
 fi

@@ -18,7 +18,7 @@
 //
 
 #import <objc/message.h>
-#import "DIRuntimeRoutines.h"
+#import <RuntimeRoutines/RuntimeRoutines.h>
 #import "DIDeluxeInjection.h"
 
 static void *DINothingToRestore = &DINothingToRestore;
@@ -179,8 +179,8 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
     const char *protocol_ptr = protocol_str;
     sprintf(protocol_str, "<%s>", NSStringFromProtocol(protocol).UTF8String);
     
-    DIRuntimeEnumerateClasses(^(Class class) {
-        DIRuntimeEnumerateClassProperties(class, ^(objc_property_t property) {
+    RRClassEnumerateAll(^(Class class) {
+        RRClassEnumerateProperties(class, ^(objc_property_t property) {
             const char *type = property_getAttributes(property);
             if (!protocol || (type && strstr(type, protocol_ptr))) {
                 block(class, property);
@@ -193,9 +193,9 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
     __block DIGetter getterToInject = getterBlock;
     __block DISetter setterToInject = setterBlock;
     
-    DIRuntimeGetPropertyType(property, ^(Class propertyClass, NSSet<Protocol *> * propertyProtocols) {
-        SEL getter = DIRuntimeGetPropertyGetter(property);
-        SEL setter = DIRuntimeGetPropertySetter(property);
+    RRPropertyGetClassAndProtocols(property, ^(Class propertyClass, NSSet<Protocol *> * propertyProtocols) {
+        SEL getter = RRPropertyGetGetter(property);
+        SEL setter = RRPropertyGetSetter(property);
         
         NSString *propertyName = [NSString stringWithUTF8String:property_getName(property)];
         if (blockFactory) {
@@ -215,13 +215,13 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
             }
         }
         
-        NSString *propertyIvarStr = DIRuntimeGetPropertyAttribute(property, "V");
+        NSString *propertyIvarStr = RRPropertyGetAttribute(property, "V");
         Ivar propertyIvar = propertyIvarStr ? class_getInstanceVariable(class, propertyIvarStr.UTF8String) : nil;
         
         BOOL isAssociated = (propertyIvar == nil);
         SEL associationKey = NSSelectorFromString([@"DI_" stringByAppendingString:propertyName]);
-        objc_AssociationPolicy associationPolicy = DIRuntimePropertyAssociationPolicy(property);
-        BOOL isWeak = DIRuntimeGetPropertyIsWeak(property);
+        objc_AssociationPolicy associationPolicy = RRPropertyGetAssociationPolicy(property);
+        BOOL isWeak = RRPropertyGetIsWeak(property);
         
         id (^newGetterBlock)(id) = nil;
         if (getterToInject) {
@@ -305,9 +305,9 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
         if (getterToInject) {
             Method getterMethod = class_getInstanceMethod(class, getter);
             if (getterMethod && method_getNumberOfArguments(getterMethod) != 0) {
-                NSAssert(method_getNumberOfArguments(getterMethod) == 2,
+                NSAssert(RRMethodGetArgumentsCount(getterMethod) == 0,
                          @"Getter should not have any arguments");
-                NSAssert([DIRuntimeMethodGetReturnType(getterMethod) isEqualToString:@"@"],
+                NSAssert([RRMethodGetReturnType(getterMethod) isEqualToString:@"@"],
                          @"DeluxeInjection do not support non-object properties injections");
             }
             
@@ -339,11 +339,11 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
         if (newSetterBlock) {
             Method setterMethod = class_getInstanceMethod(class, setter);
             if (setterMethod && method_getNumberOfArguments(setterMethod) != 0) {
-                NSAssert(method_getNumberOfArguments(setterMethod) == 3,
+                NSAssert(RRMethodGetArgumentsCount(setterMethod) == 1,
                          @"Setter should have exactly one argument");
-                NSAssert([DIRuntimeMethodGetReturnType(setterMethod) isEqualToString:@"v"],
-                         @"DeluxeInjection do not support non-object properties injections");
-                NSAssert([DIRuntimeMethodGetArgumentType(setterMethod, 0) isEqualToString:@"@"],
+                NSAssert([RRMethodGetReturnType(setterMethod) isEqualToString:@"v"],
+                         @"Setter should not have to return value");
+                NSAssert([RRMethodGetArgumentType(setterMethod, 0) isEqualToString:@"@"],
                          @"DeluxeInjection do not support non-object properties injections");
             }
             
@@ -367,7 +367,7 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
 
 + (void)reject:(Class)class property:(objc_property_t)property {
     // Restore or remove getter
-    SEL getter = DIRuntimeGetPropertyGetter(property);
+    SEL getter = RRPropertyGetGetter(property);
     IMP getterImp = DIInjectionsGettersBackupRead(class, getter);
     if (getterImp && getterImp != DINothingToRestore) {
         Method method = class_getInstanceMethod(class, getter);
@@ -390,7 +390,7 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
     DIInjectionsGettersBackupWrite(class, getter, nil);
     
     // Restore or remove setter
-    SEL setter = DIRuntimeGetPropertySetter(property);
+    SEL setter = RRPropertyGetSetter(property);
     IMP setterImp = DIInjectionsSettersBackupRead(class, setter);
     if (setterImp && setterImp != DINothingToRestore) {
         Method method = class_getInstanceMethod(class, setter);
@@ -416,7 +416,7 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
     if (associated) {
         NSString *propertyName = [NSString stringWithUTF8String:property_getName(property)];
         SEL associationKey = NSSelectorFromString([@"DI_" stringByAppendingString:propertyName]);
-        objc_AssociationPolicy associationPolicy = DIRuntimePropertyAssociationPolicy(property);
+        objc_AssociationPolicy associationPolicy = RRPropertyGetAssociationPolicy(property);
         for (id object in associated) {
             objc_setAssociatedObject(object, associationKey, nil, associationPolicy);
         }
@@ -426,10 +426,10 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
 
 + (void)reject:(DIPropertyFilter)block conformingProtocol:(Protocol *)protocol {
     [self enumerateAllClassProperties:^(Class class, objc_property_t property) {
-        DIRuntimeGetPropertyType(property, ^(Class propertyClass, NSSet<Protocol *> * propertyProtocols) {
+        RRPropertyGetClassAndProtocols(property, ^(Class propertyClass, NSSet<Protocol *> * propertyProtocols) {
             NSString *propertyName = [NSString stringWithUTF8String:property_getName(property)];
             if (block(class, propertyName, propertyClass, propertyProtocols)) {
-                SEL getter = DIRuntimeGetPropertyGetter(property);
+                SEL getter = RRPropertyGetGetter(property);
                 [self reject:class getter:getter];
             }
         });
@@ -452,8 +452,8 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
 }
 
 + (void)inject:(Class)class getter:(SEL)getter getterBlock:(DIGetter)getterBlock {
-    DIRuntimeEnumerateClassProperties(class, ^(objc_property_t property) {
-        SEL propertyGetter = DIRuntimeGetPropertyGetter(property);
+    RRClassEnumerateProperties(class, ^(objc_property_t property) {
+        SEL propertyGetter = RRPropertyGetGetter(property);
         if (getter == propertyGetter) {
             [self inject:class property:property getterBlock:getterBlock setterBlock:nil blockFactory:nil];
         }
@@ -461,8 +461,8 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
 }
 
 + (void)inject:(Class)class setter:(SEL)setter setterBlock:(DISetter)setterBlock {
-    DIRuntimeEnumerateClassProperties(class, ^(objc_property_t property) {
-        SEL propertySetter = DIRuntimeGetPropertySetter(property);
+    RRClassEnumerateProperties(class, ^(objc_property_t property) {
+        SEL propertySetter = RRPropertyGetSetter(property);
         if (setter == propertySetter) {
             [self inject:class property:property getterBlock:nil setterBlock:setterBlock blockFactory:nil];
         }
@@ -474,8 +474,8 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
         return;
     }
     
-    DIRuntimeEnumerateClassProperties(class, ^(objc_property_t property) {
-        if (getter == DIRuntimeGetPropertyGetter(property)) {
+    RRClassEnumerateProperties(class, ^(objc_property_t property) {
+        if (getter == RRPropertyGetGetter(property)) {
             [self reject:class property:property];
         }
     });
