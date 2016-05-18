@@ -41,6 +41,20 @@
 
 //
 
+@interface NSObject (TestCategory)
+
+@property (strong, nonatomic) NSArray<DIInject> *dynamicCategoryProperty;
+
+@end
+
+@implementation NSObject (TestCategory)
+
+@dynamic dynamicCategoryProperty;
+
+@end
+
+//
+
 @interface Tests : XCTestCase
 
 @end
@@ -230,6 +244,26 @@
     }
     XCTAssertNil(weakAnswer);
     XCTAssertNil(test.dynamicWeakObject);
+}
+
+- (void)testInjectToCategory
+{
+    NSArray *answer1 = @[@1,@2,@3];
+    NSArray *answer2 = @[@4,@5,@6];
+    
+    [DeluxeInjection inject:^id(Class targetClass, SEL getter, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
+        if ([propertyName isEqualToString:@"dynamicCategoryProperty"]) {
+            return answer1;
+        }
+        return [DeluxeInjection doNotInject];
+    }];
+    
+    NSObject *test = [[NSObject alloc] init];
+    XCTAssertEqualObjects(test.dynamicCategoryProperty, answer1);
+    test.dynamicCategoryProperty = answer2;
+    XCTAssertEqualObjects(test.dynamicCategoryProperty, answer2);
+    test.dynamicCategoryProperty = nil;
+    XCTAssertEqualObjects(test.dynamicCategoryProperty, answer1);
 }
 
 - (void)testLazy
