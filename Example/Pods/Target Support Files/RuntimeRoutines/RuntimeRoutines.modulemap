@@ -1,6 +1,0 @@
-framework module RuntimeRoutines {
-  umbrella header "RuntimeRoutines-umbrella.h"
-
-  export *
-  module * { export * }
-}
