@@ -1,6 +1,0 @@
-framework module DeluxeInjection {
-  umbrella header "DeluxeInjection-umbrella.h"
-
-  export *
-  module * { export * }
-}
