@@ -25,5 +25,6 @@
 #import "DIInject.h"
 #import "DILazy.h"
 #import "DIDefaults.h"
+#import "DIImperative.h"
 
 #endif // __DELUXEINJECTION__

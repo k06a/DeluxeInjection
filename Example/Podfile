@@ -1,5 +1,5 @@
 source 'https://github.com/CocoaPods/Specs.git'
-#use_frameworks!
+use_frameworks!
 
 target 'DeluxeInjection_Tests' do
   pod 'DeluxeInjection', :path => '../'
