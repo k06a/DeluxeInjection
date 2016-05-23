@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = "DeluxeInjection"
-  s.version          = "0.1.6"
+  s.version          = "0.2.0"
   s.summary          = "Simplest Objective-C Dependency Injection (DI:syringe:) implementation ever"
 
   s.description      = <<-DESC
@@ -14,9 +14,8 @@ Pod::Spec.new do |s|
   s.source           = { :git => "https://github.com/k06a/DeluxeInjection.git", :tag => s.version.to_s }
   s.social_media_url = 'https://twitter.com/k06a'
 
-  s.platform     = :ios, '7.0'
-  s.requires_arc = true
+  s.ios.deployment_target = '8.0'
 
-  s.source_files = 'Pod/Classes/**/*'
+  s.source_files = 'DeluxeInjection/Classes/**/*'
   s.dependency 'RuntimeRoutines'
 end

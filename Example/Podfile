@@ -1,6 +1,9 @@
-source 'https://github.com/CocoaPods/Specs.git'
-#use_frameworks!
+use_frameworks!
 
-target 'DeluxeInjection_Tests' do
+target 'DeluxeInjection_Example' do
   pod 'DeluxeInjection', :path => '../'
+
+  target 'DeluxeInjection_Tests' do
+    inherit! :search_paths
+  end
 end

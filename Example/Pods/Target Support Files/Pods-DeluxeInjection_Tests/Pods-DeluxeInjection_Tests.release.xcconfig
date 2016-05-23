@@ -1,8 +1,7 @@
+FRAMEWORK_SEARCH_PATHS = $(inherited) "$PODS_CONFIGURATION_BUILD_DIR/DeluxeInjection" "$PODS_CONFIGURATION_BUILD_DIR/RuntimeRoutines"
 GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
-HEADER_SEARCH_PATHS = $(inherited) "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public/DeluxeInjection" "${PODS_ROOT}/Headers/Public/RuntimeRoutines"
-LIBRARY_SEARCH_PATHS = $(inherited) "$PODS_CONFIGURATION_BUILD_DIR/DeluxeInjection" "$PODS_CONFIGURATION_BUILD_DIR/RuntimeRoutines"
-OTHER_CFLAGS = $(inherited) -isystem "${PODS_ROOT}/Headers/Public" -isystem "${PODS_ROOT}/Headers/Public/DeluxeInjection" -isystem "${PODS_ROOT}/Headers/Public/RuntimeRoutines"
-OTHER_LDFLAGS = $(inherited) -ObjC -l"DeluxeInjection" -l"RuntimeRoutines"
+LD_RUNPATH_SEARCH_PATHS = $(inherited) '@executable_path/Frameworks' '@loader_path/Frameworks'
+OTHER_CFLAGS = $(inherited) -iquote "$PODS_CONFIGURATION_BUILD_DIR/DeluxeInjection/DeluxeInjection.framework/Headers" -iquote "$PODS_CONFIGURATION_BUILD_DIR/RuntimeRoutines/RuntimeRoutines.framework/Headers"
 PODS_BUILD_DIR = $BUILD_DIR
 PODS_CONFIGURATION_BUILD_DIR = $PODS_BUILD_DIR/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)
 PODS_ROOT = ${SRCROOT}/Pods
