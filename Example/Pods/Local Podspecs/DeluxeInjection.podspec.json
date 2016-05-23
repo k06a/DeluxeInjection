@@ -18,6 +18,7 @@
   },
   "requires_arc": true,
   "source_files": "Pod/Classes/**/*",
+  "public_header_files": "Pod/Classes/DeluxeInjection.h",
   "dependencies": {
     "RuntimeRoutines": [
 

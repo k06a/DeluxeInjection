@@ -19,39 +19,74 @@
 
 #import "DIDeluxeInjection.h"
 
+/**
+ *  Block to filter properties to be injected
+ *
+ *  @param targetClass       Class to be injected
+ *  @param getter            Selector of getter method
+ *  @param propertyName      Property name to be injected
+ *  @param propertyClass     Class of property to be injected, at least \c NSObject
+ *  @param propertyProtocols Set of property protocols including all superprotocols
+ *
+ *  @return \c YES to inject property, \c NO to skip injection
+ */
+typedef BOOL (^DIPropertyFilterBlock)(Class targetClass, SEL getter, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols);
+
+//
+
+@interface DIDeluxeInjectionImperativeInjector : NSObject
+
+/**
+ *  Set value to be injected
+ *
+ *  @param valueObject Value to be injected
+ */
+- (instancetype)valueObject:(id)valueObject;
+
+/**
+ *  Set value block to be injected
+ *
+ *  @param valueBlock Value block to be injected
+ */
+- (instancetype)valueBlock:(DIGetter)valueBlock;
+
+/**
+ *  Set filter class for conditional injection
+ *
+ *  @param filterClass Class which sublasses properties can be injected
+ */
+- (instancetype)filterClass:(Class)filterClass;
+
+/**
+ *  Set filter block for conditional injection
+ *
+ *  @param filterBlock Block which define what properties can be injected
+ */
+- (instancetype)filterBlock:(DIPropertyFilterBlock)filterBlock;
+
+@end
+
+//
+
 @interface DIDeluxeInjectionImperative : NSObject
 
 /**
  *  Inject all properties of class \c klass with \c value
  *
  *  @param klass Property class
- *  @param value Value to be injected
+ *
+ *  @return Injector object to define value and options to be injected
  */
-- (void)injectByPropertyClass:(Class)klass value:(id)value;
+- (DIDeluxeInjectionImperativeInjector *)injectByPropertyClass:(Class)klass;
 
 /**
  *  Inject all properties conforming \c protocol with \c value
  *
  *  @param protocol Protocol of property
- *  @param value    Value to be injected
- */
-- (void)injectByPropertyProtocol:(Protocol *)protocol value:(id)value;
-
-/**
- *  Inject all properties of class \c klass with \c getter block
  *
- *  @param klass       Property class
- *  @param getterBlock Getter block to be injected
+ *  @return Injector object to define value and options to be injected
  */
-- (void)injectByPropertyClass:(Class)klass getterBlock:(DIGetter)getterBlock;
-
-/**
- *  Inject all properties conforming \c protocol with \c getter block
- *
- *  @param protocol    Protocol of property
- *  @param getterBlock Getter block to be injected
- */
-- (void)injectByPropertyProtocol:(Protocol *)protocol getterBlock:(DIGetter)getterBlock;
+- (DIDeluxeInjectionImperativeInjector *)injectByPropertyProtocol:(Protocol *)protocol;
 
 @end
 

@@ -11,7 +11,7 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  DeluxeInjection: ec3c67be202fc3d892412fbfe0307625afdcb383
+  DeluxeInjection: 3402ea17cac8fb0dbcb316753c36406076bfde22
   RuntimeRoutines: 2b79a691652c63061de81982b4a524cb3b323cf3
 
 PODFILE CHECKSUM: 095b1b2a21b7a2eaf9b786c4cf1f3c391bbf4c94

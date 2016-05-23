@@ -27,6 +27,7 @@
 
 @property (assign, nonatomic) Class targetClass;
 @property (assign, nonatomic) Class klass;
+@property (strong, nonatomic) NSString *name;
 @property (strong, nonatomic) NSSet<Protocol *> *protocols;
 @property (assign, nonatomic) SEL getter;
 @property (assign, nonatomic) BOOL wasInjected;
@@ -39,12 +40,73 @@
 
 //
 
+@interface DIDeluxeInjectionImperativeInjector ()
+
+@property (weak, nonatomic) DIDeluxeInjectionImperative *lets;
+@property (assign, nonatomic) Class savedClass;
+@property (assign, nonatomic) Protocol *savedProtocol;
+@property (copy, nonatomic) DIGetter savedValueBlock;
+@property (copy, nonatomic) DIPropertyFilterBlock savedFilterBlock;
+
+@end
+
 @interface DIDeluxeInjectionImperative ()
 
 @property (strong, nonatomic) NSMutableDictionary<id,NSMutableArray<DIPropertyHolder *> *> *byClass;
 @property (strong, nonatomic) NSMutableDictionary<NSValue *,NSMutableArray<DIPropertyHolder *> *> *byProtocol;
 
 @end
+
+//
+
+@implementation DIDeluxeInjectionImperativeInjector
+
+- (instancetype)valueObject:(id)valueObject {
+    return [self valueBlock:DIGetterIfIvarIsNil(^id (id target) {
+        return valueObject;
+    })];
+}
+
+- (instancetype)valueBlock:(DIGetter)valueBlock {
+    NSAssert(self.savedValueBlock == nil, @"You should call valueObject: or valueBlock: only once");
+    self.savedValueBlock = valueBlock;
+    return self;
+}
+
+- (instancetype)filterClass:(Class)filterClass {
+    return [self filterBlock:^BOOL(Class targetClass, SEL getter, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
+        return [targetClass isSubclassOfClass:filterClass];
+    }];
+}
+
+- (instancetype)filterBlock:(DIPropertyFilterBlock)filterBlock {
+    NSAssert(self.savedFilterBlock == nil, @"You should call filterClass: or filterBlock: only once");
+    self.savedFilterBlock = filterBlock;
+    return self;
+}
+
+- (void)dealloc {
+    NSAssert(!!self.savedClass != !!self.savedProtocol, @"You should not define both class and protocol to inject");
+    NSAssert(self.savedValueBlock, @"You should call valueObject: or valueBlock: once");
+    
+    NSValue *key = [NSValue valueWithPointer:(__bridge void *)(self.savedProtocol)];
+    NSArray *holders = self.savedClass ? self.lets.byClass[self.savedClass] : self.lets.byProtocol[key];
+    
+    for (DIPropertyHolder *holder in holders) {
+        if (self.savedFilterBlock && !self.savedFilterBlock(holder.targetClass, holder.getter, holder.name, holder.klass, holder.protocols)) {
+            continue;
+        }
+        if (holder.wasInjected) {
+            NSLog(@"Warning: Reinjecting property [%@ %@]", holder.targetClass, NSStringFromSelector(holder.getter));
+        }
+        [DeluxeInjection inject:holder.targetClass getter:holder.getter getterBlock:self.savedValueBlock];
+        holder.wasInjected = YES;
+    }
+}
+
+@end
+
+//
 
 @implementation DIDeluxeInjectionImperative
 
@@ -59,9 +121,10 @@
             
             DIPropertyHolder *holder = [[DIPropertyHolder alloc] init];
             holder.targetClass = targetClass;
+            holder.getter = getter;
+            holder.name = propertyName;
             holder.klass = propertyClass;
             holder.protocols = propertyProtocols;
-            holder.getter = getter;
             
             if (propertyClass) {
                 if (_byClass[(id)propertyClass] == nil) {
@@ -85,37 +148,18 @@
     return self;
 }
 
-- (void)injectByPropertyClass:(Class)klass value:(id)value {
-    [self injectByPropertyClass:klass getterBlock:DIGetterIfIvarIsNil(^(id target){
-        return value;
-    })];
+- (DIDeluxeInjectionImperativeInjector *)injectByPropertyClass:(Class)klass {
+    DIDeluxeInjectionImperativeInjector *injector = [[DIDeluxeInjectionImperativeInjector alloc] init];
+    injector.lets = self;
+    injector.savedClass = klass;
+    return injector;
 }
 
-- (void)injectByPropertyProtocol:(Protocol *)protocol value:(id)value {
-    [self injectByPropertyProtocol:protocol getterBlock:DIGetterIfIvarIsNil(^(id target){
-        return value;
-    })];
-}
-
-- (void)injectByPropertyClass:(Class)klass getterBlock:(DIGetter)getterBlock {
-    for (DIPropertyHolder *holder in self.byClass[klass]) {
-        if (holder.wasInjected) {
-            NSLog(@"Warning: Reinjecting property [%@ %@]", holder.targetClass, NSStringFromSelector(holder.getter));
-        }
-        [DeluxeInjection inject:holder.targetClass getter:holder.getter getterBlock:getterBlock];
-        holder.wasInjected = YES;
-    }
-}
-
-- (void)injectByPropertyProtocol:(Protocol *)protocol getterBlock:(DIGetter)getterBlock {
-    NSValue *key = [NSValue valueWithPointer:(__bridge void *)(protocol)];
-    for (DIPropertyHolder *holder in self.byProtocol[key]) {
-        if (holder.wasInjected) {
-            NSLog(@"Warning: Reinjecting property [%@ %@]", holder.targetClass, NSStringFromSelector(holder.getter));
-        }
-        [DeluxeInjection inject:holder.targetClass getter:holder.getter getterBlock:getterBlock];
-        holder.wasInjected = YES;
-    }
+- (DIDeluxeInjectionImperativeInjector *)injectByPropertyProtocol:(Protocol *)protocol {
+    DIDeluxeInjectionImperativeInjector *injector = [[DIDeluxeInjectionImperativeInjector alloc] init];
+    injector.lets = self;
+    injector.savedProtocol = protocol;
+    return injector;
 }
 
 - (void)checkAllInjected {

@@ -62,8 +62,8 @@
 
 @implementation Tests
 
-- (void)setUp {
-    [super setUp];
+- (void)tearDown {
+    [super tearDown];
 
     [DeluxeInjection rejectAll];
     [DeluxeInjection rejectLazy];
@@ -333,9 +333,9 @@
     id answer2 = @"abc";
 
     [DeluxeInjection imperative:^(DIDeluxeInjectionImperative *lets){
-        [lets injectByPropertyClass:[NSMutableArray class] value:[answer1 mutableCopy]];
-        [lets injectByPropertyClass:[NSArray class] value:answer1];
-        [lets injectByPropertyProtocol:@protocol(TestProtocol) value:answer2];
+        [[lets injectByPropertyClass:[NSMutableArray class]] valueObject:[answer1 mutableCopy]];
+        [[lets injectByPropertyClass:[NSArray class]] valueObject:answer1];
+        [[lets injectByPropertyProtocol:@protocol(TestProtocol)] valueObject:answer2];
     }];
 
     TestType *test = [[TestType alloc] init];
