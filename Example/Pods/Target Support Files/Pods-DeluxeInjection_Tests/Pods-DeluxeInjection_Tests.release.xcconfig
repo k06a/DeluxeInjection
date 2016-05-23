@@ -2,7 +2,6 @@ FRAMEWORK_SEARCH_PATHS = $(inherited) "$PODS_CONFIGURATION_BUILD_DIR/DeluxeInjec
 GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
 LD_RUNPATH_SEARCH_PATHS = $(inherited) '@executable_path/Frameworks' '@loader_path/Frameworks'
 OTHER_CFLAGS = $(inherited) -iquote "$PODS_CONFIGURATION_BUILD_DIR/DeluxeInjection/DeluxeInjection.framework/Headers" -iquote "$PODS_CONFIGURATION_BUILD_DIR/RuntimeRoutines/RuntimeRoutines.framework/Headers"
-OTHER_LDFLAGS = $(inherited) -framework "DeluxeInjection" -framework "RuntimeRoutines"
 PODS_BUILD_DIR = $BUILD_DIR
 PODS_CONFIGURATION_BUILD_DIR = $PODS_BUILD_DIR/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)
 PODS_ROOT = ${SRCROOT}/Pods

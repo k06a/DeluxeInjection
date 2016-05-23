@@ -82,3 +82,12 @@ strip_invalid_archs() {
   fi
 }
 
+
+if [[ "$CONFIGURATION" == "Debug" ]]; then
+  install_framework "$BUILT_PRODUCTS_DIR/DeluxeInjection/DeluxeInjection.framework"
+  install_framework "$BUILT_PRODUCTS_DIR/RuntimeRoutines/RuntimeRoutines.framework"
+fi
+if [[ "$CONFIGURATION" == "Release" ]]; then
+  install_framework "$BUILT_PRODUCTS_DIR/DeluxeInjection/DeluxeInjection.framework"
+  install_framework "$BUILT_PRODUCTS_DIR/RuntimeRoutines/RuntimeRoutines.framework"
+fi

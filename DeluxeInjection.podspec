@@ -14,10 +14,8 @@ Pod::Spec.new do |s|
   s.source           = { :git => "https://github.com/k06a/DeluxeInjection.git", :tag => s.version.to_s }
   s.social_media_url = 'https://twitter.com/k06a'
 
-  s.platform     = :ios, '7.0'
-  s.requires_arc = true
+  s.ios.deployment_target = '8.0'
 
-  s.source_files = 'Pod/Classes/**/*'
-  s.public_header_files = 'Pod/Classes/DeluxeInjection.h'
+  s.source_files = 'DeluxeInjection/Classes/**/*'
   s.dependency 'RuntimeRoutines'
 end

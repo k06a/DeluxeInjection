@@ -14,11 +14,9 @@
   },
   "social_media_url": "https://twitter.com/k06a",
   "platforms": {
-    "ios": "7.0"
+    "ios": "8.0"
   },
-  "requires_arc": true,
-  "source_files": "Pod/Classes/**/*",
-  "public_header_files": "Pod/Classes/DeluxeInjection.h",
+  "source_files": "DeluxeInjection/Classes/**/*",
   "dependencies": {
     "RuntimeRoutines": [
 
