@@ -23,6 +23,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Block types
 
+typedef id _Nullable (*DIOriginalGetter)(id target, SEL cmd);
+typedef void (*DIOriginalSetter)(id target, SEL cmd, id _Nullable value);
+
 /**
  *  Block to be injected instead of property getter
  *
@@ -31,26 +34,19 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @return Injected value or \c [DeluxeInjection \c doNotInject] instance to not inject this property
  */
-typedef id _Nullable (^DIGetter)(id target, id _Nullable * _Nonnull ivar);
+typedef id _Nullable (^DIGetter)(id target, id _Nullable * _Nonnull ivar, DIOriginalGetter _Nullable originalGetter);
+typedef id _Nullable (^DIGetterWithoutOriginal)(id target, id _Nullable * _Nonnull ivar);
+typedef id _Nullable (^DIGetterWithoutIvar)(id target);
 
 /**
  *  Block to be injected instead of property setter
  *
  *  @param target Receiver of selector
  *  @param ivar Pointer to instance variable
- *
- *  @return Injected value or \c [DeluxeInjection \c doNotInject] instance to not inject this property
  */
-typedef void (^DISetter)(id target, id _Nullable * _Nonnull ivar, id value);
-
-/**
- *  Block to be injected instead of property getter
- *
- *  @param target Receiver of selector
- *
- *  @return Injected value or \c nil
- */
-typedef id _Nullable (^DIGetterWithoutIvar)(id target);
+typedef void (^DISetter)(id target, id _Nullable * _Nonnull ivar, id value, DIOriginalSetter _Nullable originalSetter);
+typedef void (^DISetterWithoutOriginal)(id target, id _Nullable * _Nonnull ivar, id value);
+typedef void (^DISetterWithoutIvar)(id target, id value);
 
 /**
  *  Block to be injected for property
@@ -119,8 +115,10 @@ typedef BOOL (^DIPropertyFilter)(Class targetClass, NSString *propertyName, Clas
 /**
  *  Helper methods to create DIGetter and DISetter with Xcode autocomplete :)
  */
-DIGetter DIGetterMake(DIGetter getter);
-DISetter DISetterMake(DISetter setter);
+DIGetter DIGetterMake(DIGetterWithoutOriginal getter);
+DISetter DISetterMake(DISetterWithoutOriginal setter);
+DIGetter DIGetterWithOriginalMake(DIGetter getter);
+DISetter DISetterWithOriginalMake(DISetter setter);
 
 /**
  *  Transforms getter block without \c ivar argument to block with \c ivar argument this way:
@@ -155,9 +153,7 @@ id DIGetterSuperCall(id target, Class klass, SEL getter);
  *
  *  @param target Target to call
  *  @param klass  Class of current setter implementation
- *  @param getter Selector to call
- *
- *  @return Return value be supers setter
+ *  @param setter Selector to call
  */
 void DISetterSuperCall(id target, Class klass, SEL setter, id value);
 
@@ -198,7 +194,7 @@ void DISetterSuperCall(id target, Class klass, SEL setter, id value);
  *  @param setter Class property setter to inject
  *  @param setterBlock Block to be injected into setter
  */
-+ (void)inject:(Class)klass setter:(SEL)getter setterBlock:(DISetter)setterBlock;
++ (void)inject:(Class)klass setter:(SEL)setter setterBlock:(DISetter)setterBlock;
 
 /**
  *  Reject concrete property injection

@@ -115,21 +115,33 @@ static void DIAssociatesRemove(Class class, SEL getter) {
 
 //
 
-DIGetter DIGetterMake(DIGetter getter) {
+DIGetter DIGetterMake(DIGetterWithoutOriginal getter) {
+    return DIGetterWithOriginalMake(^id _Nullable(id  _Nonnull target, id  _Nullable __autoreleasing * _Nonnull ivar, id  _Nullable (* _Nullable originalGetter)(id  _Nonnull __strong, SEL _Nonnull)) {
+        return getter(target, ivar);
+    });
+}
+
+DISetter DISetterMake(DISetterWithoutOriginal setter) {
+    return DISetterWithOriginalMake(^(id  _Nonnull target, id  _Nullable __autoreleasing * _Nonnull ivar, id  _Nonnull value, void (* _Nullable originalSetter)(id  _Nonnull __strong, SEL _Nonnull, id  _Nullable __strong)) {
+        return setter(target, ivar, value);
+    });
+}
+
+DIGetter DIGetterWithOriginalMake(DIGetter getter) {
     return [getter copy];
 }
 
-DISetter DISetterMake(DISetter setter) {
+DISetter DISetterWithOriginalMake(DISetter setter) {
     return [setter copy];
 }
 
 DIGetter DIGetterIfIvarIsNil(DIGetterWithoutIvar getter) {
-    return ^id(id target, id *ivar) {
+    return DIGetterWithOriginalMake(^id _Nullable(id  _Nonnull target, id  _Nullable __autoreleasing * _Nonnull ivar, id  _Nullable (* _Nullable originalGetter)(id  _Nonnull __strong, SEL _Nonnull)) {
         if (*ivar == nil) {
             *ivar = getter(target);
         }
         return *ivar;
-    };
+    });
 }
 
 id DIGetterSuperCall(id target, Class class, SEL getter) {
@@ -224,9 +236,36 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
             }
         }
 
+        Method getterMethod = class_getInstanceMethod(class, getter);
+        if (getterMethod) {
+            NSAssert(RRMethodGetArgumentsCount(getterMethod) == 0,
+                     @"Getter should not have any arguments");
+            NSAssert([RRMethodGetReturnType(getterMethod) isEqualToString:@"@"],
+                     @"DeluxeInjection do not support non-object properties injections");
+        }
+        
+        Method setterMethod = class_getInstanceMethod(class, setter);
+        if (setterMethod) {
+            NSAssert([RRMethodGetReturnType(setterMethod) isEqualToString:@"v"],
+                     @"Setter should return void");
+            NSAssert(RRMethodGetArgumentsCount(setterMethod) == 1,
+                     @"Setter should have exactly one argument");
+            NSAssert([RRMethodGetArgumentType(setterMethod, 0) isEqualToString:@"@"],
+                     @"DeluxeInjection do not support non-object properties injections");
+        }
+        
+        DIOriginalGetter originalGetterIMP = (DIOriginalGetter)(DIInjectionsGettersBackupRead(class, getter) ?: method_getImplementation(getterMethod));
+        DIOriginalSetter originalSetterIMP = (DIOriginalSetter)(DIInjectionsSettersBackupRead(class, setter) ?: method_getImplementation(setterMethod));
+        if (originalGetterIMP == DINothingToRestore) {
+            originalGetterIMP = nil;
+        }
+        if (originalSetterIMP == DINothingToRestore) {
+            originalSetterIMP = nil;
+        }
+        
         NSString *propertyIvarStr = RRPropertyGetAttribute(property, "V");
         Ivar propertyIvar = propertyIvarStr ? class_getInstanceVariable(class, propertyIvarStr.UTF8String) : nil;
-
+        
         BOOL isAssociated = (propertyIvar == nil);
         SEL associationKey = NSSelectorFromString([@"DI_" stringByAppendingString:propertyName]);
         objc_AssociationPolicy associationPolicy = RRPropertyGetAssociationPolicy(property);
@@ -237,7 +276,7 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
             if (!isAssociated) {
                 newGetterBlock = ^id(id target) {
                     id ivar = object_getIvar(target, propertyIvar);
-                    id result = getterToInject(target, &ivar);
+                    id result = getterToInject(target, &ivar, originalGetterIMP);
                     object_setIvar(target, propertyIvar, ivar);
                     return result;
                 };
@@ -252,7 +291,7 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
                         }
                         id ivar = ((DIWeakWrapper *)wrapper)->object;
                         BOOL ivarWasNil = (ivar == nil);
-                        id result = getterToInject(target, &ivar);
+                        id result = getterToInject(target, &ivar, originalGetterIMP);
                         if (ivar && ivarWasNil) {
                             DIAssociatesWrite(class, getter, target);
                         }
@@ -267,7 +306,7 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
                     newGetterBlock = ^id(id target) {
                         id ivar = objc_getAssociatedObject(target, associationKey);
                         BOOL ivarWasNil = (ivar == nil);
-                        id result = getterToInject(target, &ivar);
+                        id result = getterToInject(target, &ivar, originalGetterIMP);
                         if (ivar && ivarWasNil) {
                             DIAssociatesWrite(class, getter, target);
                         }
@@ -283,7 +322,7 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
             if (!isAssociated) {
                 newSetterBlock = ^void(id target, id newValue) {
                     id ivar = object_getIvar(target, propertyIvar);
-                    setterToInject(target, &ivar, newValue);
+                    setterToInject(target, &ivar, newValue, originalSetterIMP);
                     object_setIvar(target, propertyIvar, ivar);
                 };
             }
@@ -293,7 +332,7 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
                         DIWeakWrapper *wrapper = objc_getAssociatedObject(target, associationKey) ?: [[DIWeakWrapper alloc] init];
                         id ivar = wrapper->object;
                         BOOL ivarWasNil = (ivar == nil);
-                        setterToInject(target, &ivar, newValue);
+                        setterToInject(target, &ivar, newValue, originalSetterIMP);
                         if (ivar && ivarWasNil) {
                             DIAssociatesWrite(class, getter, target);
                         }
@@ -305,7 +344,7 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
                     newSetterBlock = ^void(id target, id newValue) {
                         id ivar = objc_getAssociatedObject(target, associationKey);
                         BOOL ivarWasNil = (ivar == nil);
-                        setterToInject(target, &ivar, newValue);
+                        setterToInject(target, &ivar, newValue, originalSetterIMP);
                         if (ivar && ivarWasNil) {
                             DIAssociatesWrite(class, getter, target);
                         }
@@ -316,14 +355,6 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
         }
 
         if (getterToInject) {
-            Method getterMethod = class_getInstanceMethod(class, getter);
-            if (getterMethod) {
-                NSAssert(RRMethodGetArgumentsCount(getterMethod) == 0,
-                         @"Getter should not have any arguments");
-                NSAssert([RRMethodGetReturnType(getterMethod) isEqualToString:@"@"],
-                         @"DeluxeInjection do not support non-object properties injections");
-            }
-
             IMP newGetterImp = imp_implementationWithBlock(newGetterBlock);
             const char *getterTypes = method_getTypeEncoding(class_getInstanceMethod(self, @selector(getterExample)));
             IMP replacedGetterImp = class_replaceMethod(class, getter, newGetterImp, getterTypes);
@@ -349,16 +380,6 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
         }
 
         if (newSetterBlock) {
-            Method setterMethod = class_getInstanceMethod(class, setter);
-            if (setterMethod) {
-                NSAssert([RRMethodGetReturnType(setterMethod) isEqualToString:@"v"],
-                         @"Setter should return void");
-                NSAssert(RRMethodGetArgumentsCount(setterMethod) == 1,
-                         @"Setter should have exactly one argument");
-                NSAssert([RRMethodGetArgumentType(setterMethod, 0) isEqualToString:@"@"],
-                         @"DeluxeInjection do not support non-object properties injections");
-            }
-
             IMP newSetterImp = imp_implementationWithBlock(newSetterBlock);
             const char *setterTypes = method_getTypeEncoding(class_getInstanceMethod(self, @selector(setterExample:)));
             IMP replacedSetterImp = class_replaceMethod(class, setter, newSetterImp, setterTypes);

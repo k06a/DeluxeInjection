@@ -31,17 +31,20 @@
 + (void)injectDefaultsWithKey:(DIDefaultsKeyBlock)keyBlock forProtocol:(Protocol *)protocol withSync:(BOOL)withSync {
     [self inject:^NSArray *(Class targetClass, SEL getter, SEL setter, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
         NSString *key = keyBlock(targetClass, propertyName, propertyClass, propertyProtocols) ?: propertyName;
-        return @[^id(id target, id *ivar) {
+        return @[DIGetterMake(^id _Nullable(id  _Nonnull target, id  _Nullable __autoreleasing * _Nonnull ivar) {
             if (withSync) {
                 [[NSUserDefaults standardUserDefaults] synchronize];
             }
             return [[NSUserDefaults standardUserDefaults] objectForKey:key];
-        }, ^(id target, id *ivar, id newValue) {
-            [[NSUserDefaults standardUserDefaults] setValue:newValue forKey:key];
+        }), DISetterWithOriginalMake(^(id  _Nonnull target, id  _Nullable __autoreleasing * _Nonnull ivar, id  _Nonnull value, void (* _Nullable originalSetter)(id  _Nonnull __strong, SEL _Nonnull, id  _Nullable __strong)) {
+            [[NSUserDefaults standardUserDefaults] setObject:value forKey:key];
             if (withSync) {
                 [[NSUserDefaults standardUserDefaults] synchronize];
             }
-        }];
+            if (originalSetter) {
+                originalSetter(target, setter, value);
+            }
+        })];
     } conformingProtocol:protocol];
 }
 
