@@ -1,6 +1,6 @@
 //
 //  DIDefaults.h
-//  Pods
+//  DeluxeInjection
 //
 //  Copyright (c) 2016 Anton Bukov <k06aaa@gmail.com>
 //
@@ -29,7 +29,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface NSObject (DIDefaults) <DIDefaults, DIDefaultsSync>
+@protocol DIDefaultsArchived <NSObject>
+
+@end
+
+@protocol DIDefaultsArchivedSync <NSObject>
+
+@end
+
+@interface NSObject (DIDefaults) <DIDefaults, DIDefaultsSync, DIDefaultsArchived, DIDefaultsArchivedSync>
 
 @end
 
