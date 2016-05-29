@@ -53,6 +53,18 @@ NS_ASSUME_NONNULL_BEGIN
  */
 typedef NSString * _Nullable (^DIDefaultsKeyBlock)(Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols);
 
+/**
+ *  Block to define custom NSUserDefaults to use
+ *
+ *  @param targetClass       Class to be injected/rejected
+ *  @param propertyName      Property name to be injected/rejected
+ *  @param propertyClass     Class of property to be injected/rejected, at least \c NSObject
+ *  @param propertyProtocols Set of property protocols including all superprotocols
+ *
+ *  @return NSUserDefaults instance for propertyName of \c targetClass or \c nil to use \c [NSUserDefaults \c standardUserDefaults]
+ */
+typedef NSUserDefaults * _Nullable (^DIUserDefaultsBlock)(Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols);
+
 @interface DeluxeInjection (DIDefaults)
 
 /**
@@ -64,7 +76,7 @@ typedef NSString * _Nullable (^DIDefaultsKeyBlock)(Class targetClass, NSString *
  *  Inject properties marked with \c <DIDefaults> and \c <DIDefaultsSync> protocol
  *  using NSUserDefaults access with custom key provided by block
  */
-+ (void)injectDefaultsWithKey:(DIDefaultsKeyBlock)keyBlock;
++ (void)injectDefaultsWithKey:(DIDefaultsKeyBlock)keyBlock defaults:(DIUserDefaultsBlock)defaultsBlock;
 
 /**
  *  Reject all injections marked explicitly with \c <DIDefaults> and \c <DIDefaultsSync> protocol.
