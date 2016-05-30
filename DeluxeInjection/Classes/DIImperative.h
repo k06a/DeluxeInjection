@@ -19,43 +19,119 @@
 
 #import "DIDeluxeInjection.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 /**
  *  Block to filter properties to be injected
  *
  *  @param targetClass       Class to be injected
  *  @param getter            Selector of getter method
  *  @param propertyName      Property name to be injected
- *  @param propertyClass     Class of property to be injected, at least \c NSObject
+ *  @param propertyClass     Class of property to be injected, \c nil in case of \c id
  *  @param propertyProtocols Set of property protocols including all superprotocols
  *
  *  @return \c YES to inject property, \c NO to skip injection
  */
-typedef BOOL (^DIPropertyFilterBlock)(Class targetClass, SEL getter, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols);
+typedef BOOL (^DIPropertyFilterBlock)(Class targetClass,
+                                      SEL getter,
+                                      NSString * propertyName,
+                                      Class _Nullable propertyClass,
+                                      NSSet<Protocol *> *propertyProtocols);
+
+/**
+ *  Block to be injected for property getter
+ *
+ *  @param targetClass       Class to be injected
+ *  @param getter            Property getter selector
+ *  @param propertyName      Injected property name
+ *  @param propertyClass     Class of injected property, \c nil in case of \c id
+ *  @param propertyProtocols Set of property protocols including all superprotocols
+ *  @param target            Receiver of selector
+ *  @param ivar              Pointer to instance variable
+ *  @param originalSetter    Original setter pointer if exists
+ *
+ *  @return Injected value or \c nil
+ */
+typedef id _Nullable (^DIImperativeGetter)(Class targetClass,
+                                           SEL getter,
+                                           NSString *propertyName,
+                                           Class _Nullable propertyClass,
+                                           NSSet<Protocol *> *propertyProtocols,
+                                           id target,
+                                           id _Nullable * _Nonnull ivar,
+                                           DIOriginalGetter _Nullable originalGetter);
+
+/**
+ *  Block to be injected for property setter
+ *
+ *  @param targetClass       Class to be injected
+ *  @param setter            Property setter selector
+ *  @param propertyName      Injected property name
+ *  @param propertyClass     Class of injected property, \c nil in case of \c id
+ *  @param propertyProtocols Set of property protocols including all superprotocols
+ *  @param target            Receiver of selector
+ *  @param ivar              Pointer to instance variable
+ *  @param value             New value to assign inside setter
+ *  @param originalSetter    Original setter pointer if exists
+ *
+ *  @return Injected value or \c nil
+ */
+typedef void (^DIImperativeSetter)(Class targetClass,
+                                   SEL setter,
+                                   NSString *propertyName,
+                                   Class _Nullable propertyClass,
+                                   NSSet<Protocol *> *propertyProtocols,
+                                   id target,
+                                   id _Nullable * _Nonnull ivar,
+                                   id _Nullable value,
+                                   DIOriginalSetter _Nullable originalSetter);
+
 
 //
 
-@interface DIDeluxeInjectionImperativeInjector : NSObject
+@interface DIImperativeInjector : NSObject
+
+
+#pragma mark - Property injection type
+
+/**
+ *  Set property \c klass to be injected
+ *
+ *  @param klass Property class
+ */
+- (instancetype)byPropertyClass:(Class)klass;
+
+/**
+ *  Set property \c protocol to be injected
+ *
+ *  @param protocol Protocol of property
+ */
+- (instancetype)byPropertyProtocol:(Protocol *)protocol;
 
 /**
  *  Set value to be injected
  *
- *  @param valueObject Value to be injected
+ *  @param getterValue Value to be injected
  */
-- (instancetype)valueObject:(id)valueObject;
+- (instancetype)getterValue:(id)getterValue;
+
+#pragma mark - Property injection value or blocks
 
 /**
- *  Set value block to be injected
+ *  Set getter block to be injected
  *
- *  @param valueBlock Value block to be injected
+ *  @param getterBlock Value block to be injected
  */
-- (instancetype)valueBlock:(DIGetter)valueBlock;
+- (instancetype)getterBlock:(DIImperativeGetter)getterBlock;
 
 /**
- *  Set filter class for conditional injection
+ *  Set setter block to be injected
  *
- *  @param filterClass Class which sublasses properties can be injected
+ *  @param setterBlock Value block to be injected
  */
-- (instancetype)filterClass:(Class)filterClass;
+- (instancetype)setterBlock:(DIImperativeSetter)setterBlock;
+
+#pragma mark - Property injection filtering
 
 /**
  *  Set filter block for conditional injection
@@ -64,29 +140,37 @@ typedef BOOL (^DIPropertyFilterBlock)(Class targetClass, SEL getter, NSString *p
  */
 - (instancetype)filterBlock:(DIPropertyFilterBlock)filterBlock;
 
+/**
+ *  Set filter class for conditional injection
+ *
+ *  @param filterContainerClass Class which sublasses properties can be injected
+ */
+- (instancetype)filterContainerClass:(Class)filterContainerClass;
+
 @end
 
 //
 
-@interface DIDeluxeInjectionImperative : NSObject
+@interface DIImperative : NSObject
 
 /**
- *  Inject all properties of class \c klass with \c value
- *
- *  @param klass Property class
- *
- *  @return Injector object to define value and options to be injected
- */
-- (DIDeluxeInjectionImperativeInjector *)injectByPropertyClass:(Class)klass;
+*  Create injector object
+*
+*  @return injector object
+*/
+- (DIImperativeInjector *)inject;
 
 /**
- *  Inject all properties conforming \c protocol with \c value
+ *  Create rejector object
  *
- *  @param protocol Protocol of property
- *
- *  @return Injector object to define value and options to be injected
+ *  @return rejector object
  */
-- (DIDeluxeInjectionImperativeInjector *)injectByPropertyProtocol:(Protocol *)protocol;
+- (DIImperativeInjector *)reject;
+
+/**
+ *  Debug method to skip asserts
+ */
+- (void)skipAsserts;
 
 @end
 
@@ -97,7 +181,7 @@ typedef BOOL (^DIPropertyFilterBlock)(Class targetClass, SEL getter, NSString *p
  *
  *  @param lets Object to apply imperative injections
  */
-typedef void (^DIImperativeBlock)(DIDeluxeInjectionImperative *lets);
+typedef void (^DIImperativeBlock)(DIImperative *lets);
 
 @interface DeluxeInjection (DIImperative)
 
@@ -111,3 +195,5 @@ typedef void (^DIImperativeBlock)(DIDeluxeInjectionImperative *lets);
 + (void)imperative:(DIImperativeBlock)block;
 
 @end
+
+NS_ASSUME_NONNULL_END

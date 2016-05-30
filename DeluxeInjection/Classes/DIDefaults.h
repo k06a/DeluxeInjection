@@ -18,6 +18,7 @@
 //
 
 #import "DIDeluxeInjection.h"
+#import "DIImperative.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -46,42 +47,119 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @param targetClass       Class to be injected/rejected
  *  @param propertyName      Property name to be injected/rejected
- *  @param propertyClass     Class of property to be injected/rejected, at least \c NSObject
+ *  @param propertyClass     Class of property to be injected/rejected, \c nil in case of \c id
  *  @param propertyProtocols Set of property protocols including all superprotocols
  *
  *  @return Key to store in \c NSUserDefaults for propertyName of \c targetClass or \c nil to use \c propertyName
  */
-typedef NSString * _Nullable (^DIDefaultsKeyBlock)(Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols);
+typedef NSString * _Nullable (^DIDefaultsKeyBlock)(Class targetClass,
+                                                   NSString *propertyName,
+                                                   Class _Nullable propertyClass,
+                                                   NSSet<Protocol *> *propertyProtocols);
 
 /**
  *  Block to define custom NSUserDefaults to use
  *
  *  @param targetClass       Class to be injected/rejected
  *  @param propertyName      Property name to be injected/rejected
- *  @param propertyClass     Class of property to be injected/rejected, at least \c NSObject
+ *  @param propertyClass     Class of property to be injected/rejected, \c nil in case of \c id
  *  @param propertyProtocols Set of property protocols including all superprotocols
  *
  *  @return NSUserDefaults instance for propertyName of \c targetClass or \c nil to use \c [NSUserDefaults \c standardUserDefaults]
  */
-typedef NSUserDefaults * _Nullable (^DIUserDefaultsBlock)(Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols);
+typedef NSUserDefaults * _Nullable (^DIUserDefaultsBlock)(Class targetClass,
+                                                          NSString *propertyName,
+                                                          Class _Nullable propertyClass,
+                                                          NSSet<Protocol *> *propertyProtocols);
 
 @interface DeluxeInjection (DIDefaults)
 
 /**
- *  Inject properties marked with \c <DIDefaults> and \c <DIDefaultsSync> protocol using NSUserDefaults access
+ *  Inject properties marked with \c <DIDefaults>, \c <DIDefaultsSync>,
+ *  \c <DIDefaultsArchive> and \c <DIDefaultsArchiveSync> protocol using NSUserDefaults access
  */
 + (void)injectDefaults;
 
 /**
- *  Inject properties marked with \c <DIDefaults> and \c <DIDefaultsSync> protocol
+ *  Inject properties marked with \c <DIDefaults>, \c <DIDefaultsSync>,
+ *  \c <DIDefaultsArchive> and \c <DIDefaultsArchiveSync> protocol
  *  using NSUserDefaults access with custom key provided by block
+ *
+ *  @param keyBlock      Block to provide key for property
  */
-+ (void)injectDefaultsWithKey:(DIDefaultsKeyBlock)keyBlock defaults:(DIUserDefaultsBlock)defaultsBlock;
++ (void)injectDefaultsWithKeyBlock:(DIDefaultsKeyBlock)keyBlock;
 
 /**
- *  Reject all injections marked explicitly with \c <DIDefaults> and \c <DIDefaultsSync> protocol.
+ *  Inject properties marked with \c <DIDefaults>, \c <DIDefaultsSync>,
+ *  \c <DIDefaultsArchive> and \c <DIDefaultsArchiveSync> protocol
+ *  using NSUserDefaults access with custom key provided by block
+ *
+ *  @param defaultsBlock Block to provide NSUserDefaults instance
+ */
++ (void)injectDefaultsWithDefaultsBlock:(DIUserDefaultsBlock)defaultsBlock;
+
+/**
+ *  Inject properties marked with \c <DIDefaults>, \c <DIDefaultsSync>,
+ *  \c <DIDefaultsArchive> and \c <DIDefaultsArchiveSync> protocol
+ *  using NSUserDefaults access with custom key provided by block
+ *
+ *  @param keyBlock      Block to provide key for property
+ *  @param defaultsBlock Block to provide NSUserDefaults instance
+ */
++ (void)injectDefaultsWithKeyBlock:(DIDefaultsKeyBlock)keyBlock defaultsBlock:(DIUserDefaultsBlock)defaultsBlock;
+
+/**
+ *  Reject all injections marked explicitly with \c <DIDefaults>, \c <DIDefaultsSync>,
+ *  \c <DIDefaultsArchive> and \c <DIDefaultsArchiveSync> protocol.
  */
 + (void)rejectDefaults;
+
+@end
+
+//
+
+@interface DIImperative (DIDefaults)
+
+/**
+ *  Inject properties marked with \c <DIDefaults>, \c <DIDefaultsSync>,
+ *  \c <DIDefaultsArchive> and \c <DIDefaultsArchiveSync> protocol using NSUserDefaults access
+ */
+- (void)injectDefaults;
+
+/**
+ *  Inject properties marked with \c <DIDefaults>, \c <DIDefaultsSync>,
+ *  \c <DIDefaultsArchive> and \c <DIDefaultsArchiveSync> protocol
+ *  using NSUserDefaults access with custom key provided by block
+ *
+ *  @param keyBlock      Block to provide key for property
+ */
+- (void)injectDefaultsWithKeyBlock:(DIDefaultsKeyBlock)keyBlock;
+
+/**
+ *  Inject properties marked with \c <DIDefaults>, \c <DIDefaultsSync>,
+ *  \c <DIDefaultsArchive> and \c <DIDefaultsArchiveSync> protocol
+ *  using NSUserDefaults access with custom key provided by block
+ *
+ *  @param defaultsBlock Block to provide NSUserDefaults instance
+ */
+- (void)injectDefaultsWithDefaultsBlock:(DIUserDefaultsBlock)defaultsBlock;
+
+
+/**
+ *  Inject properties marked with \c <DIDefaults>, \c <DIDefaultsSync>,
+ *  \c <DIDefaultsArchive> and \c <DIDefaultsArchiveSync> protocol
+ *  using NSUserDefaults access with custom key provided by block
+ *
+ *  @param keyBlock      Block to provide key for property
+ *  @param defaultsBlock Block to provide NSUserDefaults instance
+ */
+- (void)injectDefaultsWithKeyBlock:(DIDefaultsKeyBlock)keyBlock defaultsBlock:(DIUserDefaultsBlock)defaultsBlock;
+
+/**
+ *  Reject all injections marked explicitly with \c <DIDefaults>,
+ *  \c <DIDefaultsSync>, \c <DIDefaultsArchive> and \c <DIDefaultsArchiveSync> protocol.
+ */
+- (void)rejectDefaults;
 
 @end
 

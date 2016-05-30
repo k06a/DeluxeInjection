@@ -363,8 +363,8 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
             }
         }
 
-        // If need association and not have setter so we need implement simple setter
-        if (isAssociated && !newSetterBlock) {
+        // If need association and not have setter and property is not ReadOnly so we need implement simple setter
+        if (isAssociated && !newSetterBlock && !RRPropertyGetAttribute(property, "R")) {
             if (isWeak) {
                 newSetterBlock = ^void(id target, id newValue) {
                     DIWeakWrapper *wrapper = objc_getAssociatedObject(target, associationKey) ?: [[DIWeakWrapper alloc] init];

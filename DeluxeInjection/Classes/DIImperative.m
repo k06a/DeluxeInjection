@@ -17,20 +17,21 @@
 //  limitations under the License.
 //
 
-#import <assert.h>
-
 #import "DIDeluxeInjectionPlugin.h"
 #import "DIInject.h"
+
 #import "DIImperative.h"
 
 @interface DIPropertyHolder : NSObject
 
 @property (assign, nonatomic) Class targetClass;
-@property (assign, nonatomic) Class klass;
-@property (strong, nonatomic) NSString *name;
-@property (strong, nonatomic) NSSet<Protocol *> *protocols;
+@property (assign, nonatomic) Class propertyClass;
+@property (strong, nonatomic) NSString *propertyName;
+@property (strong, nonatomic) NSSet<Protocol *> *propertyProtocols;
 @property (assign, nonatomic) SEL getter;
-@property (assign, nonatomic) BOOL wasInjected;
+@property (assign, nonatomic) SEL setter;
+@property (assign, nonatomic) BOOL wasInjectedGetter;
+@property (assign, nonatomic) BOOL wasInjectedSetter;
 
 @end
 
@@ -40,67 +41,113 @@
 
 //
 
-@interface DIDeluxeInjectionImperativeInjector ()
-
-@property (weak, nonatomic) DIDeluxeInjectionImperative *lets;
-@property (assign, nonatomic) Class savedClass;
-@property (assign, nonatomic) Protocol *savedProtocol;
-@property (copy, nonatomic) DIGetter savedValueBlock;
-@property (copy, nonatomic) DIPropertyFilterBlock savedFilterBlock;
-
-@end
-
-@interface DIDeluxeInjectionImperative ()
+@interface DIImperative ()
 
 @property (strong, nonatomic) NSMutableDictionary<id,NSMutableArray<DIPropertyHolder *> *> *byClass;
 @property (strong, nonatomic) NSMutableDictionary<NSValue *,NSMutableArray<DIPropertyHolder *> *> *byProtocol;
+@property (assign, nonatomic) BOOL shouldSkipAsserts;
 
 @end
 
 //
 
-@implementation DIDeluxeInjectionImperativeInjector
+@interface DIImperativeInjector ()
 
-- (instancetype)valueObject:(id)valueObject {
-    return [self valueBlock:DIGetterIfIvarIsNil(^id (id target) {
-        return valueObject;
-    })];
-}
+@property (assign, nonatomic) BOOL injector;
+@property (weak, nonatomic) DIImperative *lets;
+@property (assign, nonatomic) Class savedPropertyClass;
+@property (assign, nonatomic) Protocol *savedPropertyProtocol;
+@property (copy, nonatomic) DIImperativeGetter savedGetterBlock;
+@property (copy, nonatomic) DIImperativeSetter savedSetterBlock;
+@property (copy, nonatomic) DIPropertyFilterBlock savedFilterBlock;
 
-- (instancetype)valueBlock:(DIGetter)valueBlock {
-    NSAssert(self.savedValueBlock == nil, @"You should call valueObject: or valueBlock: only once");
-    self.savedValueBlock = valueBlock;
+@end
+
+@implementation DIImperativeInjector
+
+- (instancetype)byPropertyClass:(Class)klass {
+    NSAssert(self.savedPropertyClass == nil, @"You should call byPropertyClass: only once");
+    NSAssert(self.savedPropertyProtocol == nil, @"You should not call byPropertyClass: after calling byPropertyProtocol:");
+    self.savedPropertyClass = klass;
     return self;
 }
 
-- (instancetype)filterClass:(Class)filterClass {
-    return [self filterBlock:^BOOL(Class targetClass, SEL getter, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
-        return [targetClass isSubclassOfClass:filterClass];
+- (instancetype)byPropertyProtocol:(Protocol *)protocol {
+    NSAssert(self.savedPropertyProtocol == nil, @"You should call byPropertyProtocol: only once");
+    NSAssert(self.savedPropertyClass == nil, @"You should not call byPropertyProtocol: after calling byPropertyClass:");
+    self.savedPropertyProtocol = protocol;
+    return self;
+}
+
+- (instancetype)getterValue:(id)getterValue {
+    return [self getterBlock:^id _Nullable(Class  _Nonnull __unsafe_unretained targetClass, SEL  _Nonnull getter, NSString * _Nonnull propertyName, Class  _Nullable __unsafe_unretained propertyClass, NSSet<Protocol *> * _Nonnull propertyProtocols, id  _Nonnull target, id  _Nullable __autoreleasing * _Nonnull ivar, DIOriginalGetter  _Nullable originalGetter) {
+        return getterValue;
     }];
 }
 
+- (instancetype)getterBlock:(DIImperativeGetter)getterBlock {
+    NSAssert(self.savedGetterBlock == nil, @"You should call getterValue: or getterBlock: only once");
+    self.savedGetterBlock = getterBlock;
+    return self;
+}
+
+- (instancetype)setterBlock:(DIImperativeSetter)setterBlock {
+    NSAssert(self.savedSetterBlock == nil, @"You should call setterBlock: only once");
+    self.savedSetterBlock = setterBlock;
+    return self;
+}
+
 - (instancetype)filterBlock:(DIPropertyFilterBlock)filterBlock {
-    NSAssert(self.savedFilterBlock == nil, @"You should call filterClass: or filterBlock: only once");
+    NSAssert(self.savedFilterBlock == nil, @"You should call filterContainerClass: or filterBlock: only once");
     self.savedFilterBlock = filterBlock;
     return self;
 }
 
+- (instancetype)filterContainerClass:(Class)filterContainerClass {
+    return [self filterBlock:^BOOL(Class targetClass, SEL getter, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
+        return [targetClass isSubclassOfClass:filterContainerClass];
+    }];
+}
+
 - (void)dealloc {
-    NSAssert(!!self.savedClass != !!self.savedProtocol, @"You should not define both class and protocol to inject");
-    NSAssert(self.savedValueBlock, @"You should call valueObject: or valueBlock: once");
+    if (self.injector) {
+        NSAssert(self.savedGetterBlock || self.savedSetterBlock, @"You should call getterValue: or getterBlock: or setterBlock:");
+    } else {
+        NSAssert(self.savedGetterBlock == nil && self.savedSetterBlock == nil, @"You should NOT call getterValue: or getterBlock: or setterBlock: when trying to reject");
+    }
     
-    NSValue *key = [NSValue valueWithPointer:(__bridge void *)(self.savedProtocol)];
-    NSArray *holders = self.savedClass ? self.lets.byClass[self.savedClass] : self.lets.byProtocol[key];
+    NSValue *key = [NSValue valueWithPointer:(__bridge void *)(self.savedPropertyProtocol)];
+    NSArray *holders = self.savedPropertyClass ? self.lets.byClass[self.savedPropertyClass] : self.lets.byProtocol[key];
     
     for (DIPropertyHolder *holder in holders) {
-        if (self.savedFilterBlock && !self.savedFilterBlock(holder.targetClass, holder.getter, holder.name, holder.klass, holder.protocols)) {
+        if (self.savedFilterBlock && !self.savedFilterBlock(holder.targetClass, holder.getter, holder.propertyName, holder.propertyClass, holder.propertyProtocols)) {
             continue;
         }
-        if (holder.wasInjected) {
-            NSLog(@"Warning: Reinjecting property [%@ %@]", holder.targetClass, NSStringFromSelector(holder.getter));
+        if (self.injector) {
+            if (self.savedGetterBlock) {
+                if (holder.wasInjectedGetter) {
+                    NSLog(@"Warning: Reinjecting property getter [%@ %@]", holder.targetClass, NSStringFromSelector(holder.getter));
+                }
+                [DeluxeInjection inject:holder.targetClass getter:holder.getter getterBlock:^id _Nullable(id _Nonnull target, id  _Nullable __autoreleasing * _Nonnull ivar, DIOriginalGetter _Nullable originalGetter) {
+                    return self.savedGetterBlock(holder.targetClass, holder.getter, holder.propertyName, holder.propertyClass, holder.propertyProtocols, target, ivar, originalGetter);
+                }];
+                holder.wasInjectedGetter = YES;
+            }
+            if (self.savedSetterBlock) {
+                if (holder.wasInjectedSetter) {
+                    NSLog(@"Warning: Reinjecting property setter [%@ %@]", holder.targetClass, NSStringFromSelector(holder.setter));
+                }
+                [DeluxeInjection inject:holder.targetClass setter:holder.setter setterBlock:^void(id _Nonnull target, id  _Nullable __autoreleasing * _Nonnull ivar, id _Nullable value, DIOriginalSetter _Nullable originalSetter) {
+                    return self.savedSetterBlock(holder.targetClass, holder.setter, holder.propertyName, holder.propertyClass, holder.propertyProtocols, target, ivar, value, originalSetter);
+                }];
+                holder.wasInjectedSetter = YES;
+            }
         }
-        [DeluxeInjection inject:holder.targetClass getter:holder.getter getterBlock:self.savedValueBlock];
-        holder.wasInjected = YES;
+        else {
+            [DeluxeInjection reject:holder.targetClass getter:holder.getter];
+            holder.wasInjectedGetter = NO;
+            holder.wasInjectedSetter = NO;
+        }
     }
 }
 
@@ -108,7 +155,7 @@
 
 //
 
-@implementation DIDeluxeInjectionImperative
+@implementation DIImperative
 
 - (instancetype)init
 {
@@ -122,9 +169,10 @@
             DIPropertyHolder *holder = [[DIPropertyHolder alloc] init];
             holder.targetClass = targetClass;
             holder.getter = getter;
-            holder.name = propertyName;
-            holder.klass = propertyClass;
-            holder.protocols = propertyProtocols;
+            holder.setter = setter;
+            holder.propertyName = propertyName;
+            holder.propertyClass = propertyClass;
+            holder.propertyProtocols = propertyProtocols;
             
             if (propertyClass) {
                 if (_byClass[(id)propertyClass] == nil) {
@@ -143,31 +191,39 @@
             
             return @[[DeluxeInjection doNotInject],
                      [DeluxeInjection doNotInject]];
-        } conformingProtocol:@protocol(DIInject)];
+        } conformingProtocol:nil];
     }
     return self;
 }
 
-- (DIDeluxeInjectionImperativeInjector *)injectByPropertyClass:(Class)klass {
-    DIDeluxeInjectionImperativeInjector *injector = [[DIDeluxeInjectionImperativeInjector alloc] init];
+- (DIImperativeInjector *)inject {
+    DIImperativeInjector *injector = [[DIImperativeInjector alloc] init];
     injector.lets = self;
-    injector.savedClass = klass;
+    injector.injector = YES;
     return injector;
 }
 
-- (DIDeluxeInjectionImperativeInjector *)injectByPropertyProtocol:(Protocol *)protocol {
-    DIDeluxeInjectionImperativeInjector *injector = [[DIDeluxeInjectionImperativeInjector alloc] init];
-    injector.lets = self;
-    injector.savedProtocol = protocol;
-    return injector;
+- (DIImperativeInjector *)reject {
+    DIImperativeInjector *rejector = [[DIImperativeInjector alloc] init];
+    rejector.lets = self;
+    rejector.injector = NO;
+    return rejector;
+}
+
+- (void)skipAsserts {
+    self.shouldSkipAsserts = YES;
 }
 
 - (void)checkAllInjected {
+    if (self.shouldSkipAsserts) {
+        return;
+    }
+    
     for (Class klass in self.byClass) {
         for (DIPropertyHolder *holder in self.byClass[klass]) {
-            NSString *problemDescription = [NSString stringWithFormat:@"Missing injection by class to [%@ %@]", holder.targetClass, NSStringFromSelector(holder.getter)];
-            NSAssert(holder.wasInjected, problemDescription);
-            if (!holder.wasInjected) {
+            NSString *problemDescription = [NSString stringWithFormat:@"Missing injection by class to %@.%@", holder.targetClass, NSStringFromSelector(holder.getter)];
+            NSAssert(holder.wasInjectedGetter || holder.wasInjectedSetter, problemDescription);
+            if (!holder.wasInjectedGetter && !holder.wasInjectedSetter) {
                 NSLog(@"Warning: %@", problemDescription);
             }
         }
@@ -175,9 +231,9 @@
     
     for (NSValue *key in self.byProtocol) {
         for (DIPropertyHolder *holder in self.byProtocol[key]) {
-            NSString *problemDescription = [NSString stringWithFormat:@"Missing injection by protocol to [%@ %@]", holder.targetClass, NSStringFromSelector(holder.getter)];
-            NSAssert(holder.wasInjected, problemDescription);
-            if (!holder.wasInjected) {
+            NSString *problemDescription = [NSString stringWithFormat:@"Missing injection by protocol to %@.%@", holder.targetClass, NSStringFromSelector(holder.getter)];
+            NSAssert(holder.wasInjectedGetter || holder.wasInjectedSetter, problemDescription);
+            if (!holder.wasInjectedGetter && !holder.wasInjectedSetter) {
                 NSLog(@"Warning: %@", problemDescription);
             }
         }
@@ -190,8 +246,8 @@
 
 @implementation DeluxeInjection (DIImperative)
 
-+ (void)imperative:(void (^)(DIDeluxeInjectionImperative *lets))block; {
-    DIDeluxeInjectionImperative *di = [[DIDeluxeInjectionImperative alloc] init];
++ (void)imperative:(void (^)(DIImperative *lets))block; {
+    DIImperative *di = [[DIImperative alloc] init];
     block(di);
     [di checkAllInjected];
 }

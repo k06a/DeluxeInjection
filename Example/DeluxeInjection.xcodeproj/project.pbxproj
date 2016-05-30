@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0EADF4BC46A95CD299567305 /* Pods_DeluxeInjection_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63D3617C9A80DD17E56FCE08 /* Pods_DeluxeInjection_Example.framework */; };
+		2520C97C1CFCBB23009FB5ED /* Benchmarks.m in Sources */ = {isa = PBXBuildFile; fileRef = 2520C97B1CFCBB23009FB5ED /* Benchmarks.m */; };
 		438583FD33B3034D025CEE71 /* Pods_DeluxeInjection_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6884A3569856CB2FFB3E6F74 /* Pods_DeluxeInjection_Tests.framework */; };
 		6003F58E195388D20070C39A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58D195388D20070C39A /* Foundation.framework */; };
 		6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58F195388D20070C39A /* CoreGraphics.framework */; };
@@ -33,6 +34,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2520C97B1CFCBB23009FB5ED /* Benchmarks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Benchmarks.m; sourceTree = "<group>"; };
 		31B5289FDB01D77A7DE8BBDD /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		372D7399E8208F730A3C36E7 /* Pods-DeluxeInjection_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DeluxeInjection_Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-DeluxeInjection_Example/Pods-DeluxeInjection_Example.release.xcconfig"; sourceTree = "<group>"; };
 		6003F58A195388D20070C39A /* DeluxeInjection_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DeluxeInjection_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -146,6 +148,7 @@
 			isa = PBXGroup;
 			children = (
 				6003F5BB195388D20070C39A /* Tests.m */,
+				2520C97B1CFCBB23009FB5ED /* Benchmarks.m */,
 				6003F5B6195388D20070C39A /* Supporting Files */,
 			);
 			path = Tests;
@@ -387,6 +390,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6003F5BC195388D20070C39A /* Tests.m in Sources */,
+				2520C97C1CFCBB23009FB5ED /* Benchmarks.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
