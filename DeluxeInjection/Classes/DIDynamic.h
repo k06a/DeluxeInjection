@@ -1,5 +1,5 @@
 //
-//  DeluxeInjection.h
+//  DIDynamic.h
 //  DeluxeInjection
 //
 //  Copyright (c) 2016 Anton Bukov <k06aaa@gmail.com>
@@ -17,17 +17,32 @@
 //  limitations under the License.
 //
 
-#ifndef __DELUXEINJECTION__
-#define __DELUXEINJECTION__
-
 #import "DIDeluxeInjection.h"
 
-#import "DIForceInject.h"
-#import "DIInject.h"
-#import "DILazy.h"
-#import "DIDefaults.h"
-#import "DIDynamic.h"
+NS_ASSUME_NONNULL_BEGIN
 
-#import "DIImperative.h"
+@protocol DIDynamic <NSObject>
 
-#endif // __DELUXEINJECTION__
+@end
+
+@interface NSObject (DIDynamic) <DIDynamic>
+
+@end
+
+@interface DeluxeInjection (DIDynamic)
+
+/**
+ *  Inject properties marked with \c <DIDynamic> protocol using block: \code
+ *return _ivar
+ *\endcode
+ */
++ (void)injectDynamic;
+
+/**
+ *  Reject all injections marked explicitly with \c <DIDynamic> protocol.
+ */
++ (void)rejectDynamic;
+
+@end
+
+NS_ASSUME_NONNULL_END
