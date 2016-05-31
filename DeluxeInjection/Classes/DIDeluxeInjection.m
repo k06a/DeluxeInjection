@@ -205,10 +205,12 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
         RRClassEnumerateProperties(class, ^(objc_property_t property) {
             const char *type = property_getAttributes(property);
             BOOL found = NO;
-            for (NSString *protoStr in protocolStrs) {
-                if (type && strstr(type, protoStr.UTF8String)) {
-                    found = YES;
-                    break;
+            if (strstr(type, "<DI")) {
+                for (NSString *protoStr in protocolStrs) {
+                    if (type && strstr(type, protoStr.UTF8String)) {
+                        found = YES;
+                        break;
+                    }
                 }
             }
             if (!protocols || found) {
