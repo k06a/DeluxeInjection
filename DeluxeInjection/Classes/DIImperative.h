@@ -48,7 +48,7 @@ typedef BOOL (^DIPropertyFilterBlock)(Class targetClass,
  *  @param propertyProtocols Set of property protocols including all superprotocols
  *  @param target            Receiver of selector
  *  @param ivar              Pointer to instance variable
- *  @param originalSetter    Original setter pointer if exists
+ *  @param originalGetter    Original setter pointer if exists
  *
  *  @return Injected value or \c nil
  */
@@ -73,8 +73,6 @@ typedef id _Nullable (^DIImperativeGetter)(Class targetClass,
  *  @param ivar              Pointer to instance variable
  *  @param value             New value to assign inside setter
  *  @param originalSetter    Original setter pointer if exists
- *
- *  @return Injected value or \c nil
  */
 typedef void (^DIImperativeSetter)(Class targetClass,
                                    SEL setter,
@@ -152,6 +150,13 @@ typedef void (^DIImperativeSetter)(Class targetClass,
 //
 
 @interface DIImperative : NSObject
+
+/**
+ *  Register plugin protocol to be scanned while injection
+ *
+ *  @param pluginProtocol Protocol what properties can be injected
+ */
++ (void)registerPluginProtocol:(Protocol *)pluginProtocol;
 
 /**
 *  Create injector object

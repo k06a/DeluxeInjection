@@ -317,6 +317,10 @@
     id answer2 = @"abc";
 
     [DeluxeInjection imperative:^(DIImperative *lets){
+        [lets injectLazy];
+        [lets injectDefaults];
+        [lets injectDynamic];
+        
         [[[lets inject] byPropertyClass:[NSMutableArray class]] getterValue:[answer1 mutableCopy]];
         [[[lets inject] byPropertyClass:[NSArray class]] getterValue:answer1];
         [[[lets inject] byPropertyProtocol:@protocol(TestProtocol)] getterValue:answer2];

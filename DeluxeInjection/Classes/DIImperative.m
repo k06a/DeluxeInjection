@@ -80,7 +80,7 @@
 }
 
 - (instancetype)getterValue:(id)getterValue {
-    return [self getterBlock:^id _Nullable(Class  _Nonnull __unsafe_unretained targetClass, SEL  _Nonnull getter, NSString * _Nonnull propertyName, Class  _Nullable __unsafe_unretained propertyClass, NSSet<Protocol *> * _Nonnull propertyProtocols, id  _Nonnull target, id  _Nullable __autoreleasing * _Nonnull ivar, DIOriginalGetter  _Nullable originalGetter) {
+    return [self getterBlock:^id(Class targetClass, SEL getter, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols, id target, id *ivar, DIOriginalGetter originalGetter) {
         return getterValue;
     }];
 }
@@ -128,8 +128,9 @@
                 if (holder.wasInjectedGetter) {
                     NSLog(@"Warning: Reinjecting property getter [%@ %@]", holder.targetClass, NSStringFromSelector(holder.getter));
                 }
-                [DeluxeInjection inject:holder.targetClass getter:holder.getter getterBlock:^id _Nullable(id _Nonnull target, id  _Nullable __autoreleasing * _Nonnull ivar, DIOriginalGetter _Nullable originalGetter) {
-                    return self.savedGetterBlock(holder.targetClass, holder.getter, holder.propertyName, holder.propertyClass, holder.propertyProtocols, target, ivar, originalGetter);
+                DIImperativeGetter savedGetterBlock = self.savedGetterBlock;
+                [DeluxeInjection inject:holder.targetClass getter:holder.getter getterBlock:^id(id target, id *ivar, DIOriginalGetter originalGetter) {
+                    return savedGetterBlock(holder.targetClass, holder.getter, holder.propertyName, holder.propertyClass, holder.propertyProtocols, target, ivar, originalGetter);
                 }];
                 holder.wasInjectedGetter = YES;
             }
@@ -137,8 +138,9 @@
                 if (holder.wasInjectedSetter) {
                     NSLog(@"Warning: Reinjecting property setter [%@ %@]", holder.targetClass, NSStringFromSelector(holder.setter));
                 }
-                [DeluxeInjection inject:holder.targetClass setter:holder.setter setterBlock:^void(id _Nonnull target, id  _Nullable __autoreleasing * _Nonnull ivar, id _Nullable value, DIOriginalSetter _Nullable originalSetter) {
-                    return self.savedSetterBlock(holder.targetClass, holder.setter, holder.propertyName, holder.propertyClass, holder.propertyProtocols, target, ivar, value, originalSetter);
+                DIImperativeSetter savedSetterBlock = self.savedSetterBlock;
+                [DeluxeInjection inject:holder.targetClass setter:holder.setter setterBlock:^void(id target, id *ivar, id value, DIOriginalSetter originalSetter) {
+                    return savedSetterBlock(holder.targetClass, holder.setter, holder.propertyName, holder.propertyClass, holder.propertyProtocols, target, ivar, value, originalSetter);
                 }];
                 holder.wasInjectedSetter = YES;
             }
@@ -155,10 +157,19 @@
 
 //
 
+static NSMutableArray<Protocol *> *DIImperativeProtocols;
+
 @implementation DIImperative
 
-- (instancetype)init
-{
++ (void)registerPluginProtocol:(Protocol *)pluginProtocol {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        DIImperativeProtocols = [NSMutableArray array];
+    });
+    [DIImperativeProtocols addObject:pluginProtocol];
+}
+
+- (instancetype)init {
     self = [super init];
     if (self) {
         _byClass = [NSMutableDictionary dictionary];
@@ -191,7 +202,7 @@
             
             return @[[DeluxeInjection doNotInject],
                      [DeluxeInjection doNotInject]];
-        } conformingProtocol:nil];
+        } conformingProtocols:DIImperativeProtocols];
     }
     return self;
 }
