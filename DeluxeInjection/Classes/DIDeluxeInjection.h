@@ -31,6 +31,7 @@ typedef void (*DIOriginalSetter)(id target, SEL cmd, id _Nullable value);
  *
  *  @param target Receiver of selector
  *  @param ivar Pointer to instance variable
+ *  @param originalGetter Original getter pointer if exists
  *
  *  @return Injected value or \c [DeluxeInjection \c doNotInject] instance to not inject this property
  */
@@ -43,6 +44,8 @@ typedef id _Nullable (^DIGetterWithoutIvar)(id target);
  *
  *  @param target Receiver of selector
  *  @param ivar Pointer to instance variable
+ *  @param value New value to assign inside setter
+ *  @param originalSetter Original setter pointer if exists
  */
 typedef void (^DISetter)(id target, id _Nullable * _Nonnull ivar, id value, DIOriginalSetter _Nullable originalSetter);
 typedef void (^DISetterWithoutOriginal)(id target, id _Nullable * _Nonnull ivar, id value);
@@ -53,12 +56,16 @@ typedef void (^DISetterWithoutIvar)(id target, id value);
  *
  *  @param targetClass       Class to be injected
  *  @param propertyName      Injected property name
- *  @param propertyClass     Class of injected property, at least \c NSObject
+ *  @param propertyClass     Class of injected property, \c nil in case of \c id
  *  @param propertyProtocols Set of property protocols including all superprotocols
  *
  *  @return Injected value or \c nil
  */
-typedef id _Nullable (^DIPropertyGetter)(Class targetClass, SEL getter, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols);
+typedef id _Nullable (^DIPropertyGetter)(Class targetClass,
+                                         SEL getter,
+                                         NSString *propertyName,
+                                         Class _Nullable propertyClass,
+                                         NSSet<Protocol *> *propertyProtocols);
 
 /**
  *  Block to get injectable block as getter for property
@@ -66,12 +73,16 @@ typedef id _Nullable (^DIPropertyGetter)(Class targetClass, SEL getter, NSString
  *  @param targetClass       Class to be injected
  *  @param getter            Selector of getter method
  *  @param propertyName      Property name to be injected
- *  @param propertyClass     Class of property to be injected, at least \c NSObject
+ *  @param propertyClass     Class of property to be injected, \c nil in case of \c id
  *  @param propertyProtocols Set of property protocols including all superprotocols
  *
  *  @return Injectable block \c DIGetter or \c nil for skipping injection
  */
-typedef DIGetter _Nullable (^DIPropertyGetterBlock)(Class targetClass, SEL getter, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols);
+typedef DIGetter _Nullable (^DIPropertyGetterBlock)(Class targetClass,
+                                                    SEL getter,
+                                                    NSString *propertyName,
+                                                    Class _Nullable propertyClass,
+                                                    NSSet<Protocol *> *propertyProtocols);
 
 /**
  *  Block to get injectable block as setter for property
@@ -79,12 +90,16 @@ typedef DIGetter _Nullable (^DIPropertyGetterBlock)(Class targetClass, SEL gette
  *  @param targetClass       Class to be injected
  *  @param setter            Selector of setter method
  *  @param propertyName      Property name to be injected
- *  @param propertyClass     Class of property to be injected, at least \c NSObject
+ *  @param propertyClass     Class of property to be injected, \c nil in case of \c id
  *  @param propertyProtocols Set of property protocols including all superprotocols
  *
  *  @return Injectable block \c DISetter or \c [DeluxeInjecion \c doNotInject] for skipping injection
  */
-typedef DISetter _Nullable (^DIPropertySetterBlock)(Class targetClass, SEL setter, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols);
+typedef DISetter _Nullable (^DIPropertySetterBlock)(Class targetClass,
+                                                    SEL setter,
+                                                    NSString *propertyName,
+                                                    Class _Nullable propertyClass,
+                                                    NSSet<Protocol *> *propertyProtocols);
 
 /**
  *  Block to get injectable block as setter for property
@@ -93,24 +108,32 @@ typedef DISetter _Nullable (^DIPropertySetterBlock)(Class targetClass, SEL sette
  *  @param getter            Selector of getter method
  *  @param setter            Selector of setter method
  *  @param propertyName      Property name to be injected
- *  @param propertyClass     Class of property to be injected, at least \c NSObject
+ *  @param propertyClass     Class of property to be injected, \c nil in case of \c id
  *  @param propertyProtocols Set of property protocols including all superprotocols
  *
  *  @return Array of getter and settor injectable blocks or \c nil or \c [DeluxeInjecion \c doNotInject] for skipping injection
  */
-typedef NSArray *_Nullable (^DIPropertyBlock)(Class targetClass, SEL getter, SEL setter, NSString *propertyName, Class _Nullable propertyClass, NSSet<Protocol *> *propertyProtocols);
+typedef NSArray *_Nullable (^DIPropertyBlock)(Class targetClass,
+                                              SEL getter,
+                                              SEL setter,
+                                              NSString *propertyName,
+                                              Class _Nullable propertyClass,
+                                              NSSet<Protocol *> *propertyProtocols);
 
 /**
  *  Block to filter properties to be injected or not
  *
  *  @param targetClass       Class to be injected/rejected
  *  @param propertyName      Property name to be injected/rejected
- *  @param propertyClass     Class of property to be injected/rejected, at least \c NSObject
+ *  @param propertyClass     Class of property to be injected/rejected, \c nil in case of \c id
  *  @param propertyProtocols Set of property protocols including all superprotocols
  *
  *  @return \c YES to inject/reject \c propertyName of \c targetClass or NO to not inject/reject
  */
-typedef BOOL (^DIPropertyFilter)(Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols);
+typedef BOOL (^DIPropertyFilter)(Class targetClass,
+                                 NSString *propertyName,
+                                 Class _Nullable propertyClass,
+                                 NSSet<Protocol *> *propertyProtocols);
 
 /**
  *  Helper methods to create DIGetter and DISetter with Xcode autocomplete :)

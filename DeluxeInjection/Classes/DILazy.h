@@ -18,6 +18,7 @@
 //
 
 #import "DIDeluxeInjection.h"
+#import "DIImperative.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -28,6 +29,8 @@ NS_ASSUME_NONNULL_BEGIN
 @interface NSObject (DILazy) <DILazy>
 
 @end
+
+//
 
 @interface DeluxeInjection (DILazy)
 
@@ -44,6 +47,26 @@ NS_ASSUME_NONNULL_BEGIN
  *  Reject all injections marked explicitly with \c <DILazy> protocol.
  */
 + (void)rejectLazy;
+
+@end
+
+//
+
+@interface DIImperative (DILazy)
+
+/**
+ *  Inject properties marked with \c <DILazy> protocol using block: \code
+ *if (_ivar == nil)
+ *    _ivar = [[class alloc] init];
+ *return _ivar
+ *\endcode
+ */
+- (void)injectLazy;
+
+/**
+ *  Reject all injections marked explicitly with \c <DILazy> protocol.
+ */
+- (void)rejectLazy;
 
 @end
 

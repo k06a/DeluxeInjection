@@ -312,30 +312,18 @@
     XCTAssertNil([[NSUserDefaults standardUserDefaults] objectForKey:key2]);
 }
 
-- (void)testInjectPreformance {
-    [self measureBlock:^{
-        [DeluxeInjection inject:^id(Class targetClass, SEL getter, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
-            return nil;
-        }];
-    }];
-}
-
-- (void)testForceInjectPreformance {
-    [self measureBlock:^{
-        [DeluxeInjection forceInject:^id(Class targetClass, SEL getter, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
-            return [DeluxeInjection doNotInject];
-        }];
-    }];
-}
-
-- (void)testInjectImperaive {
+- (void)testInjectImperative {
     id answer1 = @[@1,@2,@3];
     id answer2 = @"abc";
 
-    [DeluxeInjection imperative:^(DIDeluxeInjectionImperative *lets){
-        [[lets injectByPropertyClass:[NSMutableArray class]] valueObject:[answer1 mutableCopy]];
-        [[lets injectByPropertyClass:[NSArray class]] valueObject:answer1];
-        [[lets injectByPropertyProtocol:@protocol(TestProtocol)] valueObject:answer2];
+    [DeluxeInjection imperative:^(DIImperative *lets){
+        [lets injectLazy];
+        [lets injectDefaults];
+        [lets injectDynamic];
+        
+        [[[lets inject] byPropertyClass:[NSMutableArray class]] getterValue:[answer1 mutableCopy]];
+        [[[lets inject] byPropertyClass:[NSArray class]] getterValue:answer1];
+        [[[lets inject] byPropertyProtocol:@protocol(TestProtocol)] getterValue:answer2];
     }];
 
     TestType *test = [[TestType alloc] init];

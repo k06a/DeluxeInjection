@@ -22,20 +22,48 @@
 
 @implementation DeluxeInjection (DIDynamic)
 
++ (void)load {
+    [DIImperative registerPluginProtocol:@protocol(DIDynamic)];
+}
+
 + (void)injectDynamic {
     [self inject:^NSArray *(Class targetClass, SEL getter, SEL setter, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
         return @[DIGetterMake(^id (id target, id *ivar) {
             return *ivar;
-        }), DISetterMake(^(id target, id *ivar, id value) {
+        }), DISetterWithOriginalMake(^(id target, id *ivar, id value, DIOriginalSetter originalSetter) {
             *ivar = value;
+            if (originalSetter) {
+                originalSetter(target, setter, value);
+            }
         })];
-    } conformingProtocol:@protocol(DIDynamic)];
+    } conformingProtocols:@[@protocol(DIDynamic)]];
 }
 
 + (void)rejectDynamic {
     [self reject:^BOOL(Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
         return YES;
-    } conformingProtocol:@protocol(DIDynamic)];
+    } conformingProtocols:@[@protocol(DIDynamic)]];
+}
+
+@end
+
+//
+
+@implementation DIImperative (DIDynamic)
+
+- (void)injectDynamic {
+    [[[[self inject] byPropertyProtocol:@protocol(DIDynamic)] getterBlock:^id(Class targetClass, SEL getter, NSString * propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols, id target, id *ivar, DIOriginalGetter originalGetter) {
+        return *ivar;
+    }] setterBlock:^(Class targetClass, SEL setter, NSString *propertyName, Class propertyClass, NSSet<Protocol *> * propertyProtocols, id target, id *ivar, id value, DIOriginalSetter originalSetter) {
+        *ivar = value;
+        if (originalSetter) {
+            originalSetter(target, setter, value);
+        }
+    }];
+}
+
+- (void)rejectDynamic {
+    [[self reject] byPropertyProtocol:@protocol(DIDynamic)];
 }
 
 @end

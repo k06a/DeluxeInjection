@@ -57,7 +57,7 @@ And you is allowed to make a decision to return value based on all this stuff:
 
 * Target class for injection – `Class targetClass`
 * Property name in string representation – `NSString *propertyName`
-* Class of property – `Class propertyClass`, at least *NSObject*
+* Class of property – `Class propertyClass`, or `nil` in case of *id*
 * Set of property protocols – `NSSet<Protocol *> *protocols`, including all superprotocols
 
 You are also able to use method `injectBlock:` to return `DIGetter` block to provide injected getter or nil to skip injection. You may wanna use this methods if wanna make a decision to return value on target object. Maybe return different mutable copies for different targets or etc. Following code will inject only properties of types `NSMutableArray` and `NSMutableDictionary` with 2 prepared objects using two different but equal ways:

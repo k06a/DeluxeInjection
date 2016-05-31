@@ -18,6 +18,7 @@
 //
 
 #import "DIDeluxeInjection.h"
+#import "DIImperative.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -42,6 +43,24 @@ NS_ASSUME_NONNULL_BEGIN
  *  Reject all injections marked explicitly with \c <DIDynamic> protocol.
  */
 + (void)rejectDynamic;
+
+@end
+
+//
+
+@interface DIImperative (DIDynamic)
+
+/**
+ *  Inject properties marked with \c <DIDynamic> protocol using block: \code
+ *return _ivar
+ *\endcode
+ */
+- (void)injectDynamic;
+
+/**
+ *  Reject all injections marked explicitly with \c <DIDynamic> protocol.
+ */
+- (void)rejectDynamic;
 
 @end
 

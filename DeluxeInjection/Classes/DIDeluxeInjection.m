@@ -195,22 +195,30 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
 
 #pragma mark - Private
 
-+ (void)enumerateAllClassProperties:(void (^)(Class class, objc_property_t property))block conformingProtocol:(Protocol *)protocol {
-    char protocol_str[1024];
-    const char *protocol_ptr = protocol_str;
-    sprintf(protocol_str, "<%s>", NSStringFromProtocol(protocol).UTF8String);
-
++ (void)enumerateAllClassProperties:(void (^)(Class class, objc_property_t property))block conformingProtocols:(NSArray<Protocol *> *)protocols {
+    NSMutableArray *protocolStrs = [NSMutableArray array];
+    for (Protocol *protocol in protocols) {
+        [protocolStrs addObject:[NSString stringWithFormat:@"<%@>", NSStringFromProtocol(protocol)]];
+    }
+    
     RRClassEnumerateAll(^(Class class) {
         RRClassEnumerateProperties(class, ^(objc_property_t property) {
             const char *type = property_getAttributes(property);
-            if (!protocol || (type && strstr(type, protocol_ptr))) {
+            BOOL found = NO;
+            for (NSString *protoStr in protocolStrs) {
+                if (type && strstr(type, protoStr.UTF8String)) {
+                    found = YES;
+                    break;
+                }
+            }
+            if (!protocols || found) {
                 block(class, property);
             }
         });
     });
 }
 
-+ (void)inject:(Class)class property:(objc_property_t)property getterBlock:(DIGetter)getterBlock setterBlock:(DISetter)setterBlock blockFactory:(DIPropertyBlock)blockFactory {
++ (void)inject:(Class)klass property:(objc_property_t)property getterBlock:(DIGetter)getterBlock setterBlock:(DISetter)setterBlock blockFactory:(DIPropertyBlock)blockFactory {
     __block DIGetter getterToInject = getterBlock;
     __block DISetter setterToInject = setterBlock;
 
@@ -220,7 +228,7 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
 
         NSString *propertyName = [NSString stringWithUTF8String:property_getName(property)];
         if (blockFactory) {
-            NSArray *blocks = blockFactory(class, getter, setter, propertyName, propertyClass, propertyProtocols);
+            NSArray *blocks = blockFactory(klass, getter, setter, propertyName, propertyClass, propertyProtocols);
             NSAssert(blocks == nil || blocks == [DeluxeInjection doNotInject] ||
                      ([blocks isKindOfClass:[NSArray class]] && blocks.count == 2),
                      @"Provide nil, [DeluxeInjection doNotInject] or array with getter and setter blocks");
@@ -236,7 +244,7 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
             }
         }
 
-        Method getterMethod = class_getInstanceMethod(class, getter);
+        Method getterMethod = class_getInstanceMethod(klass, getter);
         if (getterMethod) {
             NSAssert(RRMethodGetArgumentsCount(getterMethod) == 0,
                      @"Getter should not have any arguments");
@@ -244,7 +252,7 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
                      @"DeluxeInjection do not support non-object properties injections");
         }
         
-        Method setterMethod = class_getInstanceMethod(class, setter);
+        Method setterMethod = class_getInstanceMethod(klass, setter);
         if (setterMethod) {
             NSAssert([RRMethodGetReturnType(setterMethod) isEqualToString:@"v"],
                      @"Setter should return void");
@@ -254,8 +262,8 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
                      @"DeluxeInjection do not support non-object properties injections");
         }
         
-        DIOriginalGetter originalGetterIMP = (DIOriginalGetter)(DIInjectionsGettersBackupRead(class, getter) ?: method_getImplementation(getterMethod));
-        DIOriginalSetter originalSetterIMP = (DIOriginalSetter)(DIInjectionsSettersBackupRead(class, setter) ?: method_getImplementation(setterMethod));
+        DIOriginalGetter originalGetterIMP = (DIOriginalGetter)(DIInjectionsGettersBackupRead(klass, getter) ?: method_getImplementation(getterMethod));
+        DIOriginalSetter originalSetterIMP = (DIOriginalSetter)(DIInjectionsSettersBackupRead(klass, setter) ?: method_getImplementation(setterMethod));
         if (originalGetterIMP == DINothingToRestore) {
             originalGetterIMP = nil;
         }
@@ -264,7 +272,7 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
         }
         
         NSString *propertyIvarStr = RRPropertyGetAttribute(property, "V");
-        Ivar propertyIvar = propertyIvarStr ? class_getInstanceVariable(class, propertyIvarStr.UTF8String) : nil;
+        Ivar propertyIvar = propertyIvarStr ? class_getInstanceVariable(klass, propertyIvarStr.UTF8String) : nil;
         
         BOOL isAssociated = (propertyIvar == nil);
         SEL associationKey = NSSelectorFromString([@"DI_" stringByAppendingString:propertyName]);
@@ -293,7 +301,7 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
                         BOOL ivarWasNil = (ivar == nil);
                         id result = getterToInject(target, &ivar, originalGetterIMP);
                         if (ivar && ivarWasNil) {
-                            DIAssociatesWrite(class, getter, target);
+                            DIAssociatesWrite(klass, getter, target);
                         }
                         wrapper->object = ivar;
                         if (wrapperWasNil) {
@@ -308,7 +316,7 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
                         BOOL ivarWasNil = (ivar == nil);
                         id result = getterToInject(target, &ivar, originalGetterIMP);
                         if (ivar && ivarWasNil) {
-                            DIAssociatesWrite(class, getter, target);
+                            DIAssociatesWrite(klass, getter, target);
                         }
                         objc_setAssociatedObject(target, associationKey, ivar, associationPolicy);
                         return result;
@@ -334,7 +342,7 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
                         BOOL ivarWasNil = (ivar == nil);
                         setterToInject(target, &ivar, newValue, originalSetterIMP);
                         if (ivar && ivarWasNil) {
-                            DIAssociatesWrite(class, getter, target);
+                            DIAssociatesWrite(klass, getter, target);
                         }
                         wrapper->object = ivar;
                         objc_setAssociatedObject(target, associationKey, wrapper, associationPolicy);
@@ -346,7 +354,7 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
                         BOOL ivarWasNil = (ivar == nil);
                         setterToInject(target, &ivar, newValue, originalSetterIMP);
                         if (ivar && ivarWasNil) {
-                            DIAssociatesWrite(class, getter, target);
+                            DIAssociatesWrite(klass, getter, target);
                         }
                         objc_setAssociatedObject(target, associationKey, ivar, associationPolicy);
                     };
@@ -357,14 +365,14 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
         if (getterToInject) {
             IMP newGetterImp = imp_implementationWithBlock(newGetterBlock);
             const char *getterTypes = method_getTypeEncoding(class_getInstanceMethod(self, @selector(getterExample)));
-            IMP replacedGetterImp = class_replaceMethod(class, getter, newGetterImp, getterTypes);
-            if (!DIInjectionsGettersBackupWrite(class, getter, replacedGetterImp ?: (IMP)DINothingToRestore)) {
+            IMP replacedGetterImp = class_replaceMethod(klass, getter, newGetterImp, getterTypes);
+            if (!DIInjectionsGettersBackupWrite(klass, getter, replacedGetterImp ?: (IMP)DINothingToRestore)) {
                 imp_removeBlock(replacedGetterImp);
             }
         }
 
-        // If need association and not have setter so we need implement simple setter
-        if (isAssociated && !newSetterBlock) {
+        // If need association and not have setter and property is not ReadOnly so we need implement simple setter
+        if (isAssociated && !newSetterBlock && !RRPropertyGetAttribute(property, "R")) {
             if (isWeak) {
                 newSetterBlock = ^void(id target, id newValue) {
                     DIWeakWrapper *wrapper = objc_getAssociatedObject(target, associationKey) ?: [[DIWeakWrapper alloc] init];
@@ -382,18 +390,18 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
         if (newSetterBlock) {
             IMP newSetterImp = imp_implementationWithBlock(newSetterBlock);
             const char *setterTypes = method_getTypeEncoding(class_getInstanceMethod(self, @selector(setterExample:)));
-            IMP replacedSetterImp = class_replaceMethod(class, setter, newSetterImp, setterTypes);
-            if (!DIInjectionsSettersBackupWrite(class, setter, replacedSetterImp ?: (IMP)DINothingToRestore)) {
+            IMP replacedSetterImp = class_replaceMethod(klass, setter, newSetterImp, setterTypes);
+            if (!DIInjectionsSettersBackupWrite(klass, setter, replacedSetterImp ?: (IMP)DINothingToRestore)) {
                 imp_removeBlock(replacedSetterImp);
             }
         }
     });
 }
 
-+ (void)inject:(DIPropertyBlock)block conformingProtocol:(Protocol *)protocol {
++ (void)inject:(DIPropertyBlock)block conformingProtocols:(NSArray<Protocol *> *)protocols {
     [self enumerateAllClassProperties:^(Class class, objc_property_t property) {
         [self inject:class property:property getterBlock:nil setterBlock:nil blockFactory:block];
-    } conformingProtocol:protocol];
+    } conformingProtocols:protocols];
 }
 
 + (void)reject:(Class)class property:(objc_property_t)property {
@@ -451,7 +459,7 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
     }
 }
 
-+ (void)reject:(DIPropertyFilter)block conformingProtocol:(Protocol *)protocol {
++ (void)reject:(DIPropertyFilter)block conformingProtocols:(NSArray<Protocol *> *)protocols {
     [self enumerateAllClassProperties:^(Class class, objc_property_t property) {
         RRPropertyGetClassAndProtocols(property, ^(Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
             NSString *propertyName = [NSString stringWithUTF8String:property_getName(property)];
@@ -460,7 +468,7 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
                 [self reject:class getter:getter];
             }
         });
-    } conformingProtocol:protocol];
+    } conformingProtocols:protocols];
 }
 
 #pragma mark - Public

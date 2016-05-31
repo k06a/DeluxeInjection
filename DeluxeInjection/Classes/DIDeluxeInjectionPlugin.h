@@ -19,9 +19,13 @@
 
 #import "DIDeluxeInjection.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface DeluxeInjection (Plugin)
 
-+ (void)inject:(DIPropertyBlock)block conformingProtocol:(Protocol *)protocol;
-+ (void)reject:(DIPropertyFilter)block conformingProtocol:(Protocol *)protocol;
++ (void)inject:(DIPropertyBlock)block conformingProtocols:(NSArray<Protocol *> * _Nullable)protocols;
++ (void)reject:(DIPropertyFilter)block conformingProtocols:(NSArray<Protocol *> * _Nullable)protocols;
 
 @end
+
+NS_ASSUME_NONNULL_END

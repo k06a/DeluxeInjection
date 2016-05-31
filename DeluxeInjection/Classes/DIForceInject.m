@@ -22,6 +22,7 @@
 #import "DIInject.h"
 #import "DILazy.h"
 #import "DIDefaults.h"
+#import "DIDynamic.h"
 
 #import "DIDeluxeInjectionPlugin.h"
 #import "DIForceInject.h"
@@ -33,8 +34,11 @@ static NSSet *excudeProtocols() {
         excudeProtocols = [NSSet setWithArray:@[
             @protocol(DIInject),
             @protocol(DILazy),
+            @protocol(DIDynamic),
             @protocol(DIDefaults),
             @protocol(DIDefaultsSync),
+            @protocol(DIDefaultsArchived),
+            @protocol(DIDefaultsArchivedSync),
         ]];
     });
     return excudeProtocols;
@@ -64,7 +68,7 @@ static NSSet *excudeProtocols() {
                 return value;
             }), [DeluxeInjection doNotInject]];
         }
-    } conformingProtocol:nil];
+    } conformingProtocols:nil];
 }
 
 + (void)forceInjectBlock:(DIPropertyGetterBlock)block {
@@ -73,7 +77,7 @@ static NSSet *excudeProtocols() {
             return nil;
         }
         return @[(id)block(targetClass, getter, propertyName, propertyClass, propertyProtocols) ?: (id)[DeluxeInjection doNotInject], [DeluxeInjection doNotInject]];
-    } conformingProtocol:nil];
+    } conformingProtocols:nil];
 }
 
 + (void)forceReject:(DIPropertyFilter)block {
@@ -82,7 +86,7 @@ static NSSet *excudeProtocols() {
             return NO;
         }
         return block(targetClass, propertyName, propertyClass, propertyProtocols);
-    } conformingProtocol:nil];
+    } conformingProtocols:nil];
 }
 
 + (void)forceRejectAll {
@@ -91,7 +95,7 @@ static NSSet *excudeProtocols() {
             return NO;
         }
         return YES;
-    } conformingProtocol:nil];
+    } conformingProtocols:nil];
 }
 
 @end

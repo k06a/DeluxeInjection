@@ -20,24 +20,46 @@
 #import "DIDeluxeInjectionPlugin.h"
 #import "DILazy.h"
 
-@implementation NSObject (DILazy)
-
-@end
-
 @implementation DeluxeInjection (DILazy)
+
++ (void)load {
+    [DIImperative registerPluginProtocol:@protocol(DILazy)];
+}
 
 + (void)injectLazy {
     [self inject:^NSArray *(Class targetClass, SEL getter, SEL setter, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
+        NSAssert(propertyClass, @"DILazy can not be applied to unknown class (id)");
         return @[DIGetterIfIvarIsNil(^id(id target) {
             return [[propertyClass alloc] init];
         }), [DeluxeInjection doNotInject]];
-    } conformingProtocol:@protocol(DILazy)];
+    } conformingProtocols:@[@protocol(DILazy)]];
 }
 
 + (void)rejectLazy {
     [self reject:^BOOL(Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
         return YES;
-    } conformingProtocol:@protocol(DILazy)];
+    } conformingProtocols:@[@protocol(DILazy)]];
 }
 
 @end
+
+//
+
+@implementation DIImperative (DILazy)
+
+- (void)injectLazy {
+    [[[self inject] byPropertyProtocol:@protocol(DILazy)] getterBlock:^id(Class targetClass, SEL getter, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols, id target, id *ivar, DIOriginalGetter originalGetter) {
+        NSAssert(propertyClass, @"DILazy can not be applied to unknown class (id)");
+        if (*ivar == nil) {
+            *ivar = [[propertyClass alloc] init];
+        }
+        return *ivar;
+    }];
+}
+
+- (void)rejectLazy {
+    [[self reject] byPropertyProtocol:@protocol(DILazy)];
+}
+
+@end
+
