@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "3DA21379ED51BAA9A1D5073D418BF1A6"
+               BlueprintIdentifier = "5D888EF1BB4878C9030187889DC97D54"
                BuildableName = "DeluxeInjection.framework"
                BlueprintName = "DeluxeInjection"
                ReferencedContainer = "container:Pods.xcodeproj">
@@ -26,7 +26,8 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      shouldUseLaunchSchemeArgsEnv = "YES">
+      shouldUseLaunchSchemeArgsEnv = "YES"
+      codeCoverageEnabled = "YES">
       <Testables>
       </Testables>
       <AdditionalOptions>
@@ -45,7 +46,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "3DA21379ED51BAA9A1D5073D418BF1A6"
+            BlueprintIdentifier = "5D888EF1BB4878C9030187889DC97D54"
             BuildableName = "DeluxeInjection.framework"
             BlueprintName = "DeluxeInjection"
             ReferencedContainer = "container:Pods.xcodeproj">

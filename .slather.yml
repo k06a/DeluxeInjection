@@ -1,0 +1,9 @@
+# .slather.yml
+
+coverage_service: coveralls
+workspace: Example/DeluxeInjection.xcworkspace
+xcodeproj: Example/DeluxeInjection.xcodeproj
+scheme: DeluxeInjection-Example
+source_directory: DeluxeInjection/Classes
+build_directory: /Users/travis/Library/Developer/Xcode/DerivedData/
+binary_basename: DeluxeInjection_Example
