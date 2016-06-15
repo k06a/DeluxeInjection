@@ -89,7 +89,6 @@ typedef void (^DIImperativeSetter)(Class targetClass,
 
 @interface DIImperativeInjector : NSObject
 
-
 #pragma mark - Property injection type
 
 /**
@@ -112,6 +111,20 @@ typedef void (^DIImperativeSetter)(Class targetClass,
  *  @param getterValue Value to be injected
  */
 - (instancetype)getterValue:(id)getterValue;
+
+/**
+ *  Set value to be injected by lazy block
+ *
+ *  @param lazyBlock Block to be called on first access only
+ */
+- (instancetype)getterValueLazy:(id(^)())lazyBlock;
+
+/**
+ *  Set value to be injected by class
+ *
+ *  @param lazyClass Class value to be injected with alloc-init
+ */
+- (instancetype)getterValueLazyByClass:(Class)lazyClass;
 
 #pragma mark - Property injection value or blocks
 

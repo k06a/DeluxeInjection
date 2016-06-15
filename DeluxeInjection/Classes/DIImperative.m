@@ -81,8 +81,34 @@
 
 - (instancetype)getterValue:(id)getterValue {
     return [self getterBlock:^id(Class targetClass, SEL getter, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols, id target, id *ivar, DIOriginalGetter originalGetter) {
-        return getterValue;
+        if (*ivar == nil) {
+            *ivar = getterValue;
+        }
+        return *ivar;
     }];
+}
+
+- (instancetype)getterValueLazy:(id(^)())lazyBlock {
+    __block id(^lazyBlockCopy)() = [lazyBlock copy];
+    __block id lazyValue = nil;
+    [self getterBlock:^id(Class targetClass, SEL getter, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols, id target, id *ivar, DIOriginalGetter originalGetter) {
+        if (*ivar == nil) {
+            if (lazyValue == nil) {
+                lazyValue = lazyBlockCopy();
+                lazyBlockCopy = nil;
+            }
+            *ivar = lazyValue;
+        }
+        return *ivar;
+    }];
+    return self;
+}
+
+- (instancetype)getterValueLazyByClass:(Class)lazyClass {
+    [self getterValueLazy:^id {
+        return [[lazyClass alloc] init];
+    }];
+    return self;
 }
 
 - (instancetype)getterBlock:(DIImperativeGetter)getterBlock {
@@ -128,7 +154,7 @@
                 if (holder.wasInjectedGetter) {
                     NSLog(@"Warning: Reinjecting property getter [%@ %@]", holder.targetClass, NSStringFromSelector(holder.getter));
                 }
-                DIImperativeGetter savedGetterBlock = self.savedGetterBlock;
+                DIImperativeGetter savedGetterBlock = [self.savedGetterBlock copy];
                 [DeluxeInjection inject:holder.targetClass getter:holder.getter getterBlock:^id(id target, id *ivar, DIOriginalGetter originalGetter) {
                     return savedGetterBlock(holder.targetClass, holder.getter, holder.propertyName, holder.propertyClass, holder.propertyProtocols, target, ivar, originalGetter);
                 }];
@@ -138,7 +164,7 @@
                 if (holder.wasInjectedSetter) {
                     NSLog(@"Warning: Reinjecting property setter [%@ %@]", holder.targetClass, NSStringFromSelector(holder.setter));
                 }
-                DIImperativeSetter savedSetterBlock = self.savedSetterBlock;
+                DIImperativeSetter savedSetterBlock = [self.savedSetterBlock copy];
                 [DeluxeInjection inject:holder.targetClass setter:holder.setter setterBlock:^void(id target, id *ivar, id value, DIOriginalSetter originalSetter) {
                     return savedSetterBlock(holder.targetClass, holder.setter, holder.propertyName, holder.propertyClass, holder.propertyProtocols, target, ivar, value, originalSetter);
                 }];
