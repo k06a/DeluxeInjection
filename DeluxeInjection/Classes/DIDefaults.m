@@ -69,20 +69,21 @@
         NSMutableSet *protocolsCopy = [defaultsProtocols mutableCopy];
         [protocolsCopy intersectSet:propertyProtocols];
         Protocol *protocol = protocolsCopy.anyObject;
+        NSValue *protocolKey = [NSValue valueWithPointer:(__bridge void *)protocol];
         
         BOOL withSync = [@{
             [NSValue valueWithPointer:(__bridge void *)@protocol(DIDefaults)] : @NO,
             [NSValue valueWithPointer:(__bridge void *)@protocol(DIDefaultsSync)] : @YES,
             [NSValue valueWithPointer:(__bridge void *)@protocol(DIDefaultsArchived)] : @NO,
             [NSValue valueWithPointer:(__bridge void *)@protocol(DIDefaultsArchivedSync)] : @YES,
-        }[protocol] boolValue];
+        }[protocolKey] boolValue];
         
         BOOL withArchive = [@{
             [NSValue valueWithPointer:(__bridge void *)@protocol(DIDefaults)] : @NO,
             [NSValue valueWithPointer:(__bridge void *)@protocol(DIDefaultsSync)] : @NO,
             [NSValue valueWithPointer:(__bridge void *)@protocol(DIDefaultsArchived)] : @YES,
             [NSValue valueWithPointer:(__bridge void *)@protocol(DIDefaultsArchivedSync)] : @YES,
-        }[protocol] boolValue];
+        }[protocolKey] boolValue];
         
         NSString *key = keyBlock(targetClass, propertyName, propertyClass, propertyProtocols) ?: propertyName;
         NSUserDefaults *defaults = defaultsBlock(targetClass, propertyName, propertyClass, propertyProtocols) ?: [NSUserDefaults standardUserDefaults];
@@ -151,19 +152,21 @@
                                   @protocol(DIDefaultsSync),
                                   @protocol(DIDefaultsArchived),
                                   @protocol(DIDefaultsArchivedSync) ]) {
+        NSValue *protocolKey = [NSValue valueWithPointer:(__bridge void *)protocol];
+        
         BOOL withSync = [@{
             [NSValue valueWithPointer:(__bridge void *)@protocol(DIDefaults)] : @NO,
             [NSValue valueWithPointer:(__bridge void *)@protocol(DIDefaultsSync)] : @YES,
             [NSValue valueWithPointer:(__bridge void *)@protocol(DIDefaultsArchived)] : @NO,
             [NSValue valueWithPointer:(__bridge void *)@protocol(DIDefaultsArchivedSync)] : @YES,
-        }[protocol] boolValue];
+        }[protocolKey] boolValue];
         
         BOOL withArchive = [@{
             [NSValue valueWithPointer:(__bridge void *)@protocol(DIDefaults)] : @NO,
             [NSValue valueWithPointer:(__bridge void *)@protocol(DIDefaultsSync)] : @NO,
             [NSValue valueWithPointer:(__bridge void *)@protocol(DIDefaultsArchived)] : @YES,
             [NSValue valueWithPointer:(__bridge void *)@protocol(DIDefaultsArchivedSync)] : @YES,
-        }[protocol] boolValue];
+        }[protocolKey] boolValue];
         
         [[[[self inject] byPropertyProtocol:protocol] getterBlock:^id _Nullable(Class targetClass, SEL getter, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols, id target, id *ivar, DIOriginalGetter originalGetter) {
             NSUserDefaults *defaults = defaultsBlock(targetClass, propertyName, propertyClass, propertyProtocols) ?: [NSUserDefaults standardUserDefaults];
