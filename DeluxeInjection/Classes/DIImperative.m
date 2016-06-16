@@ -53,6 +53,7 @@
 
 @interface DIImperativeInjector ()
 
+@property (assign, nonatomic) BOOL resolved;
 @property (assign, nonatomic) BOOL injector;
 @property (weak, nonatomic) DIImperative *lets;
 @property (assign, nonatomic) Class savedPropertyClass;
@@ -136,7 +137,11 @@
     }];
 }
 
-- (void)dealloc {
+- (void)resolve {
+    if (self.resolved) {
+        return;
+    }
+    
     if (self.injector) {
         NSAssert(self.savedGetterBlock || self.savedSetterBlock, @"You should call getterValue: or getterBlock: or setterBlock:");
     } else {
@@ -178,6 +183,12 @@
             holder.wasInjectedSetter = NO;
         }
     }
+    
+    self.resolved = YES;
+}
+
+- (void)dealloc {
+    [self resolve];
 }
 
 @end
@@ -286,7 +297,9 @@ static NSMutableArray<Protocol *> *DIImperativeProtocols;
 
 + (void)imperative:(void (^)(DIImperative *lets))block; {
     DIImperative *di = [[DIImperative alloc] init];
-    block(di);
+    @autoreleasepool {
+        block(di);
+    }
     [di checkAllInjected];
 }
 

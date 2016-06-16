@@ -84,7 +84,6 @@ typedef void (^DIImperativeSetter)(Class targetClass,
                                    id _Nullable value,
                                    DIOriginalSetter _Nullable originalSetter);
 
-
 //
 
 @interface DIImperativeInjector : NSObject
