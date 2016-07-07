@@ -7,7 +7,7 @@
 [![License](https://img.shields.io/cocoapods/l/DeluxeInjection.svg?style=flat)](http://cocoapods.org/pods/DeluxeInjection)
 [![Platform](https://img.shields.io/cocoapods/p/DeluxeInjection.svg?style=flat)](http://cocoapods.org/pods/DeluxeInjection)
 
-<img src="/images/Relax.png" align="right" height="300px" hspace="10px" vspace="10px">
+<img src="./images/Relax.png" align="right" height="300px" hspace="10px" vspace="10px">
 
 ## Features
 
@@ -19,9 +19,20 @@
 5. Inject both *ivar*-backed and `@dynamic` properties (over association)
 6. Easily access *ivar*s inside injected getter
 
+## Table of contents
+
+1. [DeluxeInjection core injection](#core-injection)
+2. Plugins
+  1. [Auto injection](#auto-injection)
+	
+
+## Core injection
+
+
+
 ## Auto injection
 
-<img src="/images/AI.png" align="right" height="400px" hspace="10px" vspace="10px">
+<img src="./images/AI.png" align="right" height="400px" hspace="10px" vspace="10px">
 
 First of all imagine what are you trying to inject?
 
@@ -92,7 +103,7 @@ Whole block will be called once for each property of each class. Returned `DIGet
 
 ## Laziness
 
-<img src="/images/LI.png" align="right" height="400px" hspace="10px" vspace="10px">
+<img src="./images/LI.png" align="right" height="400px" hspace="10px" vspace="10px">
 
 Do you really like this boilerplate?
 
@@ -140,7 +151,7 @@ This all will be done after calling this:
 
 ## Force injection
 
-<img src="/images/FI.png" align="right" height="400px" hspace="10px" vspace="10px">
+<img src="./images/FI.png" align="right" height="400px" hspace="10px" vspace="10px">
 
 You can force inject any property of any class even without `DIInject` specification using `forceInject:` method:
 
