@@ -176,7 +176,8 @@
             }
         }
         else {
-            [DeluxeInjection reject:holder.targetClass getter:holder.getter];
+            objc_property_t property = class_getProperty(holder.targetClass, holder.propertyName.UTF8String);
+            [DeluxeInjection reject:holder.targetClass property:property];
             holder.wasInjectedGetter = NO;
             holder.wasInjectedSetter = NO;
         }

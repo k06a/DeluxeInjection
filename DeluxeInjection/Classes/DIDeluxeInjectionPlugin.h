@@ -28,15 +28,9 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)inject:(DIPropertyBlock)block conformingProtocols:(NSArray<Protocol *> * _Nullable)protocols;
 + (void)reject:(DIPropertyFilter)block conformingProtocols:(NSArray<Protocol *> * _Nullable)protocols;
 
-/**
- *  Inject concrete property getter
- *
- *  @param klass  Class of property to inject
- *  @param property Class property to inject
- *  @param getterBlock Block to be injected into getter
- *  @param setterBlock Block to be injected into setter
- */
 + (void)inject:(Class)klass property:(objc_property_t)property getterBlock:(DIGetter)getterBlock setterBlock:(DISetter)setterBlock;
+
++ (void)reject:(Class)klass property:(objc_property_t)property;
 
 @end
 

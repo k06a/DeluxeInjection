@@ -192,22 +192,14 @@ void DISetterSuperCall(id target, Class klass, SEL setter, id value);
 + (id)doNotInject;
 
 /**
- *  Check if \c property of \c class is injected
+ *  Check if \c getter or \c setter of \c class was injected
  *
  *  @param klass  Class of property to check
- *  @param getter Class property to check
+ *  @param selector Selector to check
  *
  *  @return \c YES if injected, otherwise \c NO
  */
-+ (BOOL)checkInjected:(Class)klass getter:(SEL)getter;
-
-/**
- *  Reject concrete property injection
- *
- *  @param klass  Class of property to reject
- *  @param getter Class property to reject
- */
-+ (void)reject:(Class)klass getter:(SEL)getter;
++ (BOOL)checkInjected:(Class)klass selector:(SEL)selector;
 
 /**
  *  Overriden \c debugDescription method to see tree of classes and injected properties

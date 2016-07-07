@@ -466,8 +466,7 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
         RRPropertyGetClassAndProtocols(property, ^(Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
             NSString *propertyName = [NSString stringWithUTF8String:property_getName(property)];
             if (block(class, propertyName, propertyClass, propertyProtocols)) {
-                SEL getter = RRPropertyGetGetter(property);
-                [self reject:class getter:getter];
+                [self reject:class property:property];
             }
         });
     } conformingProtocols:protocols];
@@ -484,24 +483,11 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
     return doNotInject;
 }
 
-+ (BOOL)checkInjected:(Class)class getter:(SEL)getter {
-    return DIInjectionsGettersBackupRead(class, getter) != nil;
-}
-
-+ (void)inject:(Class)klass property:(objc_property_t)property getterBlock:(DIGetter)getterBlock setterBlock:(DISetter)setterBlock {
-    [self inject:klass property:property getterBlock:getterBlock setterBlock:setterBlock blockFactory:nil];
-}
-
-+ (void)reject:(Class)class getter:(SEL)getter {
-    if (!DIInjectionsGettersBackupRead(class, getter)) {
-        return;
++ (BOOL)checkInjected:(Class)klass selector:(SEL)selector {
+    if ([NSStringFromSelector(selector) hasSuffix:@":"]) {
+        return DIInjectionsSettersBackupRead(klass, selector) != nil;
     }
-
-    RRClassEnumerateProperties(class, ^(objc_property_t property) {
-        if (getter == RRPropertyGetGetter(property)) {
-            [self reject:class property:property];
-        }
-    });
+    return DIInjectionsGettersBackupRead(klass, selector) != nil;
 }
 
 + (NSString *)debugDescription {
@@ -529,6 +515,12 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
         }
         return str;
     }()];
+}
+
+#pragma mark - Plugin API
+
++ (void)inject:(Class)klass property:(objc_property_t)property getterBlock:(DIGetter)getterBlock setterBlock:(DISetter)setterBlock {
+    [self inject:klass property:property getterBlock:getterBlock setterBlock:setterBlock blockFactory:nil];
 }
 
 @end
