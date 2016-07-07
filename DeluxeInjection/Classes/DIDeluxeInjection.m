@@ -488,22 +488,8 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
     return DIInjectionsGettersBackupRead(class, getter) != nil;
 }
 
-+ (void)inject:(Class)class getter:(SEL)getter getterBlock:(DIGetter)getterBlock {
-    RRClassEnumerateProperties(class, ^(objc_property_t property) {
-        SEL propertyGetter = RRPropertyGetGetter(property);
-        if (getter == propertyGetter) {
-            [self inject:class property:property getterBlock:getterBlock setterBlock:nil blockFactory:nil];
-        }
-    });
-}
-
-+ (void)inject:(Class)class setter:(SEL)setter setterBlock:(DISetter)setterBlock {
-    RRClassEnumerateProperties(class, ^(objc_property_t property) {
-        SEL propertySetter = RRPropertyGetSetter(property);
-        if (setter == propertySetter) {
-            [self inject:class property:property getterBlock:nil setterBlock:setterBlock blockFactory:nil];
-        }
-    });
++ (void)inject:(Class)klass property:(objc_property_t)property getterBlock:(DIGetter)getterBlock setterBlock:(DISetter)setterBlock {
+    [self inject:klass property:property getterBlock:getterBlock setterBlock:setterBlock blockFactory:nil];
 }
 
 + (void)reject:(Class)class getter:(SEL)getter {

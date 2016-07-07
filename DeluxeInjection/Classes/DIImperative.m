@@ -156,25 +156,23 @@
             continue;
         }
         if (self.injector) {
-            if (self.savedGetterBlock) {
-                if (holder.wasInjectedGetter) {
+            if (self.savedGetterBlock || self.savedSetterBlock) {
+                if (self.savedGetterBlock && holder.wasInjectedGetter) {
                     NSLog(@"Warning: Reinjecting property getter [%@ %@]", holder.targetClass, NSStringFromSelector(holder.getter));
                 }
-                DIImperativeGetter savedGetterBlock = [self.savedGetterBlock copy];
-                [DeluxeInjection inject:holder.targetClass getter:holder.getter getterBlock:^id(id target, id *ivar, DIOriginalGetter originalGetter) {
-                    return savedGetterBlock(holder.targetClass, holder.getter, holder.propertyName, holder.propertyClass, holder.propertyProtocols, target, ivar, originalGetter);
-                }];
-                holder.wasInjectedGetter = YES;
-            }
-            if (self.savedSetterBlock) {
-                if (holder.wasInjectedSetter) {
+                if (self.savedSetterBlock && holder.wasInjectedSetter) {
                     NSLog(@"Warning: Reinjecting property setter [%@ %@]", holder.targetClass, NSStringFromSelector(holder.setter));
                 }
+                DIImperativeGetter savedGetterBlock = [self.savedGetterBlock copy];
                 DIImperativeSetter savedSetterBlock = [self.savedSetterBlock copy];
-                [DeluxeInjection inject:holder.targetClass setter:holder.setter setterBlock:^void(id target, id *ivar, id value, DIOriginalSetter originalSetter) {
+                objc_property_t property = class_getProperty(holder.targetClass, holder.propertyName.UTF8String);
+                [DeluxeInjection inject:holder.targetClass property:property getterBlock:^id(id target, id *ivar, DIOriginalGetter originalGetter) {
+                    return savedGetterBlock(holder.targetClass, holder.getter, holder.propertyName, holder.propertyClass, holder.propertyProtocols, target, ivar, originalGetter);
+                } setterBlock:^void(id target, id *ivar, id value, DIOriginalSetter originalSetter) {
                     return savedSetterBlock(holder.targetClass, holder.setter, holder.propertyName, holder.propertyClass, holder.propertyProtocols, target, ivar, value, originalSetter);
                 }];
-                holder.wasInjectedSetter = YES;
+                holder.wasInjectedGetter = (self.savedGetterBlock != nil);
+                holder.wasInjectedSetter = (self.savedSetterBlock != nil);
             }
         }
         else {

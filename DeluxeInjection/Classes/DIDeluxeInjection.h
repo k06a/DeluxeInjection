@@ -202,24 +202,6 @@ void DISetterSuperCall(id target, Class klass, SEL setter, id value);
 + (BOOL)checkInjected:(Class)klass getter:(SEL)getter;
 
 /**
- *  Inject concrete property getter
- *
- *  @param klass  Class of property to inject
- *  @param getter Class property getter to inject
- *  @param getterBlock Block to be injected into getter
- */
-+ (void)inject:(Class)klass getter:(SEL)getter getterBlock:(DIGetter)getterBlock;
-
-/**
- *  Inject concrete property setter
- *
- *  @param klass  Class of property to inject
- *  @param setter Class property setter to inject
- *  @param setterBlock Block to be injected into setter
- */
-+ (void)inject:(Class)klass setter:(SEL)setter setterBlock:(DISetter)setterBlock;
-
-/**
  *  Reject concrete property injection
  *
  *  @param klass  Class of property to reject
