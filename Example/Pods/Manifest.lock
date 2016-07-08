@@ -1,5 +1,5 @@
 PODS:
-  - DeluxeInjection (0.5.6):
+  - DeluxeInjection (0.5.7):
     - RuntimeRoutines
   - RuntimeRoutines (0.1.1)
 
@@ -11,7 +11,7 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  DeluxeInjection: 940d7b0b8df8af368629188b4d9997c524cdfa63
+  DeluxeInjection: 2858602e4acbc99c1de38c176d94f477fecef7f3
   RuntimeRoutines: 2b79a691652c63061de81982b4a524cb3b323cf3
 
 PODFILE CHECKSUM: 55decd0b4acc24f287a9604c235d704bff558d58
