@@ -17,8 +17,8 @@
 //  limitations under the License.
 //
 
-#import <Foundation/Foundation.h>
 #import "DIDeluxeInjectionPlugin.h"
+#import "DIInjectPlugin.h"
 #import "DIDefaults.h"
 
 @implementation NSObject (DIDefaults)
@@ -168,7 +168,7 @@
             [NSValue valueWithPointer:(__bridge void *)@protocol(DIDefaultsArchivedSync)] : @YES,
         }[protocolKey] boolValue];
         
-        [[[[self inject] byPropertyProtocol:protocol] getterBlock:^id _Nullable(Class targetClass, SEL getter, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols, id target, id *ivar, DIOriginalGetter originalGetter) {
+        [[[[[self inject] byPropertyProtocol:protocol] getterBlock:^id _Nullable(Class targetClass, SEL getter, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols, id target, id *ivar, DIOriginalGetter originalGetter) {
             NSUserDefaults *defaults = defaultsBlock(targetClass, propertyName, propertyClass, propertyProtocols) ?: [NSUserDefaults standardUserDefaults];
             NSString *key = keyBlock(targetClass, propertyName, propertyClass, propertyProtocols) ?: propertyName;
             if (withSync) {
@@ -192,7 +192,7 @@
             if (originalSetter) {
                 originalSetter(target, setter, value);
             }
-        }];
+        }] skipDIInjectProtocolFilter];
     }
 }
 
@@ -201,7 +201,7 @@
                                   @protocol(DIDefaultsSync),
                                   @protocol(DIDefaultsArchived),
                                   @protocol(DIDefaultsArchivedSync) ]) {
-        [[self reject] byPropertyProtocol:protocol];
+        [[[self reject] byPropertyProtocol:protocol] skipDIInjectProtocolFilter];
     }
 }
 

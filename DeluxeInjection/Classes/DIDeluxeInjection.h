@@ -202,6 +202,22 @@ void DISetterSuperCall(id target, Class klass, SEL setter, id value);
 + (BOOL)checkInjected:(Class)klass selector:(SEL)selector;
 
 /**
+ *  Get array of classes with some properties injected
+ *
+ *  @return Array of \c Class objects
+ */
++ (NSArray<Class> *)injectedClasses;
+
+/**
+ *  Get array of selectors of injected properties
+ *
+ *  @param klass Class of properties
+ *
+ *  @return Array of \c NSStrings, should be transformed with NSSelectorFromString
+ */
++ (NSArray<NSString *> *)injectedSelectorsForClass:(Class)klass;
+
+/**
  *  Overriden \c debugDescription method to see tree of classes and injected properties
  *
  *  @return String with injections info

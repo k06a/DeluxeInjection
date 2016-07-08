@@ -10,6 +10,8 @@
 		05EB6DF75EC763241A83CA9158D33FD2 /* DIDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = AC3997261D3C385E746EACD947B81494 /* DIDefaults.m */; };
 		1DD8993D767F136CB52A863DA572FF68 /* DIDynamic.m in Sources */ = {isa = PBXBuildFile; fileRef = F05AE6803147A3369BEB15300390BC77 /* DIDynamic.m */; };
 		244AB5C941BAD6C6C51D1002158C2702 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50FA752FF315BD6DBF821084189A17CC /* Foundation.framework */; };
+		25C7172A1D2FC390003B9167 /* DIImperativePlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 25C717281D2FC390003B9167 /* DIImperativePlugin.h */; };
+		25C7172E1D2FC645003B9167 /* DIInjectPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 25C7172C1D2FC645003B9167 /* DIInjectPlugin.h */; };
 		2C07E4562BF421B4C16EFF11C9EE6B43 /* DIImperative.h in Headers */ = {isa = PBXBuildFile; fileRef = 791B2C119F465C3237599C8FCD55476F /* DIImperative.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2E7045E5771B7319DE6A047DCD30F69E /* DILazy.h in Headers */ = {isa = PBXBuildFile; fileRef = 3E4E617A5AA3BBC002DAECC264810E66 /* DILazy.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2ED999A6EC54CC5B1BF336A702A75C07 /* DIDynamic.h in Headers */ = {isa = PBXBuildFile; fileRef = 0DCD8B9ADACC08F3C05EB801A2DFD68A /* DIDynamic.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -76,6 +78,8 @@
 		1EC162C2A566F9DB745D426B0518D38D /* RuntimeRoutines.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = RuntimeRoutines.xcconfig; sourceTree = "<group>"; };
 		1F47291CC3F6CD739E9EF5163E609B27 /* RuntimeRoutines-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "RuntimeRoutines-dummy.m"; sourceTree = "<group>"; };
 		22DA75845E5599E6791A93897EA80330 /* DIForceInject.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DIForceInject.m; sourceTree = "<group>"; };
+		25C717281D2FC390003B9167 /* DIImperativePlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DIImperativePlugin.h; sourceTree = "<group>"; };
+		25C7172C1D2FC645003B9167 /* DIInjectPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DIInjectPlugin.h; sourceTree = "<group>"; };
 		27CE5DE0F3B8CC8120AB20D22A172DA2 /* Pods-DeluxeInjection_Example-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-DeluxeInjection_Example-dummy.m"; sourceTree = "<group>"; };
 		28235174898A24DC1013C811BDAAA57F /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		30536BFDA8A390CD1261E12CB89A8946 /* DIDeluxeInjection.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DIDeluxeInjection.m; sourceTree = "<group>"; };
@@ -213,8 +217,10 @@
 				22DA75845E5599E6791A93897EA80330 /* DIForceInject.m */,
 				791B2C119F465C3237599C8FCD55476F /* DIImperative.h */,
 				57FB938BC58712A56F5F31DA2A02ADF4 /* DIImperative.m */,
+				25C717281D2FC390003B9167 /* DIImperativePlugin.h */,
 				5010418CCA34ED973DFEF65111F9364C /* DIInject.h */,
 				E52CB4CDFFB88A74546E15C0658625D7 /* DIInject.m */,
+				25C7172C1D2FC645003B9167 /* DIInjectPlugin.h */,
 				3E4E617A5AA3BBC002DAECC264810E66 /* DILazy.h */,
 				72C34E17AB49BB184C470627DA798138 /* DILazy.m */,
 			);
@@ -368,12 +374,14 @@
 				7C16C1CCCB826502638CC1490452A45B /* DeluxeInjection-umbrella.h in Headers */,
 				F82EB45BB99FC050F07DD69FA640B724 /* DeluxeInjection.h in Headers */,
 				F8F1349DF0701388D9F539614A2AE266 /* DIDefaults.h in Headers */,
+				25C7172E1D2FC645003B9167 /* DIInjectPlugin.h in Headers */,
 				7D6C3FB7D7F10DDB887F8ACAF8B48FB5 /* DIDeluxeInjection.h in Headers */,
 				9A1D1362100EE2CCE47CBF4CE553BDA7 /* DIDeluxeInjectionPlugin.h in Headers */,
 				2ED999A6EC54CC5B1BF336A702A75C07 /* DIDynamic.h in Headers */,
 				8D24C9AD911DAD11A31465FA64924E3F /* DIForceInject.h in Headers */,
 				2C07E4562BF421B4C16EFF11C9EE6B43 /* DIImperative.h in Headers */,
 				C997D6AD3DB730A0461EFC66459EE103 /* DIInject.h in Headers */,
+				25C7172A1D2FC390003B9167 /* DIImperativePlugin.h in Headers */,
 				2E7045E5771B7319DE6A047DCD30F69E /* DILazy.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -467,7 +475,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0730;
-				LastUpgradeCheck = 0700;
+				LastUpgradeCheck = 0730;
 			};
 			buildConfigurationList = 2D8E8EC45A3A1A1D94AE762CB5028504 /* Build configuration list for PBXProject "Pods" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -574,6 +582,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MODULEMAP_FILE = "Target Support Files/DeluxeInjection/DeluxeInjection.modulemap";
 				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = "${PRODUCT_BUNDLE_IDENTIFIER}";
 				PRODUCT_NAME = DeluxeInjection;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -678,6 +687,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MODULEMAP_FILE = "Target Support Files/RuntimeRoutines/RuntimeRoutines.modulemap";
 				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = "${PRODUCT_BUNDLE_IDENTIFIER}";
 				PRODUCT_NAME = RuntimeRoutines;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -778,6 +788,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MODULEMAP_FILE = "Target Support Files/RuntimeRoutines/RuntimeRoutines.modulemap";
 				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "${PRODUCT_BUNDLE_IDENTIFIER}";
 				PRODUCT_NAME = RuntimeRoutines;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -807,6 +818,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MODULEMAP_FILE = "Target Support Files/DeluxeInjection/DeluxeInjection.modulemap";
 				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "${PRODUCT_BUNDLE_IDENTIFIER}";
 				PRODUCT_NAME = DeluxeInjection;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;

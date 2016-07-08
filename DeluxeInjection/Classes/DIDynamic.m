@@ -18,6 +18,7 @@
 //
 
 #import "DIDeluxeInjectionPlugin.h"
+#import "DIInjectPlugin.h"
 #import "DIDynamic.h"
 
 @implementation DeluxeInjection (DIDynamic)
@@ -52,18 +53,18 @@
 @implementation DIImperative (DIDynamic)
 
 - (void)injectDynamic {
-    [[[[self inject] byPropertyProtocol:@protocol(DIDynamic)] getterBlock:^id(Class targetClass, SEL getter, NSString * propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols, id target, id *ivar, DIOriginalGetter originalGetter) {
+    [[[[[self inject] byPropertyProtocol:@protocol(DIDynamic)] getterBlock:^id(Class targetClass, SEL getter, NSString * propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols, id target, id *ivar, DIOriginalGetter originalGetter) {
         return *ivar;
     }] setterBlock:^(Class targetClass, SEL setter, NSString *propertyName, Class propertyClass, NSSet<Protocol *> * propertyProtocols, id target, id *ivar, id value, DIOriginalSetter originalSetter) {
         *ivar = value;
         if (originalSetter) {
             originalSetter(target, setter, value);
         }
-    }];
+    }] skipDIInjectProtocolFilter];
 }
 
 - (void)rejectDynamic {
-    [[self reject] byPropertyProtocol:@protocol(DIDynamic)];
+    [[[self reject] byPropertyProtocol:@protocol(DIDynamic)] skipDIInjectProtocolFilter];
 }
 
 @end

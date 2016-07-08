@@ -6,9 +6,9 @@
 //  Copyright © 2016 Anton Bukov. All rights reserved.
 //
 
-#import <XCTest/XCTest.h>
-
 #import <DeluxeInjection/DIInject.h>
+
+#import "AbstractTests.h"
 
 //
 
@@ -51,25 +51,16 @@
 
 //
 
-@interface DIInjectTests : XCTestCase
+@interface DIInjectTests : AbstractTests
 
 @end
 
 @implementation DIInjectTests
 
 - (void)tearDown {
-    [super tearDown];
-    
     [DeluxeInjection rejectAll];
     
-    [self testZNothing];
-}
-
-- (void)testZNothing {
-    XCTAssertTrue([[DeluxeInjection debugDescription] rangeOfString:@"Nothing"].location != NSNotFound);
-    if ([[DeluxeInjection debugDescription] rangeOfString:@"Nothing"].location != NSNotFound) {
-        NSLog(@"%@", [DeluxeInjection debugDescription]);
-    }
+    [super tearDown];
 }
 
 - (void)testInjectByClass {
@@ -228,29 +219,7 @@
     XCTAssertFalse([DeluxeInjection checkInjected:[DIInjectTests_Class class] selector:@selector(setDynamicWeakObject:)]);
 }
 
-- (void)testInjectDynamicByClass {
-    NSArray *answer1 = @[ @1, @2, @3 ];
-    NSArray *answer2 = @[ @4, @5, @6 ];
-    
-    [DeluxeInjection injectBlock:^DIGetter(Class targetClass, SEL getter, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *protocols) {
-        if (targetClass == [DIInjectTests_Class class] && propertyClass == [NSMutableArray class]) {
-            return DIGetterIfIvarIsNil(^id(id target) {
-                return [answer1 mutableCopy];
-            });
-        }
-        return nil;
-    }];
-    
-    DIInjectTests_Class *test = [[DIInjectTests_Class alloc] init];
-    
-    XCTAssertEqualObjects(test.dynamicClassObject, answer1);
-    test.dynamicClassObject = [answer2 mutableCopy];
-    XCTAssertEqualObjects(test.dynamicClassObject, answer2);
-    test.dynamicClassObject = nil;
-    XCTAssertEqualObjects(test.dynamicClassObject, answer1);
-}
-
-- (void)testInjectDynamicByProtocol {
+- (void)testInjectDynamic {
     id answer1 = @777;
     id answer2 = @666;
     

@@ -18,6 +18,7 @@
 //
 
 #import "DIDeluxeInjectionPlugin.h"
+#import "DIInjectPlugin.h"
 #import "DILazy.h"
 
 @implementation DeluxeInjection (DILazy)
@@ -48,17 +49,17 @@
 @implementation DIImperative (DILazy)
 
 - (void)injectLazy {
-    [[[self inject] byPropertyProtocol:@protocol(DILazy)] getterBlock:^id(Class targetClass, SEL getter, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols, id target, id *ivar, DIOriginalGetter originalGetter) {
+    [[[[self inject] byPropertyProtocol:@protocol(DILazy)] getterBlock:^id(Class targetClass, SEL getter, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols, id target, id *ivar, DIOriginalGetter originalGetter) {
         NSAssert(propertyClass, @"DILazy can not be applied to unknown class (id)");
         if (*ivar == nil) {
             *ivar = [[propertyClass alloc] init];
         }
         return *ivar;
-    }];
+    }] skipDIInjectProtocolFilter];
 }
 
 - (void)rejectLazy {
-    [[self reject] byPropertyProtocol:@protocol(DILazy)];
+    [[[self reject] byPropertyProtocol:@protocol(DILazy)] skipDIInjectProtocolFilter];
 }
 
 @end

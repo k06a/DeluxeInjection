@@ -490,6 +490,17 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
     return DIInjectionsGettersBackupRead(klass, selector) != nil;
 }
 
++ (NSArray<Class> *)injectedClasses {
+    NSMutableSet *set = [NSMutableSet setWithArray:injectionsGettersBackup.allKeys];
+    [set unionSet:[NSSet setWithArray:injectionsSettersBackup.allKeys]];
+    return set.allObjects;
+}
+
++ (NSArray<NSString *> *)injectedSelectorsForClass:(Class)klass {
+    return [[NSArray arrayWithArray:injectionsGettersBackup[klass].allKeys]
+            arrayByAddingObjectsFromArray:injectionsSettersBackup[klass].allKeys];
+}
+
 + (NSString *)debugDescription {
     return [[super description] stringByAppendingString:^{
         NSMutableString *str = [NSMutableString stringWithString:@" injected:\n"];
