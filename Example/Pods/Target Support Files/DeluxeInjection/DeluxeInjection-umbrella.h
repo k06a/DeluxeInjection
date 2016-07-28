@@ -1,10 +1,10 @@
 #import <UIKit/UIKit.h>
 
 #import "DeluxeInjection.h"
+#import "DIAssociate.h"
 #import "DIDefaults.h"
 #import "DIDeluxeInjection.h"
 #import "DIDeluxeInjectionPlugin.h"
-#import "DIDynamic.h"
 #import "DIForceInject.h"
 #import "DIImperative.h"
 #import "DIImperativePlugin.h"
