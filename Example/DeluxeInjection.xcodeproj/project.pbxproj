@@ -215,6 +215,7 @@
 				6003F588195388D20070C39A /* Resources */,
 				7EA2819488D1C6811AA204F3 /* [CP] Embed Pods Frameworks */,
 				4B4BC63FD9BE7DD21035C9C4 /* [CP] Copy Pods Resources */,
+				2573F6491D4C11D500AD1BB5 /* Run Script CoverAlls */,
 			);
 			buildRules = (
 			);
@@ -235,6 +236,7 @@
 				6003F5AC195388D20070C39A /* Resources */,
 				66F0E482C6D6CE715AA3C22C /* [CP] Embed Pods Frameworks */,
 				1D342014BF5FBA61CC593C27 /* [CP] Copy Pods Resources */,
+				2573F6481D4C11C500AD1BB5 /* Run Script CoverAlls */,
 			);
 			buildRules = (
 			);
@@ -329,6 +331,34 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-DeluxeInjection_Tests/Pods-DeluxeInjection_Tests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		2573F6481D4C11C500AD1BB5 /* Run Script CoverAlls */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Run Script CoverAlls";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which xcode-coveralls >/dev/null; then\n    xcode-coveralls \"${OBJECT_FILE_DIR_normal}/${CURRENT_ARCH}/\"\nfi";
+		};
+		2573F6491D4C11D500AD1BB5 /* Run Script CoverAlls */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Run Script CoverAlls";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "cd Example\nif which xcode-coveralls >/dev/null; then\n    xcode-coveralls \"${OBJECT_FILE_DIR_normal}/${CURRENT_ARCH}/\"\nfi\ncd ..";
 		};
 		4B4BC63FD9BE7DD21035C9C4 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;

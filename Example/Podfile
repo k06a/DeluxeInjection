@@ -1,4 +1,3 @@
-plugin 'slather'
 use_frameworks!
 
 target 'DeluxeInjection_Example' do
