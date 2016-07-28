@@ -192,40 +192,30 @@ void DISetterSuperCall(id target, Class klass, SEL setter, id value);
 + (id)doNotInject;
 
 /**
- *  Check if \c property of \c class is injected
+ *  Check if \c getter or \c setter of \c class was injected
  *
  *  @param klass  Class of property to check
- *  @param getter Class property to check
+ *  @param selector Selector to check
  *
  *  @return \c YES if injected, otherwise \c NO
  */
-+ (BOOL)checkInjected:(Class)klass getter:(SEL)getter;
++ (BOOL)checkInjected:(Class)klass selector:(SEL)selector;
 
 /**
- *  Inject concrete property getter
+ *  Get array of classes with some properties injected
  *
- *  @param klass  Class of property to inject
- *  @param getter Class property getter to inject
- *  @param getterBlock Block to be injected into getter
+ *  @return Array of \c Class objects
  */
-+ (void)inject:(Class)klass getter:(SEL)getter getterBlock:(DIGetter)getterBlock;
++ (NSArray<Class> *)injectedClasses;
 
 /**
- *  Inject concrete property setter
+ *  Get array of selectors of injected properties
  *
- *  @param klass  Class of property to inject
- *  @param setter Class property setter to inject
- *  @param setterBlock Block to be injected into setter
- */
-+ (void)inject:(Class)klass setter:(SEL)setter setterBlock:(DISetter)setterBlock;
-
-/**
- *  Reject concrete property injection
+ *  @param klass Class of properties
  *
- *  @param klass  Class of property to reject
- *  @param getter Class property to reject
+ *  @return Array of \c NSStrings, should be transformed with NSSelectorFromString
  */
-+ (void)reject:(Class)klass getter:(SEL)getter;
++ (NSArray<NSString *> *)injectedSelectorsForClass:(Class)klass;
 
 /**
  *  Overriden \c debugDescription method to see tree of classes and injected properties

@@ -1,5 +1,5 @@
 //
-//  DIDeluxeInjectionPlugin.h
+//  DIImperativePlugin.h
 //  DeluxeInjection
 //
 //  Copyright (c) 2016 Anton Bukov <k06aaa@gmail.com>
@@ -17,20 +17,13 @@
 //  limitations under the License.
 //
 
-#import <objc/runtime.h>
-
-#import "DIDeluxeInjection.h"
+#import "DIInject.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface DeluxeInjection (Plugin)
+@interface DIImperativeInjector (Plugin)
 
-+ (void)inject:(DIPropertyBlock)block conformingProtocols:(NSArray<Protocol *> * _Nullable)protocols;
-+ (void)reject:(DIPropertyFilter)block conformingProtocols:(NSArray<Protocol *> * _Nullable)protocols;
-
-+ (void)inject:(Class)klass property:(objc_property_t)property getterBlock:(DIGetter)getterBlock setterBlock:(DISetter)setterBlock;
-
-+ (void)reject:(Class)klass property:(objc_property_t)property;
+- (instancetype)skipDIInjectProtocolFilter;
 
 @end
 

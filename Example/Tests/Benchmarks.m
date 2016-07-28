@@ -6,33 +6,15 @@
 //  Copyright © 2016 Anton Bukov. All rights reserved.
 //
 
-#import <XCTest/XCTest.h>
-
 #import <DeluxeInjection/DeluxeInjection.h>
 
-@interface Benchmarks : XCTestCase
+#import "AbstractTests.h"
+
+@interface Benchmarks : AbstractTests
 
 @end
 
 @implementation Benchmarks
-
-- (void)tearDown {
-    [super tearDown];
-    
-    [DeluxeInjection rejectAll];
-    [DeluxeInjection rejectLazy];
-    [DeluxeInjection rejectDefaults];
-    [DeluxeInjection forceRejectAll];
-    
-    [self testZNothing];
-}
-
-- (void)testZNothing {
-    XCTAssertTrue([[DeluxeInjection debugDescription] rangeOfString:@"Nothing"].location != NSNotFound);
-    if ([[DeluxeInjection debugDescription] rangeOfString:@"Nothing"].location == NSNotFound) {
-        NSLog(@"XXX: %@", [DeluxeInjection debugDescription]);
-    }
-}
 
 - (void)testInject {
     [self measureBlock:^{
