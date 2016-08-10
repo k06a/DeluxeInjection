@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "5D888EF1BB4878C9030187889DC97D54"
+               BlueprintIdentifier = "58E0717B09342566E457CE7C004ADB09"
                BuildableName = "DeluxeInjection.framework"
                BlueprintName = "DeluxeInjection"
                ReferencedContainer = "container:Pods.xcodeproj">
@@ -46,7 +46,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "5D888EF1BB4878C9030187889DC97D54"
+            BlueprintIdentifier = "58E0717B09342566E457CE7C004ADB09"
             BuildableName = "DeluxeInjection.framework"
             BlueprintName = "DeluxeInjection"
             ReferencedContainer = "container:Pods.xcodeproj">

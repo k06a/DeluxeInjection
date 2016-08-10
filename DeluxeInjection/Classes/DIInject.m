@@ -196,9 +196,15 @@
                 DIImperativeSetter savedSetterBlock = [self.savedSetterBlock copy];
                 objc_property_t property = class_getProperty(holder.targetClass, holder.propertyName.UTF8String);
                 [DeluxeInjection inject:holder.targetClass property:property getterBlock:^id(id target, id *ivar, DIOriginalGetter originalGetter) {
-                    return savedGetterBlock(holder.targetClass, holder.getter, holder.propertyName, holder.propertyClass, holder.propertyProtocols, target, ivar, originalGetter);
+                    if (savedGetterBlock) {
+                        return savedGetterBlock(holder.targetClass, holder.getter, holder.propertyName, holder.propertyClass, holder.propertyProtocols, target, ivar, originalGetter);
+                    }
+                    return originalGetter(target, holder.setter);
                 } setterBlock:^void(id target, id *ivar, id value, DIOriginalSetter originalSetter) {
-                    return savedSetterBlock(holder.targetClass, holder.setter, holder.propertyName, holder.propertyClass, holder.propertyProtocols, target, ivar, value, originalSetter);
+                    if (savedSetterBlock) {
+                        return savedSetterBlock(holder.targetClass, holder.setter, holder.propertyName, holder.propertyClass, holder.propertyProtocols, target, ivar, value, originalSetter);
+                    }
+                    return originalSetter(target, holder.setter, value);
                 }];
                 holder.wasInjectedGetter = (self.savedGetterBlock != nil);
                 holder.wasInjectedSetter = (self.savedSetterBlock != nil);
