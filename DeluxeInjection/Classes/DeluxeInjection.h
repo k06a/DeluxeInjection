@@ -26,7 +26,7 @@
 #import "DIInject.h"
 #import "DILazy.h"
 #import "DIDefaults.h"
-#import "DIDynamic.h"
+#import "DIAssociate.h"
 
 #import "DIImperative.h"
 

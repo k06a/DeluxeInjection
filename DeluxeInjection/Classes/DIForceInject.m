@@ -22,7 +22,7 @@
 #import "DIInject.h"
 #import "DILazy.h"
 #import "DIDefaults.h"
-#import "DIDynamic.h"
+#import "DIAssociate.h"
 
 #import "DIDeluxeInjectionPlugin.h"
 #import "DIForceInject.h"
@@ -34,7 +34,7 @@ static NSSet *excudeProtocols() {
         excudeProtocols = [NSSet setWithArray:@[
             @protocol(DIInject),
             @protocol(DILazy),
-            @protocol(DIDynamic),
+            @protocol(DIAssociate),
             @protocol(DIDefaults),
             @protocol(DIDefaultsSync),
             @protocol(DIDefaultsArchived),

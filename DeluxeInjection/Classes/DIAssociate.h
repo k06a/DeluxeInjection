@@ -1,5 +1,5 @@
 //
-//  DIDynamic.h
+//  DIAssociate.h
 //  DeluxeInjection
 //
 //  Copyright (c) 2016 Anton Bukov <k06aaa@gmail.com>
@@ -22,45 +22,45 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol DIDynamic <NSObject>
+@protocol DIAssociate <NSObject>
 
 @end
 
-@interface NSObject (DIDynamic) <DIDynamic>
+@interface NSObject (DIAssociate) <DIAssociate>
 
 @end
 
-@interface DeluxeInjection (DIDynamic)
+@interface DeluxeInjection (DIAssociate)
 
 /**
- *  Inject properties marked with \c <DIDynamic> protocol using block: \code
+ *  Inject properties marked with \c <DIAssociate> protocol using block: \code
  *return _ivar
  *\endcode
  */
-+ (void)injectDynamic;
++ (void)injectAssociate;
 
 /**
- *  Reject all injections marked explicitly with \c <DIDynamic> protocol.
+ *  Reject all injections marked explicitly with \c <DIAssociate> protocol.
  */
-+ (void)rejectDynamic;
++ (void)rejectAssociate;
 
 @end
 
 //
 
-@interface DIImperative (DIDynamic)
+@interface DIImperative (DIAssociate)
 
 /**
- *  Inject properties marked with \c <DIDynamic> protocol using block: \code
+ *  Inject properties marked with \c <DIAssociate> protocol using block: \code
  *return _ivar
  *\endcode
  */
-- (void)injectDynamic;
+- (void)injectAssociate;
 
 /**
- *  Reject all injections marked explicitly with \c <DIDynamic> protocol.
+ *  Reject all injections marked explicitly with \c <DIAssociate> protocol.
  */
-- (void)rejectDynamic;
+- (void)rejectAssociate;
 
 @end
 
