@@ -19,11 +19,11 @@
 
 #import "RuntimeRoutines.h"
 
-void RRClassEnumerateAll(void (^block)(Class klass)) {
-    RRClassEnumerateSubclasses([NSObject class], block);
+void RRClassEnumerateAllClasses(BOOL includeMetaClasses, void (^block)(Class klass)) {
+    RRClassEnumerateSubclasses([NSObject class], includeMetaClasses, block);
 }
 
-void RRClassEnumerateSubclasses(Class parentclass, void (^block)(Class klass)) {
+void RRClassEnumerateSubclasses(Class parentclass, BOOL includeMetaClasses, void (^block)(Class klass)) {
     Class *classes = objc_copyClassList(NULL);
     for (Class *cursor = classes; classes && *cursor; cursor++) {
         // Filter only NSObject subclasses
@@ -36,6 +36,9 @@ void RRClassEnumerateSubclasses(Class parentclass, void (^block)(Class klass)) {
         }
 
         block(*cursor);
+        if (includeMetaClasses) {
+            block(objc_getMetaClass(class_getName(*cursor)));
+        }
     }
 
     free(classes);
@@ -55,6 +58,22 @@ void RRClassEnumerateProperties(Class klass, void (^block)(objc_property_t prope
         block(*cursor);
     }
     free(properties);
+}
+
+void RRClassEnumeratePropertiesWithSuperclassesProperties(Class klass, void (^block)(objc_property_t property)) {
+    NSMutableSet <NSString *> *calledProperties = [NSMutableSet new];
+    
+    for (Class currentKlass = klass; currentKlass; currentKlass = [currentKlass superclass]) {
+        RRClassEnumerateProperties(currentKlass, ^(objc_property_t property) {
+            NSString *name = [[NSString alloc] initWithUTF8String:property_getName(property)];
+            if ([calledProperties containsObject:name]) {
+                return;
+            }
+            
+            [calledProperties addObject:name];
+            block(property);
+        });
+    }
 }
 
 void RRClassEnumerateIvars(Class klass, void (^block)(Ivar ivar)) {
@@ -92,6 +111,10 @@ void RRClassEnumerateProtocolsWithSuperprotocols(Class klass, void (^block)(Prot
 
 objc_property_t RRClassGetPropertyByName(Class klass, NSString *propertyName) {
     return class_getProperty(klass, propertyName.UTF8String);
+}
+
+objc_property_t RRClassGetMetaPropertyByName(Class klass, NSString *propertyName) {
+    return class_getProperty(objc_getMetaClass(class_getName(klass)), propertyName.UTF8String);
 }
 
 void RRProtocolEnumerateSuperprotocols(Protocol *protocol, void (^block)(Protocol *superprotocol)) {
@@ -172,6 +195,8 @@ void RRPropertyGetClassAndProtocols(objc_property_t property, void (^block)(Clas
     if (location != 0 && location != NSNotFound) {
         klass = NSClassFromString([type substringToIndex:location]);
         type = [type substringFromIndex:location];
+    } else {
+        klass = NSClassFromString(type);
     }
 
     NSMutableSet *protocols = [NSMutableSet set];

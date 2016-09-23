@@ -194,7 +194,7 @@
                 }
                 DIImperativeGetter savedGetterBlock = [self.savedGetterBlock copy];
                 DIImperativeSetter savedSetterBlock = [self.savedSetterBlock copy];
-                objc_property_t property = class_getProperty(holder.targetClass, holder.propertyName.UTF8String);
+                objc_property_t property = RRClassGetPropertyByName(holder.targetClass, holder.propertyName);
                 [DeluxeInjection inject:holder.targetClass property:property getterBlock:^id(id target, id *ivar, DIOriginalGetter originalGetter) {
                     if (savedGetterBlock) {
                         return savedGetterBlock(holder.targetClass, holder.getter, holder.propertyName, holder.propertyClass, holder.propertyProtocols, target, ivar, originalGetter);

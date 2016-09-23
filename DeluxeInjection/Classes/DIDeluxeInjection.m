@@ -201,7 +201,7 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
         [protocolStrs addObject:[NSString stringWithFormat:@"<%@>", NSStringFromProtocol(protocol)]];
     }
     
-    RRClassEnumerateAll(^(Class class) {
+    RRClassEnumerateAllClasses(YES, ^(Class class) {
         RRClassEnumerateProperties(class, ^(objc_property_t property) {
             const char *type = property_getAttributes(property);
             BOOL found = NO;

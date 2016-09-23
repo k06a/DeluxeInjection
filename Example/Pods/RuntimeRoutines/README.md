@@ -29,7 +29,7 @@ github "ML-Works/RuntimeRoutines"
 
 ## Author
 
-Anton Bukov, k06aaa@gmail.com
+Anton Bukov, k06a@mlworks.com
 
 ## License
 
