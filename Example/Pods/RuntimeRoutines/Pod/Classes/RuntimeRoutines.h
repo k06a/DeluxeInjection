@@ -23,10 +23,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Class
 
-void RRClassEnumerateAll(void (^block)(Class klass));
-void RRClassEnumerateSubclasses(Class parentclass, void (^block)(Class klass));
+void RRClassEnumerateAllClasses(BOOL includeMetaClasses, void (^block)(Class klass));
+void RRClassEnumerateSubclasses(Class parentclass, BOOL includeMetaClasses, void (^block)(Class klass));
 void RRClassEnumerateMethods(Class klass, void (^block)(Method method));
 void RRClassEnumerateProperties(Class klass, void (^block)(objc_property_t property));
+void RRClassEnumeratePropertiesWithSuperclassesProperties(Class klass, void (^block)(objc_property_t property));
 void RRClassEnumerateIvars(Class klass, void (^block)(Ivar ivar));
 void RRClassEnumerateProtocols(Class klass, void (^block)(Protocol *protocol));
 void RRClassEnumerateProtocolsWithSuperprotocols(Class klass, void (^block)(Protocol *protocol));

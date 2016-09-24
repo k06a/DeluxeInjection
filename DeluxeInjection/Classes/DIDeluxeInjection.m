@@ -201,8 +201,8 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
         [protocolStrs addObject:[NSString stringWithFormat:@"<%@>", NSStringFromProtocol(protocol)]];
     }
     
-    RRClassEnumerateAll(^(Class class) {
-        RRClassEnumerateProperties(class, ^(objc_property_t property) {
+    RRClassEnumerateAllClasses(YES, ^(Class klass) {
+        RRClassEnumerateProperties(klass, ^(objc_property_t property) {
             const char *type = property_getAttributes(property);
             BOOL found = NO;
             if (strstr(type, "<DI")) {
@@ -214,7 +214,7 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
                 }
             }
             if (!protocols || found) {
-                block(class, property);
+                block(klass, property);
             }
         });
     });
@@ -253,7 +253,7 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
             NSAssert([RRMethodGetReturnType(getterMethod) isEqualToString:@"@"],
                      @"DeluxeInjection do not support non-object properties injections");
         }
-        
+
         Method setterMethod = class_getInstanceMethod(klass, setter);
         if (setterMethod) {
             NSAssert([RRMethodGetReturnType(setterMethod) isEqualToString:@"v"],
@@ -462,11 +462,11 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
 }
 
 + (void)reject:(DIPropertyFilter)block conformingProtocols:(NSArray<Protocol *> *)protocols {
-    [self enumerateAllClassProperties:^(Class class, objc_property_t property) {
+    [self enumerateAllClassProperties:^(Class klass, objc_property_t property) {
         RRPropertyGetClassAndProtocols(property, ^(Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
             NSString *propertyName = [NSString stringWithUTF8String:property_getName(property)];
-            if (block(class, propertyName, propertyClass, propertyProtocols)) {
-                [self reject:class property:property];
+            if (block(klass, propertyName, propertyClass, propertyProtocols)) {
+                [self reject:klass property:property];
             }
         });
     } conformingProtocols:protocols];
