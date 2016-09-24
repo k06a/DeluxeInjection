@@ -113,10 +113,6 @@ objc_property_t RRClassGetPropertyByName(Class klass, NSString *propertyName) {
     return class_getProperty(klass, propertyName.UTF8String);
 }
 
-objc_property_t RRClassGetMetaPropertyByName(Class klass, NSString *propertyName) {
-    return class_getProperty(objc_getMetaClass(class_getName(klass)), propertyName.UTF8String);
-}
-
 void RRProtocolEnumerateSuperprotocols(Protocol *protocol, void (^block)(Protocol *superprotocol)) {
     __unsafe_unretained Protocol **protocols = protocol_copyProtocolList(protocol, NULL);
     for (__unsafe_unretained Protocol **cursor = protocols; protocols && *cursor; cursor++) {
