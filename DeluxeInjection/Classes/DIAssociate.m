@@ -24,36 +24,33 @@
 @implementation DeluxeInjection (DIAssociate)
 
 + (void)load {
-  [DIImperative registerPluginProtocol:@protocol(DIAssociate)];
+    [DIImperative registerPluginProtocol:@protocol(DIAssociate)];
 }
 
 + (void)injectAssociate {
-  [self inject:^NSArray *(Class targetClass, SEL getter, SEL setter,
-                          NSString *propertyName, Class propertyClass,
-                          NSSet<Protocol *> *propertyProtocols) {
-    return @[
-      DIGetterMake(^id(id target, id *ivar) {
-        return *ivar;
-      }),
-      DISetterWithOriginalMake(
-          ^(id target, id *ivar, id value, DIOriginalSetter originalSetter) {
-            *ivar = value;
-            if (originalSetter) {
-              originalSetter(target, setter, value);
-            }
-          })
-    ];
-  }
-      conformingProtocols:@[ @protocol(DIAssociate) ]];
+    [self inject:^NSArray *(Class targetClass, SEL getter, SEL setter,
+                            NSString *propertyName, Class propertyClass,
+                            NSSet<Protocol *> *propertyProtocols) {
+        return @[
+            DIGetterMake(^id(id target, id *ivar) {
+                return *ivar;
+            }),
+            DISetterWithOriginalMake(^(id target, id *ivar, id value, DIOriginalSetter originalSetter) {
+                *ivar = value;
+                if (originalSetter) {
+                    originalSetter(target, setter, value);
+                }
+            })
+        ];
+    } conformingProtocols:@[ @protocol(DIAssociate) ]];
 }
 
 + (void)rejectAssociate {
-  [self reject:^BOOL(Class targetClass, NSString *propertyName,
-                     Class propertyClass,
-                     NSSet<Protocol *> *propertyProtocols) {
-    return YES;
-  }
-      conformingProtocols:@[ @protocol(DIAssociate) ]];
+    [self reject:^BOOL(Class targetClass, NSString *propertyName,
+                       Class propertyClass,
+                       NSSet<Protocol *> *propertyProtocols) {
+        return YES;
+    } conformingProtocols:@[ @protocol(DIAssociate) ]];
 }
 
 @end
