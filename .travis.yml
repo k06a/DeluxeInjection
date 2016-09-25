@@ -8,6 +8,7 @@ podfile: Example/Podfile
 cache: cocoapods
 
 before_install:
+- brew update
 - brew install macmade/tap/xcode-coveralls
 - gem update cocoapods --no-ri --no-rdoc
 - pod install --repo-update --project-directory=Example
