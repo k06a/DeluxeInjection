@@ -7,12 +7,9 @@ osx_image: xcode8
 podfile: Example/Podfile
 cache: cocoapods
 
-before_install:
-- brew update
-- brew install macmade/tap/xcode-coveralls
-- gem update cocoapods --no-ri --no-rdoc
-- pod install --repo-update --project-directory=Example
-
 script:
 - set -o pipefail && xcodebuild test -workspace Example/DeluxeInjection.xcworkspace -scheme DeluxeInjection-Example -destination 'platform=iOS Simulator,name=iPhone 6' ONLY_ACTIVE_ARCH=YES | xcpretty
 - pod lib lint --verbose
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
