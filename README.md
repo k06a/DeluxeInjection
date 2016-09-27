@@ -1,7 +1,6 @@
 # DeluxeInjection :syringe:
 
 [![CI Status](http://img.shields.io/travis/k06a/DeluxeInjection.svg?style=flat)](https://travis-ci.org/k06a/DeluxeInjection)
-[![Coverage Status](https://coveralls.io/repos/github/k06a/DeluxeInjection/badge.svg?branch=master)](https://coveralls.io/github/k06a/DeluxeInjection?branch=master)
 [![Test Coverage](http://codecov.io/github/k06a/DeluxeInjection/coverage.svg?branch=master)](http://codecov.io/github/k06a/DeluxeInjection?branch=master)
 [![Version](https://img.shields.io/cocoapods/v/DeluxeInjection.svg?style=flat)](http://cocoapods.org/pods/DeluxeInjection)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
