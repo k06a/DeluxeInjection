@@ -11,97 +11,74 @@
 
 ## Features
 
-1. Auto-injection as first-class feature
+1. Auto-injection as first-class feature (+ class property support)
 2. Force injection for any property of any class
 3. Lazy properties initialization feature
 3. `NSUserDefaults`-backed properties feature
 4. Both *value-* and *getter-*injection supported
 5. Inject both *ivar*-backed and `@dynamic` properties (over association)
-6. Easily access *ivar*s inside injected getter
+6. Easily access *ivar*s and original method implementations inside injected getter/setter
 
 ## Table of contents
 
-1. [DeluxeInjection core injection](#core-injection)
-2. Plugins
-  1. [Auto injection](#auto-injection)
-	
+1. [Concepts](#concepts)
+2. [Auto Injection](#auto-injection)
+3. [Lazies Injection](#lazies-injection)
+4. [Settings Injection](#settings-injection)
+5. [Performance and Testing](#performance-and-testing)
+6. [Installation](#installation)
 
-## Core injection
+## Concepts
 
+The main concept of DeluxeInjection library is explicit injection of marked properties. Properties can be marked with protocols, thats why integral (non-object) properties are not supported.
 
+DeluxeInjection have minimal API and most interesting features are implemented like separated plugins. You can easily develop your own plugins, just looking at some existing: `DIInject`, `DILazy`, `DIDefaults`, `DIAssociate`.
 
-## Auto injection
+Due DeluxeInjection architecture most plugins works by enumeration all properties of all classes. Thats not very optimal to use with several plugins, thats why `DIImperative` plugin was implemented, and all other plugins now support `DIImperative` plugin. It collects all injectable properties of all classes and provide you a block to apply all necessary injections in imperative format. This plugin is used to be default usage of DeluxeInjection.
+
+## Auto Injection
 
 <img src="./images/AI.png" align="right" height="400px" hspace="10px" vspace="10px">
 
-First of all imagine what are you trying to inject?
-
+Here is basic example of injection value by class and protocol and getter injection:
 ```objective-c
-@interface SomeClass : SomeSuperclass
+@interface MyClass : NSObject
 
-@property (nonatomic) Feedback *feedback;
+@property (strong, nonatomic) Settings<DIInject> *settings;
+@property (strong, nonatomic) id<Analytics,DIInject> *analytics;
+@property (strong, nonatomic) NSMutableArray<DIInject> *items;
 
 @end
-```
 
-Just one keyword will do this for you:
-```objective-c
-@interface SomeClass : SomeSuperclass
+...
 
-@property (nonatomic) Feedback<DIInject> *feedback;
+Settings *settings = [UserDefaultsSetting new];
+Analytics *analytics = [CountlyAnalytics new];
 
-@end
-```
+[DeluxeInjection imperative:^(DIImperative *lets) {
 
-And block to be called for all classes properties marked with `<DIInject>`:
-
-```objective-c
-Feedabck *feedback = [Feedback alloc] initWithSettings: ... ];
-[DeluxeInjection inject:^(Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *protocols) {
-    if (propertyClass == [Feedback class]) {
-    	return feedback;
-    }
-    return [DeluxeInjection doNotInject]; // Special value to skip injection for propertyName of targetClass
+    // Inject value by class
+    [[[lets inject] byPropertyClass:[Settings class]] getterValue:settings];
+    
+    // Inject value by property protocol
+    [[[lets inject] byPropertyProtocol:[Analytics class]] getterValue:analytics];
+    
+    // Inject getter by property class
+    [[[lets inject] byPropertyClass:[NSMutableArray class]] getterBlock:DIGetterMake(^id (id target, id *ivar) {
+        if (*ivar == nil) {
+	    *ivar = [NSMutableArray array];
+	}
+	return *ivar;
+    })];
 }];
 ```
 
-And you is allowed to make a decision to return value based on all this stuff:
+You can inject value, getter and setter blocks. There are some functions to simplify getter (same for setters plus additional argument `value`) block definitions:
+- `DIGetterMake` with block arguments: target and \*ivar
+- `DIGetterIfIvarIsNil` with block arguments: target
+- `DIGetterWithOriginalMake` with block arguments: target, \*ivar and original getter pointer
 
-* Target class for injection – `Class targetClass`
-* Property name in string representation – `NSString *propertyName`
-* Class of property – `Class propertyClass`, or `nil` in case of *id*
-* Set of property protocols – `NSSet<Protocol *> *protocols`, including all superprotocols
-
-You are also able to use method `injectBlock:` to return `DIGetter` block to provide injected getter or nil to skip injection. You may wanna use this methods if wanna make a decision to return value on target object. Maybe return different mutable copies for different targets or etc. Following code will inject only properties of types `NSMutableArray` and `NSMutableDictionary` with 2 prepared objects using two different but equal ways:
-
-```objective-c
-NSArray *array1 = @[@1, @2, @3];
-NSDictionary *dict1 = @[@"key" : @"value"];
-
-[DeluxeInjection injectBlock:^DIGetter (Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
-
-    if (propertyClass == [NSMutableArray class]) {
-        return DIGetterIfIvarIsNil(^id(id target) {
-            return [array1 mutableCopy];
-        });
-    }
-    
-    if (propertyClass == [NSMutableDictionary class]) {
-        return ^id(id target, id *ivar) {
-            if (*ivar == nil) {
-                *ivar = [dict1 mutableCopy];
-            }
-            return *ivar;
-        };
-    }
-    
-    return nil; // It is also safe to return a [DeluxeInjection doNotInject] here :)
-}];
-```
-
-Whole block will be called once for each property of each class. Returned `DIGetter` blocks will be used as injected getter. Helper function `DIGetterIfIvarIsNil` allows to skip boilerplate *if-ivar-is-nil-then-assing-ivar-and-return-ivar*.
-
-## Laziness
+## Lazies Injection
 
 <img src="./images/LI.png" align="right" height="400px" hspace="10px" vspace="10px">
 
@@ -110,7 +87,7 @@ Do you really like this boilerplate?
 ```objective-c
 @interface SomeClass : SomeSuperclass
 
-@property (nonatomic) NSMutableArray *items;
+@property (strong, nonatomic) NSMutableArray *items;
 
 @end
 
@@ -143,39 +120,17 @@ Of course this will work for generic types:
 @property (nonatomic) NSMutableDictionary<NSString *, NSString *><DILazy> *items;
 ```
 
-This all will be done after calling this:
+This all will be injected after calling `injectLazy`:
 
 ```objective-c
-[DeluxeInjection injectLazy];
-```
-
-## Force injection
-
-<img src="./images/FI.png" align="right" height="400px" hspace="10px" vspace="10px">
-
-You can force inject any property of any class even without `DIInject` specification using `forceInject:` method:
-
-```objective-c
-@interface TestClass : SomeSuperclass
-
-@property (nonatomic) Network *network;
-
-@end
-
-...
-
-Network *network = [Network alloc] initWithSettings: ... ];
-[DeluxeInjection forceInject:^id(Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *protocols) {
-    if ([target isKindOfClass:[TestClass class]] && propertyClass == [Network class]) {
-    	return network;
-    }
-    return [DeluxeInjection doNotInject]; // Special value to skip injection for propertyName of targetClass
+[DeluxeInjection imperative:^(DIImperative *lets) {
+    ...
+    [lets injectLazy];
+    ...
 }];
 ```
 
-You are also able to use method `forceInjectBlock:` to return `DIGetter` block to provide injected getter similar to method `injectBlock:`.
-
-## *NSUserDefaults-*backed properties
+## Settings Injection
 
 Wanna achieve this behavior with less boilerplate code?
 
@@ -209,123 +164,58 @@ Just use `<DIDefaults>` or `<DIDefaultsSync>` protocols on property declaration:
 @end
 ```
 
-And do not forget to call injection before usage: `[DeluxeInjection injectDefaults];` You are also able to use `injectDefaultsWithKey:` to provide block to get custom key to use with user defaults. Also look at `<DIDefaultsSync>` to inject getter and setter with synchronization.
+Injections are made by calling `injectDefaults`:
 
-## Plugins
+```objective-c
+[DeluxeInjection imperative:^(DIImperative *lets) {
+    ...
+    [lets injectDefaults];
+    ...
+}];
+```
 
-Look at source code: `DIInject`, `DIForceInject`, `DILazy`, `DIDefaults` are implemented like separated plugins, so you can easily implement your own protocols and define injected getter and setter for each with easy access to arguments and *ivar* or associated value.
+If something can not be stored directly to NSUserDefault it can be archived, just use `DIDefaultsArchived` or `DIDefaultsArchivedSync` protocols.
 
-## All methods documentation
+There are some extended versions of `injectDefaults` methods to provide key generator and use different `NSUserDefaults` instance:
+- `injectDefaultsWithKeyBlock`
+- `injectDefaultsWithDefaultsBlock`
+- `injectDefaultsWithKeyBlock:injectDefaultsWithKeyBlock:`
 
-You can see methods and arguments documentation right in Xcode.
+## Force injection
 
-1. Check if property of class is injected
-   ```objective-c
-   + (BOOL)checkInjected:(Class)class getter:(SEL)getter;
-    ```
+<img src="./images/FI.png" align="right" height="400px" hspace="10px" vspace="10px">
 
-2. Inject concrete property
-   ```objective-c
-   + (void)inject:(Class)class getter:(SEL)getter block:(DIGetter)block;
-      ```
+**!!!Warning `DIForceInject` plugin can't be used in `DIImperative` manner and should be used in separate way.**
 
-3. Reject concrete property injection
-   ```objective-c
-   + (void)reject:(Class)class getter:(SEL)getter;
-   ```
+You can force inject any property of any class even without any protocol specification using `forceInject:` method:
 
-   #### Auto-injection
+```objective-c
+@interface TestClass : SomeSuperclass
 
-4. Inject **values** into class properties marked explicitly with `<DIInject>` protocol.
-   ```objective-c
-   + (void)inject:(DIPropertyGetter)block;
-    ```
+@property (nonatomic) Network *network;
 
-5. Inject **getters** into class properties marked explicitly with `<DIInject>` protocol.
-   ```objective-c
-   + (void)injectBlock:(DIPropertyGetterBlock)block;
-      ```
+@end
 
-6. Reject some injections marked explicitly with `<DIInject>` protocol.
-   ```objective-c
-   + (void)reject:(DIPropertyFilter)block;
-   ```
+...
 
-7. Reject all injections marked explicitly with `<DIInject>` protocol.
-   ```objective-c
-   + (void)rejectAll;
-   ```
+Network *network = [Network alloc] initWithSettings: ... ];
+[DeluxeInjection forceInject:^id(Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *protocols) {
+    if ([target isKindOfClass:[TestClass class]] && propertyClass == [Network class]) {
+    	return network;
+    }
+    return [DeluxeInjection doNotInject]; // Special value to skip injection for propertyName of targetClass
+}];
+```
 
-   #### Force injections
-
-8. Force inject **values** into class properties **not** marked explicitly with any of `<DI***>` protocols.
-   ```objective-c
-   + (void)forceInject:(DIPropertyGetter)block;
-   ```
-
-9. Force inject **getters** into class properties **not** marked explicitly with any of `<DI***>` protocols.
-   ```objective-c
-   + (void)forceInjectBlock:(DIPropertyGetterBlock)block;
-     ```
-
-10. Reject some injections **not** marked explicitly with any of `<DI***>` protocols.
-   ```objective-c
-   + (void)forceReject:(DIPropertyFilter)block;
-   ```
-
-11.  Reject **all** injections **not** marked explicitly with any of `<DI***>` protocols.
-   ```objective-c
-   + (void)forceRejectAll;
-   ```
-
-   #### Lazy initializers injections
-
-12. Inject properties marked with `<DILazy>` protocol using block: `^{ if (_ivar == nil) { _ivar = [[propertyClass alloc] init]; return _ivar; }`
-   ```objective-c
-   + (void)injectLazy;
-   ```
-   
-13. Reject all injections marked explicitly with `<DILazy>` protocol.
-   ```objective-c
-   + (void)rejectLazy;
-   ```
-   
-   #### NSUserDefaults-backed properties
-
-14. Inject properties marked with `<DIDefaults>` or `<DIDefaultsSync>` protocol
-   ```objective-c
-   + (void)injectDefaults;
-   ```
-   
-15. Inject properties marked with `<DIDefaults>` or `<DIDefaultsSync>` protocol and provide block to generate custom key
-   ```objective-c
-   + (void)injectDefaultsWithKey:(DIDefaultsKeyBlock)keyBlock;
-   ```
-   
-16. Reject all injections marked explicitly with `<DIDefaults>` or `<DIDefaultsSync>` protocol.
-   ```objective-c
-   + (void)rejectDefaults;
-   ```
-
-   #### Other methods
-
-17. Overriden `debugDescription` method to see tree of classes and injected properties
-   ```objective-c
-   + (NSString *)debugDescription;
-   ```
-
-18. Transforms getter block without `ivar` argument to block with `ivar` argument
-   ```objective-c
-   DIGetter DIGetterIfIvarIsNil(DIGetterWithoutIvar getter);
-   ```
+Specified block will be called for all properties of all classes (exclude properties conforming any `DI***` protocol) and you should determine which value to inject in this property, or not inject at all. You are also able to use method `forceInjectBlock:` to return `DIGetter` block instead of value to provide injected getter.
 
 ## Performance and Testing
 
-Four times enumeration of 15.000 classes during lazy-injection, defaults-injection and twice dependant auto-injection tooks 0.16 sec. Performance will increase in future versions, it is one of first-class feature of the library to be super-performant. You can find some performance test and other tests in Example project. I am planning to add as many tests as possible to detect all possible problems. May be you wanna help me with tests?
-
-To run the example project, clone the repo, and run `pod install` from the Example directory first.
+Single time enumeration of 100.000 properties in 40.000 classes with injecting 150 properties tooks 0.082 sec on my `iPhone 6s` in `DEBUG` configuration. Performance will not decrease in future versions, it is one of first-class feature of the library to be super-performant. You can find some performance test and other tests in Example project. I am planning to add as many tests as possible to detect all possible problems. May be you wanna help me with tests?
 
 ## Installation
+
+To run the example project, clone the repo, and run `pod install` from the Example directory first.
 
 DeluxeInjection is available through [CocoaPods](http://cocoapods.org). To install it, simply add the following line to your Podfile:
 
@@ -355,7 +245,7 @@ DeluxeInjection is available under the MIT license. See the LICENSE file for mor
 – Help me to add more test and divide them by plugins.
 
 – Found any bugs?<br/>
-– Feel free to open issue or discuss to me directly [@k06a](https://twitter.com/k06a)!
+– Feel free to open issue or talk to me directly [@k06a](https://twitter.com/k06a)!
 
 Contribution workflow:<br/>
 1. Fork repository<br/>
