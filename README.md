@@ -44,9 +44,9 @@ Here is basic example of injection value by class and protocol and getter inject
 ```objective-c
 @interface MyClass : NSObject
 
-@property (strong, nonatomic) Settings<DIInject> *settings;
-@property (strong, nonatomic) id<Analytics,DIInject> *analytics;
-@property (strong, nonatomic) NSMutableArray<DIInject> *items;
+@property (nonatomic) Settings<DIInject> *settings;
+@property (nonatomic) id<Analytics,DIInject> *analytics;
+@property (nonatomic) NSMutableArray<DIInject> *items;
 
 @end
 
@@ -90,7 +90,7 @@ Do you really like this boilerplate?
 ```objective-c
 @interface SomeClass : SomeSuperclass
 
-@property (strong, nonatomic) NSMutableArray *items;
+@property (nonatomic) NSMutableArray *items;
 
 @end
 
