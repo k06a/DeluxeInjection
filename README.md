@@ -38,7 +38,7 @@ Due DeluxeInjection architecture most plugins works by enumeration all propertie
 
 ## Auto Injection
 
-<img src="./images/AI.png" align="right" height="400px" hspace="10px" vspace="10px">
+<img src="./images/AI.png" align="right" height="360px" hspace="10px" vspace="10px">
 
 Here is basic example of injection value by class and protocol and getter injection:
 ```objective-c
@@ -46,15 +46,19 @@ Here is basic example of injection value by class and protocol and getter inject
 
 @property (nonatomic) Settings<DIInject> *settings;
 @property (nonatomic) id<Analytics,DIInject> *analytics;
-@property (nonatomic) NSMutableArray<DIInject> *items;
+@property (nonatomic) NSMutableArray<UIVIew *><DIInject> *items;
 
 @end
+```
 
-...
-
+Create some instances to be injected:
+```objective-c
 Settings *settings = [UserDefaultsSetting new];
 Analytics *analytics = [CountlyAnalytics new];
+```
 
+Inject instances and blocks to properties:
+```objective-c
 [DeluxeInjection imperative:^(DIImperative *lets) {
 
     // Inject value by class
@@ -186,11 +190,11 @@ There are some extended versions of `injectDefaults` methods to provide key gene
 
 ## Force injection
 
-<img src="./images/FI.png" align="right" height="400px" hspace="10px" vspace="10px">
+<img src="./images/FI.png" align="right" height="360px" hspace="10px" vspace="10px">
 
 **!!!Warning `DIForceInject` plugin can't be used in `DIImperative` manner and should be used in separate way.**
 
-You can force inject any property of any class even without any protocol specification using `forceInject:` method:
+You can force inject any property of any class:
 
 ```objective-c
 @interface TestClass : SomeSuperclass
@@ -198,15 +202,22 @@ You can force inject any property of any class even without any protocol specifi
 @property (nonatomic) Network *network;
 
 @end
+```
 
-...
-
+Even without any protocol specification using `forceInject:` method:
+```objective-c
 Network *network = [Network alloc] initWithSettings: ... ];
-[DeluxeInjection forceInject:^id(Class targetClass, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *protocols) {
-    if ([target isKindOfClass:[TestClass class]] && propertyClass == [Network class]) {
+[DeluxeInjection forceInject:^id(Class targetClass,
+                                 NSString *propertyName,
+				 Class propertyClass,
+				 NSSet<Protocol *> *protocols) {
+				 
+    if ([target isKindOfClass:[TestClass class]] &&
+        propertyClass == [Network class]) {
+	
     	return network;
     }
-    return [DeluxeInjection doNotInject]; // Special value to skip injection for propertyName of targetClass
+    return [DeluxeInjection doNotInject]; // Special value to skip injection
 }];
 ```
 
