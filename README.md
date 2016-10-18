@@ -58,13 +58,16 @@ Analytics *analytics = [CountlyAnalytics new];
 [DeluxeInjection imperative:^(DIImperative *lets) {
 
     // Inject value by class
-    [[[lets inject] byPropertyClass:[Settings class]] getterValue:settings];
+    [[[lets inject] byPropertyClass:[Settings class]]
+                    getterValue:settings];
     
     // Inject value by property protocol
-    [[[lets inject] byPropertyProtocol:[Analytics class]] getterValue:analytics];
+    [[[lets inject] byPropertyProtocol:[Analytics class]]
+                    getterValue:analytics];
     
     // Inject getter by property class
-    [[[lets inject] byPropertyClass:[NSMutableArray class]] getterBlock:DIGetterMake(^id (id target, id *ivar) {
+    [[[lets inject] byPropertyClass:[NSMutableArray class]]
+                    getterBlock:DIGetterMake(^id (id target, id *ivar) {
         if (*ivar == nil) {
 	    *ivar = [NSMutableArray array];
 	}
