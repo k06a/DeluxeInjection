@@ -71,9 +71,9 @@ Inject instances and blocks to properties:
     [[[lets inject] byPropertyClass:[NSMutableArray class]]
                     getterBlock:DIImperativeGetterFromGetter(DIGetterMake(^id (id target, id *ivar) {
         if (*ivar == nil) {
-	    *ivar = [NSMutableArray array];
-	}
-	return *ivar;
+            *ivar = [NSMutableArray array];
+        }
+        return *ivar;
     }))];
 }];
 ```
