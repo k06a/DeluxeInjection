@@ -125,6 +125,20 @@ typedef void (^DIImperativeSetter)(Class targetClass,
                                    id _Nullable value,
                                    DIOriginalSetter _Nullable originalSetter);
 
+/**
+ *  Helper methods to create DIImperativeGetter and DIImperativeSetter with Xcode autocomplete :)
+ */
+DIImperativeGetter DIImperativeGetterMake(DIImperativeGetter getter);
+DIImperativeSetter DIImperativeSetterMake(DIImperativeSetter setter);
+
+
+/**
+ *  Helper methods to create DIImperativeGetter and DIImperativeSetter with DIGetter and DISetter
+ */
+DIImperativeGetter DIImperativeGetterFromGetter(DIGetter getter);
+DIImperativeSetter DIImperativeSetterFromSetter(DISetter getter);
+
+//
 
 @interface DIImperativeInjector : NSObject
 

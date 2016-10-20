@@ -24,6 +24,30 @@
 
 #import "DIInjectPlugin.h"
 
+//
+
+DIImperativeGetter DIImperativeGetterMake(DIImperativeGetter getter) {
+    return getter;
+}
+
+DIImperativeSetter DIImperativeSetterMake(DIImperativeSetter setter) {
+    return setter;
+}
+
+DIImperativeGetter DIImperativeGetterFromGetter(DIGetter di_getter) {
+    return ^id _Nullable(Class targetClass, SEL getter, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols, id target, id *ivar, DIOriginalGetter originalGetter) {
+        return di_getter(target, ivar, originalGetter);
+    };
+}
+
+DIImperativeSetter DIImperativeSetterFromSetter(DISetter di_setter) {
+    return ^(Class targetClass, SEL setter, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols, id target, id *ivar, id value, DIOriginalSetter originalSetter) {
+        return di_setter(target, ivar, value, originalSetter);
+    };
+}
+
+//
+
 @implementation DeluxeInjection (DIInject)
 
 + (void)load {
