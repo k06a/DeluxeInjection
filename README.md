@@ -11,13 +11,11 @@
 
 ## Features
 
-1. Auto-injection as first-class feature (+ class property support)
-2. Force injection for any property of any class
-3. Lazy properties initialization feature
-3. `NSUserDefaults`-backed properties feature
-4. Both *value-* and *getter-*injection supported
-5. Inject both *ivar*-backed and `@dynamic` properties (over association)
-6. Easily access *ivar*s and original method implementations inside injected getter/setter
+1. Auto-injection as first-class feature
+2. Objective-C class properties support
+3. Both *value-* and *getter-*/*setter-*injection supported
+4. Inject both *ivar*-backed and `@dynamic` properties (over association)
+5. Easily access *ivar* and original method implementation inside injected method
 
 ## Table of contents
 
@@ -71,12 +69,12 @@ Inject instances and blocks to properties:
     
     // Inject getter by property class
     [[[lets inject] byPropertyClass:[NSMutableArray class]]
-                    getterBlock:DIGetterMake(^id (id target, id *ivar) {
+                    getterBlock:DIImperativeGetterFromGetter(DIGetterMake(^id (id target, id *ivar) {
         if (*ivar == nil) {
 	    *ivar = [NSMutableArray array];
 	}
 	return *ivar;
-    })];
+    }))];
 }];
 ```
 
