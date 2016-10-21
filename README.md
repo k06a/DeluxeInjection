@@ -71,9 +71,9 @@ Inject instances and blocks to properties:
     [[[lets inject] byPropertyClass:[NSMutableArray class]]
                     getterBlock:DIImperativeGetterFromGetter(DIGetterMake(^id (id target, id *ivar) {
         if (*ivar == nil) {
-	    *ivar = [NSMutableArray array];
-	}
-	return *ivar;
+            *ivar = [NSMutableArray array];
+        }
+        return *ivar;
     }))];
 }];
 ```
@@ -182,8 +182,8 @@ Injections are made by calling `injectDefaults`:
 If something can not be stored directly to NSUserDefault it can be archived, just use `DIDefaultsArchived` or `DIDefaultsArchivedSync` protocols.
 
 There are some extended versions of `injectDefaults` methods to provide key generator and use different `NSUserDefaults` instance:
-- `injectDefaultsWithKeyBlock`
-- `injectDefaultsWithDefaultsBlock`
+- `injectDefaultsWithKeyBlock:`
+- `injectDefaultsWithDefaultsBlock:`
 - `injectDefaultsWithKeyBlock:injectDefaultsWithKeyBlock:`
 
 ## Force injection
