@@ -83,6 +83,7 @@ static BOOL DIInjectionsSettersBackupWrite(Class class, SEL selector, IMP imp) {
 //
 
 static NSMutableDictionary<Class, NSMutableDictionary<NSString *, NSHashTable *> *> *associates;
+static NSMutableDictionary<Class, NSMutableDictionary<NSString *, NSHashTable *> *> *associatesUnsafe;
 
 static NSArray *DIAssociatesRead(Class class, SEL getter) {
     NSHashTable *hashTable = associates[class][NSStringFromSelector(getter)];
@@ -92,25 +93,32 @@ static NSArray *DIAssociatesRead(Class class, SEL getter) {
 static void DIAssociatesWrite(Class class, SEL getter, id object) {
     if (associates == nil) {
         associates = [NSMutableDictionary dictionary];
+        associatesUnsafe = [NSMutableDictionary dictionary];
     }
 
-    if (associates[class] == nil) {
+    if (associates[(id) class] == nil) {
         associates[(id) class] = [NSMutableDictionary dictionary];
+        associatesUnsafe[(id) class] = [NSMutableDictionary dictionary];
     }
 
     NSString *selectorKey = NSStringFromSelector(getter);
     if (associates[class][selectorKey] == nil) {
         associates[class][selectorKey] = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory | NSPointerFunctionsOpaquePersonality];
+        associatesUnsafe[class][selectorKey] = [NSHashTable hashTableWithOptions:NSPointerFunctionsOpaqueMemory | NSPointerFunctionsOpaquePersonality];
     }
 
     if (object) {
-        [associates[class][selectorKey] addObject:object];
+        if (![associatesUnsafe[class][selectorKey] containsObject:object]) {
+            [associates[class][selectorKey] addObject:object];
+            [associatesUnsafe[class][selectorKey] addObject:object];
+        }
     }
 }
 
 static void DIAssociatesRemove(Class class, SEL getter) {
     NSString *selectorKey = NSStringFromSelector(getter);
     [associates[class] removeObjectForKey:selectorKey];
+    [associatesUnsafe[class] removeObjectForKey:selectorKey];
 }
 
 //

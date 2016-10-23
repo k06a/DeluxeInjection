@@ -15,6 +15,7 @@
 		25C717221D2F0CA3003B9167 /* DIDefaultsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 25C717211D2F0CA3003B9167 /* DIDefaultsTests.m */; };
 		25C717241D2F0D08003B9167 /* DIImperativeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 25C717231D2F0D08003B9167 /* DIImperativeTests.m */; };
 		25C717261D2F0E9F003B9167 /* AbstractTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 25C717251D2F0E9F003B9167 /* AbstractTests.m */; };
+		25E0BDBA1DBCDF9E00613954 /* DIDeallocTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 25E0BDB91DBCDF9E00613954 /* DIDeallocTests.m */; };
 		438583FD33B3034D025CEE71 /* Pods_DeluxeInjection_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6884A3569856CB2FFB3E6F74 /* Pods_DeluxeInjection_Tests.framework */; };
 		6003F58E195388D20070C39A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58D195388D20070C39A /* Foundation.framework */; };
 		6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58F195388D20070C39A /* CoreGraphics.framework */; };
@@ -47,6 +48,7 @@
 		25C717231D2F0D08003B9167 /* DIImperativeTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DIImperativeTests.m; sourceTree = "<group>"; };
 		25C717251D2F0E9F003B9167 /* AbstractTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AbstractTests.m; sourceTree = "<group>"; };
 		25C717271D2FB4AD003B9167 /* AbstractTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AbstractTests.h; sourceTree = "<group>"; };
+		25E0BDB91DBCDF9E00613954 /* DIDeallocTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DIDeallocTests.m; sourceTree = "<group>"; };
 		31B5289FDB01D77A7DE8BBDD /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		372D7399E8208F730A3C36E7 /* Pods-DeluxeInjection_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DeluxeInjection_Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-DeluxeInjection_Example/Pods-DeluxeInjection_Example.release.xcconfig"; sourceTree = "<group>"; };
 		6003F58A195388D20070C39A /* DeluxeInjection_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DeluxeInjection_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -165,6 +167,7 @@
 				25C717211D2F0CA3003B9167 /* DIDefaultsTests.m */,
 				25C717231D2F0D08003B9167 /* DIImperativeTests.m */,
 				257464231D95D24D00B9E8E1 /* DIClassPropertyTests.m */,
+				25E0BDB91DBCDF9E00613954 /* DIDeallocTests.m */,
 				2520C97B1CFCBB23009FB5ED /* Benchmarks.m */,
 				6003F5B6195388D20070C39A /* Supporting Files */,
 			);
@@ -428,6 +431,7 @@
 				257464241D95D24D00B9E8E1 /* DIClassPropertyTests.m in Sources */,
 				25C7171E1D2EFA18003B9167 /* DIInjectTests.m in Sources */,
 				2520C97C1CFCBB23009FB5ED /* Benchmarks.m in Sources */,
+				25E0BDBA1DBCDF9E00613954 /* DIDeallocTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
