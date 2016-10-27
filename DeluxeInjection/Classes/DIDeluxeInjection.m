@@ -124,14 +124,14 @@ static void DIAssociatesRemove(Class class, SEL getter) {
 //
 
 DIGetter DIGetterMake(DIGetterWithoutOriginal getter) {
-    return DIGetterWithOriginalMake(^id _Nullable(id  _Nonnull target, id  _Nullable __autoreleasing * _Nonnull ivar, id  _Nullable (* _Nullable originalGetter)(id  _Nonnull __strong, SEL _Nonnull)) {
-        return getter(target, ivar);
+    return DIGetterWithOriginalMake(^id _Nullable(id  _Nonnull target, SEL cmd, id  _Nullable __autoreleasing * _Nonnull ivar, id  _Nullable (* _Nullable originalGetter)(id  _Nonnull __strong, SEL _Nonnull)) {
+        return getter(target, cmd, ivar);
     });
 }
 
 DISetter DISetterMake(DISetterWithoutOriginal setter) {
-    return DISetterWithOriginalMake(^(id  _Nonnull target, id  _Nullable __autoreleasing * _Nonnull ivar, id  _Nonnull value, void (* _Nullable originalSetter)(id  _Nonnull __strong, SEL _Nonnull, id  _Nullable __strong)) {
-        return setter(target, ivar, value);
+    return DISetterWithOriginalMake(^(id  _Nonnull target, SEL cmd, id  _Nullable __autoreleasing * _Nonnull ivar, id  _Nonnull value, void (* _Nullable originalSetter)(id  _Nonnull __strong, SEL _Nonnull, id  _Nullable __strong)) {
+        return setter(target, cmd, ivar, value);
     });
 }
 
@@ -144,9 +144,29 @@ DISetter DISetterWithOriginalMake(DISetter setter) {
 }
 
 DIGetter DIGetterIfIvarIsNil(DIGetterWithoutIvar getter) {
-    return DIGetterWithOriginalMake(^id _Nullable(id  _Nonnull target, id  _Nullable __autoreleasing * _Nonnull ivar, id  _Nullable (* _Nullable originalGetter)(id  _Nonnull __strong, SEL _Nonnull)) {
+    return DIGetterWithOriginalMake(^id _Nullable(id  _Nonnull target, SEL cmd, id  _Nullable __autoreleasing * _Nonnull ivar, id  _Nullable (* _Nullable originalGetter)(id  _Nonnull __strong, SEL _Nonnull)) {
         if (*ivar == nil) {
-            *ivar = getter(target);
+            *ivar = getter(target, cmd);
+        }
+        return *ivar;
+    });
+}
+
+DIGetter DIGetterIfIvarIsNilOnce(DIGetterWithoutIvar getter) {
+    __block NSMapTable *targets = [NSMapTable mapTableWithKeyOptions:NSPointerFunctionsOpaqueMemory | NSPointerFunctionsOpaquePersonality valueOptions:NSPointerFunctionsStrongMemory];
+    return DIGetterWithOriginalMake(^id _Nullable(id  _Nonnull target, SEL cmd, id  _Nullable __autoreleasing * _Nonnull ivar, id  _Nullable (* _Nullable originalGetter)(id  _Nonnull __strong, SEL _Nonnull)) {
+        if (*ivar == nil) {
+            NSMutableSet *cmds = [targets objectForKey:target];
+            if (cmds == nil) {
+                cmds = [NSMutableSet set];
+                [targets setObject:cmds forKey:target];
+            }
+            
+            NSString *cmdStr = NSStringFromSelector(cmd);
+            if (![cmds containsObject:cmdStr]) {
+                *ivar = getter(target, cmd);
+                [cmds addObject:cmdStr];
+            }
         }
         return *ivar;
     });
@@ -294,8 +314,11 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
             if (!isAssociated) {
                 newGetterBlock = ^id(id target) {
                     id ivar = object_getIvar(target, propertyIvar);
-                    id result = getterToInject(target, &ivar, originalGetterIMP);
-                    object_setIvar(target, propertyIvar, ivar);
+                    id ivar2 = ivar;
+                    id result = getterToInject(target, getter, &ivar, originalGetterIMP);
+                    if (ivar != ivar2) {
+                        object_setIvar(target, propertyIvar, ivar);
+                    }
                     return result;
                 };
             }
@@ -308,12 +331,15 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
                             wrapper = [[DIWeakWrapper alloc] init];
                         }
                         id ivar = ((DIWeakWrapper *)wrapper)->object;
+                        id ivar2 = ivar;
                         BOOL ivarWasNil = (ivar == nil);
-                        id result = getterToInject(target, &ivar, originalGetterIMP);
+                        id result = getterToInject(target, getter, &ivar, originalGetterIMP);
                         if (ivar && ivarWasNil) {
                             DIAssociatesWrite(klass, getter, target);
                         }
-                        wrapper->object = ivar;
+                        if (ivar != ivar2) {
+                            wrapper->object = ivar;
+                        }
                         if (wrapperWasNil) {
                             objc_setAssociatedObject(target, associationKey, wrapper, associationPolicy);
                         }
@@ -323,12 +349,15 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
                 else {
                     newGetterBlock = ^id(id target) {
                         id ivar = objc_getAssociatedObject(target, associationKey);
+                        id ivar2 = ivar;
                         BOOL ivarWasNil = (ivar == nil);
-                        id result = getterToInject(target, &ivar, originalGetterIMP);
+                        id result = getterToInject(target, getter, &ivar, originalGetterIMP);
                         if (ivar && ivarWasNil) {
                             DIAssociatesWrite(klass, getter, target);
                         }
-                        objc_setAssociatedObject(target, associationKey, ivar, associationPolicy);
+                        if (ivar != ivar2) {
+                            objc_setAssociatedObject(target, associationKey, ivar, associationPolicy);
+                        }
                         return result;
                     };
                 }
@@ -340,7 +369,7 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
             if (!isAssociated) {
                 newSetterBlock = ^void(id target, id newValue) {
                     id ivar = object_getIvar(target, propertyIvar);
-                    setterToInject(target, &ivar, newValue, originalSetterIMP);
+                    setterToInject(target, setter, &ivar, newValue, originalSetterIMP);
                     object_setIvar(target, propertyIvar, ivar);
                 };
             }
@@ -350,7 +379,7 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
                         DIWeakWrapper *wrapper = objc_getAssociatedObject(target, associationKey) ?: [[DIWeakWrapper alloc] init];
                         id ivar = wrapper->object;
                         BOOL ivarWasNil = (ivar == nil);
-                        setterToInject(target, &ivar, newValue, originalSetterIMP);
+                        setterToInject(target, setter, &ivar, newValue, originalSetterIMP);
                         if (ivar && ivarWasNil) {
                             DIAssociatesWrite(klass, getter, target);
                         }
@@ -362,7 +391,7 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
                     newSetterBlock = ^void(id target, id newValue) {
                         id ivar = objc_getAssociatedObject(target, associationKey);
                         BOOL ivarWasNil = (ivar == nil);
-                        setterToInject(target, &ivar, newValue, originalSetterIMP);
+                        setterToInject(target, setter, &ivar, newValue, originalSetterIMP);
                         if (ivar && ivarWasNil) {
                             DIAssociatesWrite(klass, getter, target);
                         }

@@ -43,7 +43,7 @@
 - (void)testAssociatedInDealloc {
     [DeluxeInjection injectLazy];
     
-    DIDeallocTests_Class *obj = [DIDeallocTests_Class new];
+    __unused DIDeallocTests_Class *obj = [DIDeallocTests_Class new];
     NSAssert(obj.string, @"");
     obj.string = nil;
 }

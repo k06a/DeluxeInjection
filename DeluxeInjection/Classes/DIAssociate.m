@@ -32,10 +32,10 @@
                             NSString *propertyName, Class propertyClass,
                             NSSet<Protocol *> *propertyProtocols) {
         return @[
-            DIGetterMake(^id(id target, id *ivar) {
+            DIGetterMake(^id(id target, SEL cmd, id *ivar) {
                 return *ivar;
             }),
-            DISetterWithOriginalMake(^(id target, id *ivar, id value, DIOriginalSetter originalSetter) {
+            DISetterWithOriginalMake(^(id target, SEL cmd, id *ivar, id value, DIOriginalSetter originalSetter) {
                 *ivar = value;
                 if (originalSetter) {
                     originalSetter(target, setter, value);

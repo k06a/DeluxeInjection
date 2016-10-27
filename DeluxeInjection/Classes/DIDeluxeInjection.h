@@ -30,26 +30,28 @@ typedef void (*DIOriginalSetter)(id target, SEL cmd, id _Nullable value);
  *  Block to be injected instead of property getter
  *
  *  @param target Receiver of selector
+ *  @param cmd Selector name
  *  @param ivar Pointer to instance variable
  *  @param originalGetter Original getter pointer if exists
  *
  *  @return Injected value or \c [DeluxeInjection \c doNotInject] instance to not inject this property
  */
-typedef id _Nullable (^DIGetter)(id target, id _Nullable * _Nonnull ivar, DIOriginalGetter _Nullable originalGetter);
-typedef id _Nullable (^DIGetterWithoutOriginal)(id target, id _Nullable * _Nonnull ivar);
-typedef id _Nullable (^DIGetterWithoutIvar)(id target);
+typedef id _Nullable (^DIGetter)(id target, SEL cmd, id _Nullable * _Nonnull ivar, DIOriginalGetter _Nullable originalGetter);
+typedef id _Nullable (^DIGetterWithoutOriginal)(id target, SEL cmd, id _Nullable * _Nonnull ivar);
+typedef id _Nullable (^DIGetterWithoutIvar)(id target, SEL cmd);
 
 /**
  *  Block to be injected instead of property setter
  *
  *  @param target Receiver of selector
+ *  @param cmd Selector name
  *  @param ivar Pointer to instance variable
  *  @param value New value to assign inside setter
  *  @param originalSetter Original setter pointer if exists
  */
-typedef void (^DISetter)(id target, id _Nullable * _Nonnull ivar, id value, DIOriginalSetter _Nullable originalSetter);
-typedef void (^DISetterWithoutOriginal)(id target, id _Nullable * _Nonnull ivar, id value);
-typedef void (^DISetterWithoutIvar)(id target, id value);
+typedef void (^DISetter)(id target, SEL cmd, id _Nullable * _Nonnull ivar, id value, DIOriginalSetter _Nullable originalSetter);
+typedef void (^DISetterWithoutOriginal)(id target, SEL cmd, id _Nullable * _Nonnull ivar, id value);
+typedef void (^DISetterWithoutIvar)(id target, SEL cmd, id value);
 
 /**
  *  Block to be injected for property
@@ -159,6 +161,12 @@ DISetter DISetterWithOriginalMake(DISetter setter);
  *  @return Block with \c ivar argument
  */
 DIGetter DIGetterIfIvarIsNil(DIGetterWithoutIvar getter);
+
+/**
+ *  Works the same way as \c DIGetterIfIvarIsNil
+ *  but returns new value once per target per injection
+ */
+DIGetter DIGetterIfIvarIsNilOnce(DIGetterWithoutIvar getter);
 
 /**
  *  Helper to call supers getter method

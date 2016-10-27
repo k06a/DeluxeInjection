@@ -30,7 +30,7 @@
 + (void)injectLazy {
     [self inject:^NSArray *(Class targetClass, SEL getter, SEL setter, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols) {
         NSAssert(propertyClass, @"DILazy can not be applied to unknown class (id)");
-        return @[DIGetterIfIvarIsNil(^id(id target) {
+        return @[DIGetterIfIvarIsNil(^id(id target, SEL cmd) {
             return [[propertyClass alloc] init];
         }), [DeluxeInjection doNotInject]];
     } conformingProtocols:@[@protocol(DILazy)]];
