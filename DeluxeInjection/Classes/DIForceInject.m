@@ -60,11 +60,11 @@ static NSSet *excudeProtocols() {
         objc_property_t property = RRClassGetPropertyByName(targetClass, propertyName);
         if (RRPropertyGetIsWeak(property)) {
             __weak id weakValue = value;
-            return @[DIGetterIfIvarIsNil(^id(id target) {
+            return @[DIGetterIfIvarIsNil(^id(id target, SEL cmd) {
                 return weakValue;
             }), [DeluxeInjection doNotInject]];
         } else {
-            return @[DIGetterIfIvarIsNil(^id(id target) {
+            return @[DIGetterIfIvarIsNil(^id(id target, SEL cmd) {
                 return value;
             }), [DeluxeInjection doNotInject]];
         }

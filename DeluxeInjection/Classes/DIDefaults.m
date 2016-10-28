@@ -87,7 +87,7 @@
         
         NSString *key = keyBlock(targetClass, propertyName, propertyClass, propertyProtocols) ?: propertyName;
         NSUserDefaults *defaults = defaultsBlock(targetClass, propertyName, propertyClass, propertyProtocols) ?: [NSUserDefaults standardUserDefaults];
-        return @[DIGetterMake(^id _Nullable(id target, id *ivar) {
+        return @[DIGetterMake(^id _Nullable(id target, SEL cmd, id *ivar) {
             if (withSync) {
                 [defaults synchronize];
             }
@@ -96,7 +96,7 @@
                 return [NSKeyedUnarchiver unarchiveObjectWithData:value];
             }
             return value;
-        }), DISetterWithOriginalMake(^(id target, id *ivar, id value, void (*originalSetter)(id, SEL, id)) {
+        }), DISetterWithOriginalMake(^(id target, SEL cmd, id *ivar, id value, void (*originalSetter)(id, SEL, id)) {
             if (withArchive && value) {
                 value = [NSKeyedArchiver archivedDataWithRootObject:value];
             }

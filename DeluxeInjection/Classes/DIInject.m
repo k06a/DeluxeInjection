@@ -36,13 +36,13 @@ DIImperativeSetter DIImperativeSetterMake(DIImperativeSetter setter) {
 
 DIImperativeGetter DIImperativeGetterFromGetter(DIGetter di_getter) {
     return ^id _Nullable(Class targetClass, SEL getter, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols, id target, id *ivar, DIOriginalGetter originalGetter) {
-        return di_getter(target, ivar, originalGetter);
+        return di_getter(target, getter, ivar, originalGetter);
     };
 }
 
 DIImperativeSetter DIImperativeSetterFromSetter(DISetter di_setter) {
     return ^(Class targetClass, SEL setter, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols, id target, id *ivar, id value, DIOriginalSetter originalSetter) {
-        return di_setter(target, ivar, value, originalSetter);
+        return di_setter(target, setter, ivar, value, originalSetter);
     };
 }
 
@@ -64,11 +64,11 @@ DIImperativeSetter DIImperativeSetterFromSetter(DISetter di_setter) {
         objc_property_t property = RRClassGetPropertyByName(targetClass, propertyName);
         if (RRPropertyGetIsWeak(property)) {
             __weak id weakValue = value;
-            return @[DIGetterIfIvarIsNil(^id(id target) {
+            return @[DIGetterIfIvarIsNil(^id(id target, SEL cmd) {
                 return weakValue;
             }), [DeluxeInjection doNotInject]];
         } else {
-            return @[DIGetterIfIvarIsNil(^id(id target) {
+            return @[DIGetterIfIvarIsNil(^id(id target, SEL cmd) {
                 return value;
             }), [DeluxeInjection doNotInject]];
         }
@@ -219,12 +219,12 @@ DIImperativeSetter DIImperativeSetterFromSetter(DISetter di_setter) {
                 DIImperativeGetter savedGetterBlock = [self.savedGetterBlock copy];
                 DIImperativeSetter savedSetterBlock = [self.savedSetterBlock copy];
                 objc_property_t property = RRClassGetPropertyByName(holder.targetClass, holder.propertyName);
-                [DeluxeInjection inject:holder.targetClass property:property getterBlock:^id(id target, id *ivar, DIOriginalGetter originalGetter) {
+                [DeluxeInjection inject:holder.targetClass property:property getterBlock:^id(id target, SEL cmd, id *ivar, DIOriginalGetter originalGetter) {
                     if (savedGetterBlock) {
                         return savedGetterBlock(holder.targetClass, holder.getter, holder.propertyName, holder.propertyClass, holder.propertyProtocols, target, ivar, originalGetter);
                     }
                     return originalGetter(target, holder.setter);
-                } setterBlock:^void(id target, id *ivar, id value, DIOriginalSetter originalSetter) {
+                } setterBlock:^void(id target, SEL cmd, id *ivar, id value, DIOriginalSetter originalSetter) {
                     if (savedSetterBlock) {
                         return savedSetterBlock(holder.targetClass, holder.setter, holder.propertyName, holder.propertyClass, holder.propertyProtocols, target, ivar, value, originalSetter);
                     }
