@@ -1,7 +1,7 @@
 PODS:
-  - DeluxeInjection (0.7.2):
-    - RuntimeRoutines (~> 0.3.0)
-  - RuntimeRoutines (0.3.1)
+  - DeluxeInjection (0.8.0):
+    - RuntimeRoutines (~> 0.3.2)
+  - RuntimeRoutines (0.3.2)
 
 DEPENDENCIES:
   - DeluxeInjection (from `../`)
@@ -11,8 +11,8 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  DeluxeInjection: 1c2826728fa49508fc025ad2bd4bdebeec33f75c
-  RuntimeRoutines: dd297e7416c549614e07ecbb444b2da974a17afd
+  DeluxeInjection: 554b977b0fced7015680e716422924a3a1e65ea6
+  RuntimeRoutines: 9253ad1e61a0e2af32cf2ce37393e9185003b94f
 
 PODFILE CHECKSUM: 81c90c6c2ec9754827499be4f3481cecc117ffe0
 

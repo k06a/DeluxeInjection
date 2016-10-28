@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = "DeluxeInjection"
-  s.version          = "0.7.2"
+  s.version          = "0.8.0"
   s.summary          = "Simplest Objective-C Dependency Injection (DI:syringe:) implementation ever"
 
   s.description      = <<-DESC
@@ -20,5 +20,5 @@ Pod::Spec.new do |s|
   s.tvos.deployment_target = '9.0'
 
   s.source_files = 'DeluxeInjection/Classes/**/*'
-  s.dependency 'RuntimeRoutines', '~> 0.3.0'
+  s.dependency 'RuntimeRoutines', '~> 0.3.2'
 end
