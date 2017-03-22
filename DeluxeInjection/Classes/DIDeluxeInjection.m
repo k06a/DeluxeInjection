@@ -27,24 +27,6 @@
 
 static void *DINothingToRestore = &DINothingToRestore;
 
-IMP EmptyGetterImp(){
-    static IMP emptyGetterImp;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        emptyGetterImp = class_getMethodImplementation([DeluxeInjection class], @selector(exampleDynamicProperty));
-    });
-    return emptyGetterImp;
-}
-
-IMP EmptySetterImp(){
-    static IMP emptySetterImp;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        emptySetterImp = class_getMethodImplementation([DeluxeInjection class], @selector(setExampleDynamicProperty:));
-    });
-    return emptySetterImp;
-}
-
 //
 
 static NSMutableDictionary<Class, NSMutableDictionary<NSString *, NSValue *> *> *injectionsGettersBackup;
@@ -242,6 +224,24 @@ void DISetterSuperCall(id target, Class class, SEL setter, id value) {
 
 @dynamic exampleDynamicProperty;
 
+IMP EmptyGetterImp(){
+    static IMP emptyGetterImp;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        emptyGetterImp = class_getMethodImplementation([DeluxeInjection class], @selector(exampleDynamicProperty));
+    });
+    return emptyGetterImp;
+}
+
+IMP EmptySetterImp(){
+    static IMP emptySetterImp;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        emptySetterImp = class_getMethodImplementation([DeluxeInjection class], @selector(setExampleDynamicProperty:));
+    });
+    return emptySetterImp;
+}
+
 #pragma mark - Private
 
 + (void)enumerateAllClassProperties:(void (^)(Class class, objc_property_t property))block conformingProtocols:(NSArray<Protocol *> *)protocols {
@@ -393,7 +393,6 @@ void DISetterSuperCall(id target, Class class, SEL setter, id value) {
                 }
                 else {
                     newGetterBlock = ^id(id target) {
-                        BOOL ori = originalGetterExist;
                         id ivar = nil;
                         if (useOriginalAccessors) {
                             ivar = originalGetterIMP(target, getter);
