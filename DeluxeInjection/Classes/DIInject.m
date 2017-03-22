@@ -223,7 +223,7 @@ DIImperativeSetter DIImperativeSetterFromSetter(DISetter di_setter) {
                     if (savedGetterBlock) {
                         return savedGetterBlock(holder.targetClass, holder.getter, holder.propertyName, holder.propertyClass, holder.propertyProtocols, target, ivar, originalGetter);
                     }
-                    return originalGetter(target, holder.setter);
+                    return originalGetter(target, holder.getter);
                 } setterBlock:^void(id target, SEL cmd, id *ivar, id value, DIOriginalSetter originalSetter) {
                     if (savedSetterBlock) {
                         return savedSetterBlock(holder.targetClass, holder.setter, holder.propertyName, holder.propertyClass, holder.propertyProtocols, target, ivar, value, originalSetter);
