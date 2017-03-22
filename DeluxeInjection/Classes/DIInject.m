@@ -157,10 +157,9 @@ DIImperativeSetter DIImperativeSetterFromSetter(DISetter di_setter) {
 }
 
 - (instancetype)getterValueLazyByClass:(Class)lazyClass {
-    [self getterValueLazy:^id {
+    return [self getterValueLazy:^id {
         return [[lazyClass alloc] init];
     }];
-    return self;
 }
 
 - (instancetype)getterBlock:(DIImperativeGetter)getterBlock {
@@ -219,16 +218,10 @@ DIImperativeSetter DIImperativeSetterFromSetter(DISetter di_setter) {
                 DIImperativeGetter savedGetterBlock = [self.savedGetterBlock copy];
                 DIImperativeSetter savedSetterBlock = [self.savedSetterBlock copy];
                 objc_property_t property = RRClassGetPropertyByName(holder.targetClass, holder.propertyName);
-                [DeluxeInjection inject:holder.targetClass property:property getterBlock:^id(id target, SEL cmd, id *ivar, DIOriginalGetter originalGetter) {
-                    if (savedGetterBlock) {
-                        return savedGetterBlock(holder.targetClass, holder.getter, holder.propertyName, holder.propertyClass, holder.propertyProtocols, target, ivar, originalGetter);
-                    }
-                    return originalGetter(target, holder.getter);
-                } setterBlock:^void(id target, SEL cmd, id *ivar, id value, DIOriginalSetter originalSetter) {
-                    if (savedSetterBlock) {
-                        return savedSetterBlock(holder.targetClass, holder.setter, holder.propertyName, holder.propertyClass, holder.propertyProtocols, target, ivar, value, originalSetter);
-                    }
-                    return originalSetter(target, holder.setter, value);
+                [DeluxeInjection inject:holder.targetClass property:property getterBlock:!savedGetterBlock ? nil : ^id(id target, SEL cmd, id *ivar, DIOriginalGetter originalGetter) {
+                    return savedGetterBlock(holder.targetClass, holder.getter, holder.propertyName, holder.propertyClass, holder.propertyProtocols, target, ivar, originalGetter);
+                } setterBlock:!savedSetterBlock ? nil : ^void(id target, SEL cmd, id *ivar, id value, DIOriginalSetter originalSetter) {
+                    return savedSetterBlock(holder.targetClass, holder.setter, holder.propertyName, holder.propertyClass, holder.propertyProtocols, target, ivar, value, originalSetter);
                 }];
                 holder.wasInjectedGetter = (self.savedGetterBlock != nil);
                 holder.wasInjectedSetter = (self.savedSetterBlock != nil);

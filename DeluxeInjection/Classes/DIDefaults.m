@@ -104,9 +104,6 @@
             if (withSync) {
                 [defaults synchronize];
             }
-            if (originalSetter) {
-                originalSetter(target, setter, value);
-            }
         })];
     } conformingProtocols:defaultsProtocols.allObjects];
 }
@@ -188,9 +185,6 @@
             [defaults setObject:value forKey:key];
             if (withSync) {
                 [defaults synchronize];
-            }
-            if (originalSetter) {
-                originalSetter(target, setter, value);
             }
         }] skipDIInjectProtocolFilter];
     }

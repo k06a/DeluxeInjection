@@ -23,7 +23,27 @@
 
 #import "DIDeluxeInjection.h"
 
+//
+
 static void *DINothingToRestore = &DINothingToRestore;
+
+IMP EmptyGetterImp(){
+    static IMP emptyGetterImp;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        emptyGetterImp = class_getMethodImplementation([DeluxeInjection class], @selector(exampleDynamicProperty));
+    });
+    return emptyGetterImp;
+}
+
+IMP EmptySetterImp(){
+    static IMP emptySetterImp;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        emptySetterImp = class_getMethodImplementation([DeluxeInjection class], @selector(setExampleDynamicProperty:));
+    });
+    return emptySetterImp;
+}
 
 //
 
@@ -183,7 +203,7 @@ id DIGetterSuperCall(id target, Class class, SEL getter) {
     return (*objc_superAllocTyped)(&mySuper, getter);
 }
 
-void DISetterSuperCall(id target, Class class, SEL getter, id value) {
+void DISetterSuperCall(id target, Class class, SEL setter, id value) {
     struct objc_super mySuper = {
         .receiver = target,
         .super_class = class_isMetaClass(object_getClass(target))
@@ -191,7 +211,7 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
                            : [class superclass],
     };
     void (*objc_superAllocTyped)(struct objc_super *, SEL, id) = (void *)&objc_msgSendSuper;
-    (*objc_superAllocTyped)(&mySuper, getter, value);
+    (*objc_superAllocTyped)(&mySuper, setter, value);
 }
 
 //
@@ -209,17 +229,18 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
 
 //
 
+@interface DeluxeInjection ()
+
+@property (strong, nonatomic) id exampleDynamicProperty;
+@property (strong, nonatomic) id exampleProperty;
+
+@end
+
 @implementation DeluxeInjection
 
 #pragma mark - Sample getter and setter
 
-- (id)getterExample {
-    return nil;
-}
-
-- (void)setterExample:(id)value {
-    return;
-}
+@dynamic exampleDynamicProperty;
 
 #pragma mark - Private
 
@@ -304,14 +325,23 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
         NSString *propertyIvarStr = RRPropertyGetAttribute(property, "V");
         Ivar propertyIvar = propertyIvarStr ? class_getInstanceVariable(klass, propertyIvarStr.UTF8String) : nil;
         
-        BOOL isAssociated = (propertyIvar == nil);
+        BOOL haveIvar = (propertyIvar != nil);
+        BOOL originalGetterExist = class_getMethodImplementation(klass, getter) != EmptyGetterImp();
+        BOOL originalSetterExist = class_getMethodImplementation(klass, setter) != EmptyGetterImp();
+        BOOL useOriginalAccessors = (originalGetterExist && originalSetterExist);
+        if (!originalGetterExist) {
+            originalGetterIMP = nil;
+        }
+        if (!originalSetterExist) {
+            originalSetterIMP = nil;
+        }
         SEL associationKey = NSSelectorFromString([@"DI_" stringByAppendingString:propertyName]);
         objc_AssociationPolicy associationPolicy = RRPropertyGetAssociationPolicy(property);
         BOOL isWeak = RRPropertyGetIsWeak(property);
 
         id (^newGetterBlock)(id) = nil;
         if (getterToInject) {
-            if (!isAssociated) {
+            if (haveIvar) {
                 newGetterBlock = ^id(id target) {
                     id ivar = object_getIvar(target, propertyIvar);
                     id ivar2 = ivar;
@@ -325,38 +355,67 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
             else {
                 if (isWeak) {
                     newGetterBlock = ^id(id target) {
-                        DIWeakWrapper *wrapper = objc_getAssociatedObject(target, associationKey);
-                        BOOL wrapperWasNil = (wrapper == nil);
-                        if (wrapper == nil) {
-                            wrapper = [[DIWeakWrapper alloc] init];
+                        id ivar = nil;
+                        DIWeakWrapper *wrapper = nil;
+                        BOOL wrapperWasNil = NO;
+                        if (useOriginalAccessors) {
+                            ivar = originalGetterIMP(target, getter);
                         }
-                        id ivar = ((DIWeakWrapper *)wrapper)->object;
+                        else {
+                            wrapper = objc_getAssociatedObject(target, associationKey);
+                            wrapperWasNil = (wrapper == nil);
+                            if (wrapperWasNil) {
+                                wrapper = [[DIWeakWrapper alloc] init];
+                            }
+                            ivar = ((DIWeakWrapper *)wrapper)->object;
+                        }
+                        
                         id ivar2 = ivar;
                         BOOL ivarWasNil = (ivar == nil);
                         id result = getterToInject(target, getter, &ivar, originalGetterIMP);
                         if (ivar && ivarWasNil) {
                             DIAssociatesWrite(klass, getter, target);
                         }
+                        
                         if (ivar != ivar2) {
-                            wrapper->object = ivar;
-                        }
-                        if (wrapperWasNil) {
-                            objc_setAssociatedObject(target, associationKey, wrapper, associationPolicy);
+                            if (!useOriginalAccessors) {
+                                wrapper->object = ivar;
+                                if (wrapperWasNil) {
+                                    objc_setAssociatedObject(target, associationKey, wrapper, associationPolicy);
+                                }
+                            }
+                            if (originalSetterIMP) {
+                                originalSetterIMP(target, setter, ivar);
+                            }
                         }
                         return result;
                     };
                 }
                 else {
                     newGetterBlock = ^id(id target) {
-                        id ivar = objc_getAssociatedObject(target, associationKey);
+                        BOOL ori = originalGetterExist;
+                        id ivar = nil;
+                        if (useOriginalAccessors) {
+                            ivar = originalGetterIMP(target, getter);
+                        }
+                        else {
+                            ivar = objc_getAssociatedObject(target, associationKey);
+                        }
+                        
                         id ivar2 = ivar;
                         BOOL ivarWasNil = (ivar == nil);
                         id result = getterToInject(target, getter, &ivar, originalGetterIMP);
                         if (ivar && ivarWasNil) {
                             DIAssociatesWrite(klass, getter, target);
                         }
+                        
                         if (ivar != ivar2) {
-                            objc_setAssociatedObject(target, associationKey, ivar, associationPolicy);
+                            if (!useOriginalAccessors) {
+                                objc_setAssociatedObject(target, associationKey, ivar, associationPolicy);
+                            }
+                            if (originalSetterIMP) {
+                                originalSetterIMP(target, setter, ivar);
+                            }
                         }
                         return result;
                     };
@@ -366,7 +425,7 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
 
         void (^newSetterBlock)(id, id) = nil;
         if (setterToInject) {
-            if (!isAssociated) {
+            if (haveIvar) {
                 newSetterBlock = ^void(id target, id newValue) {
                     id ivar = object_getIvar(target, propertyIvar);
                     setterToInject(target, setter, &ivar, newValue, originalSetterIMP);
@@ -376,26 +435,60 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
             else {
                 if (isWeak) {
                     newSetterBlock = ^void(id target, id newValue) {
-                        DIWeakWrapper *wrapper = objc_getAssociatedObject(target, associationKey) ?: [[DIWeakWrapper alloc] init];
-                        id ivar = wrapper->object;
+                        id ivar = nil;
+                        DIWeakWrapper *wrapper = nil;
+                        BOOL wrapperWasNil = NO;
+                        if (useOriginalAccessors) {
+                            ivar = originalGetterIMP(target, getter);
+                        }
+                        else {
+                            wrapper = objc_getAssociatedObject(target, associationKey);
+                            wrapperWasNil = (wrapper == nil);
+                            if (wrapperWasNil) {
+                                wrapper = [[DIWeakWrapper alloc] init];
+                            }
+                            ivar = wrapper->object;
+                        }
+                        
                         BOOL ivarWasNil = (ivar == nil);
                         setterToInject(target, setter, &ivar, newValue, originalSetterIMP);
                         if (ivar && ivarWasNil) {
                             DIAssociatesWrite(klass, getter, target);
                         }
-                        wrapper->object = ivar;
-                        objc_setAssociatedObject(target, associationKey, wrapper, associationPolicy);
+                        
+                        if (!useOriginalAccessors) {
+                            wrapper->object = ivar;
+                            if (wrapperWasNil) {
+                                objc_setAssociatedObject(target, associationKey, wrapper, associationPolicy);
+                            }
+                        }
+                        if (originalSetterIMP) {
+                            originalSetterIMP(target, setter, ivar);
+                        }
                     };
                 }
                 else {
                     newSetterBlock = ^void(id target, id newValue) {
-                        id ivar = objc_getAssociatedObject(target, associationKey);
+                        id ivar = nil;
+                        if (useOriginalAccessors) {
+                            ivar = originalGetterIMP(target, getter);
+                        }
+                        else {
+                            ivar = objc_getAssociatedObject(target, associationKey);
+                        }
+                        
                         BOOL ivarWasNil = (ivar == nil);
                         setterToInject(target, setter, &ivar, newValue, originalSetterIMP);
                         if (ivar && ivarWasNil) {
                             DIAssociatesWrite(klass, getter, target);
                         }
-                        objc_setAssociatedObject(target, associationKey, ivar, associationPolicy);
+                        
+                        if (!useOriginalAccessors) {
+                            objc_setAssociatedObject(target, associationKey, ivar, associationPolicy);
+                        }
+                        if (originalSetterIMP) {
+                            originalSetterIMP(target, setter, ivar);
+                        }
                     };
                 }
             }
@@ -403,7 +496,7 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
 
         if (getterToInject) {
             IMP newGetterImp = imp_implementationWithBlock(newGetterBlock);
-            const char *getterTypes = method_getTypeEncoding(class_getInstanceMethod(self, @selector(getterExample)));
+            const char *getterTypes = method_getTypeEncoding(class_getInstanceMethod(self, @selector(exampleProperty)));
             IMP replacedGetterImp = class_replaceMethod(klass, getter, newGetterImp, getterTypes);
             if (!DIInjectionsGettersBackupWrite(klass, getter, replacedGetterImp ?: (IMP)DINothingToRestore)) {
                 imp_removeBlock(replacedGetterImp);
@@ -411,24 +504,32 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
         }
 
         // If need association and not have setter and property is not ReadOnly so we need implement simple setter
-        if (isAssociated && !newSetterBlock && !RRPropertyGetAttribute(property, "R")) {
+        if (!haveIvar && !useOriginalAccessors &&
+            !RRPropertyGetAttribute(property, "R")) {
+            
             if (isWeak) {
                 newSetterBlock = ^void(id target, id newValue) {
                     DIWeakWrapper *wrapper = objc_getAssociatedObject(target, associationKey) ?: [[DIWeakWrapper alloc] init];
                     wrapper->object = newValue;
                     objc_setAssociatedObject(target, associationKey, wrapper, associationPolicy);
+                    if (originalSetterIMP) {
+                        originalSetterIMP(target, setter, newValue);
+                    }
                 };
             }
             else {
                 newSetterBlock = ^void(id target, id newValue) {
                     objc_setAssociatedObject(target, associationKey, newValue, associationPolicy);
+                    if (originalSetterIMP) {
+                        originalSetterIMP(target, setter, newValue);
+                    }
                 };
             }
         }
 
         if (newSetterBlock) {
             IMP newSetterImp = imp_implementationWithBlock(newSetterBlock);
-            const char *setterTypes = method_getTypeEncoding(class_getInstanceMethod(self, @selector(setterExample:)));
+            const char *setterTypes = method_getTypeEncoding(class_getInstanceMethod(self, @selector(setExampleProperty:)));
             IMP replacedSetterImp = class_replaceMethod(klass, setter, newSetterImp, setterTypes);
             if (!DIInjectionsSettersBackupWrite(klass, setter, replacedSetterImp ?: (IMP)DINothingToRestore)) {
                 imp_removeBlock(replacedSetterImp);
@@ -448,19 +549,13 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
     SEL getter = RRPropertyGetGetter(property);
     IMP getterImp = DIInjectionsGettersBackupRead(class, getter);
     if (getterImp && getterImp != DINothingToRestore) {
-        const char *types = method_getTypeEncoding(class_getInstanceMethod(self, @selector(getterExample)));
+        const char *types = method_getTypeEncoding(class_getInstanceMethod(self, @selector(exampleProperty)));
         IMP replacedImp = class_replaceMethod(class, getter, getterImp, types);
         imp_removeBlock(replacedImp);
     }
     else if (getterImp == DINothingToRestore) {
-        id (^newGetterBlock)(id) = ^id(id target) {
-            [target doesNotRecognizeSelector:getter];
-            return nil;
-        };
-
-        IMP newGetterImp = imp_implementationWithBlock(newGetterBlock);
-        const char *getterTypes = method_getTypeEncoding(class_getInstanceMethod(self, @selector(getterExample)));
-        IMP replacedImp = class_replaceMethod(class, getter, newGetterImp, getterTypes);
+        const char *getterTypes = method_getTypeEncoding(class_getInstanceMethod(self, @selector(exampleProperty)));
+        IMP replacedImp = class_replaceMethod(class, getter, EmptyGetterImp(), getterTypes);
         imp_removeBlock(replacedImp);
     }
     DIInjectionsGettersBackupWrite(class, getter, nil);
@@ -469,18 +564,13 @@ void DISetterSuperCall(id target, Class class, SEL getter, id value) {
     SEL setter = RRPropertyGetSetter(property);
     IMP setterImp = DIInjectionsSettersBackupRead(class, setter);
     if (setterImp && setterImp != DINothingToRestore) {
-        const char *types = method_getTypeEncoding(class_getInstanceMethod(self, @selector(setterExample:)));
+        const char *types = method_getTypeEncoding(class_getInstanceMethod(self, @selector(setExampleProperty:)));
         IMP replacedImp = class_replaceMethod(class, setter, getterImp, types);
         imp_removeBlock(replacedImp);
     }
     else if (setterImp == DINothingToRestore) {
-        void (^newSetterBlock)(id, id) = ^void(id target, id newValue) {
-            [target doesNotRecognizeSelector:setter];
-        };
-
-        IMP newSetterImp = imp_implementationWithBlock(newSetterBlock);
-        const char *setterTypes = method_getTypeEncoding(class_getInstanceMethod(self, @selector(setterExample:)));
-        IMP replacedImp = class_replaceMethod(class, setter, newSetterImp, setterTypes);
+        const char *setterTypes = method_getTypeEncoding(class_getInstanceMethod(self, @selector(setExampleProperty:)));
+        IMP replacedImp = class_replaceMethod(class, setter, EmptySetterImp(), setterTypes);
         imp_removeBlock(replacedImp);
     }
     DIInjectionsSettersBackupWrite(class, setter, nil);
