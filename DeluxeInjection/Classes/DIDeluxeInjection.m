@@ -221,22 +221,13 @@ void DISetterSuperCall(id target, Class class, SEL setter, id value) {
 
 #pragma mark - Sample getter and setter
 
-IMP EmptyGetterImp(){
+IMP EmptyMethodImp(){
     static IMP emptyGetterImp;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         emptyGetterImp = class_getMethodImplementation([NSObject class], NSSelectorFromString(@"bool"));
     });
     return emptyGetterImp;
-}
-
-IMP EmptySetterImp(){
-    static IMP emptySetterImp;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        emptySetterImp = class_getMethodImplementation([DeluxeInjection class], @selector(setExampleDynamicProperty:));
-    });
-    return emptySetterImp;
 }
 
 #pragma mark - Private
@@ -323,8 +314,8 @@ IMP EmptySetterImp(){
         Ivar propertyIvar = propertyIvarStr ? class_getInstanceVariable(klass, propertyIvarStr.UTF8String) : nil;
         
         BOOL haveIvar = (propertyIvar != nil);
-        BOOL originalGetterExist = class_getMethodImplementation(klass, getter) != EmptyGetterImp();
-        BOOL originalSetterExist = class_getMethodImplementation(klass, setter) != EmptyGetterImp();
+        BOOL originalGetterExist = class_getMethodImplementation(klass, getter) != EmptyMethodImp();
+        BOOL originalSetterExist = class_getMethodImplementation(klass, setter) != EmptyMethodImp();
         BOOL useOriginalAccessors = (originalGetterExist && originalSetterExist);
         if (!originalGetterExist) {
             originalGetterIMP = nil;
@@ -551,7 +542,7 @@ IMP EmptySetterImp(){
     }
     else if (getterImp == DINothingToRestore) {
         const char *getterTypes = method_getTypeEncoding(class_getInstanceMethod(self, @selector(exampleProperty)));
-        IMP replacedImp = class_replaceMethod(class, getter, EmptyGetterImp(), getterTypes);
+        IMP replacedImp = class_replaceMethod(class, getter, EmptyMethodImp(), getterTypes);
         imp_removeBlock(replacedImp);
     }
     DIInjectionsGettersBackupWrite(class, getter, nil);
@@ -566,7 +557,7 @@ IMP EmptySetterImp(){
     }
     else if (setterImp == DINothingToRestore) {
         const char *setterTypes = method_getTypeEncoding(class_getInstanceMethod(self, @selector(setExampleProperty:)));
-        IMP replacedImp = class_replaceMethod(class, setter, EmptySetterImp(), setterTypes);
+        IMP replacedImp = class_replaceMethod(class, setter, EmptyMethodImp(), setterTypes);
         imp_removeBlock(replacedImp);
     }
     DIInjectionsSettersBackupWrite(class, setter, nil);
