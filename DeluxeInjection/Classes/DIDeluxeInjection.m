@@ -213,7 +213,6 @@ void DISetterSuperCall(id target, Class class, SEL setter, id value) {
 
 @interface DeluxeInjection ()
 
-@property (strong, nonatomic) id exampleDynamicProperty;
 @property (strong, nonatomic) id exampleProperty;
 
 @end
@@ -222,13 +221,11 @@ void DISetterSuperCall(id target, Class class, SEL setter, id value) {
 
 #pragma mark - Sample getter and setter
 
-@dynamic exampleDynamicProperty;
-
 IMP EmptyGetterImp(){
     static IMP emptyGetterImp;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        emptyGetterImp = class_getMethodImplementation([DeluxeInjection class], @selector(exampleDynamicProperty));
+        emptyGetterImp = class_getMethodImplementation([NSObject class], NSSelectorFromString(@"bool"));
     });
     return emptyGetterImp;
 }
