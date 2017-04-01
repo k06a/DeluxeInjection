@@ -37,9 +37,6 @@
             }),
             DISetterWithOriginalMake(^(id target, SEL cmd, id *ivar, id value, DIOriginalSetter originalSetter) {
                 *ivar = value;
-                if (originalSetter) {
-                    originalSetter(target, setter, value);
-                }
             })
         ];
     } conformingProtocols:@[ @protocol(DIAssociate) ]];
@@ -70,9 +67,6 @@
                        NSSet<Protocol *> *propertyProtocols, id target,
                        id *ivar, id value, DIOriginalSetter originalSetter) {
     *ivar = value;
-    if (originalSetter) {
-      originalSetter(target, setter, value);
-    }
   }] skipDIInjectProtocolFilter];
 }
 

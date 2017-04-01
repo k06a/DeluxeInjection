@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = "DeluxeInjection"
-  s.version          = "0.8.2"
+  s.version          = "0.8.4"
   s.summary          = "Simplest Objective-C Dependency Injection (DI:syringe:) implementation ever"
 
   s.description      = <<-DESC
