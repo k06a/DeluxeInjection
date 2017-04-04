@@ -12,10 +12,10 @@
 ## Features
 
 1. Auto-injection as first-class feature
-2. Objective-C class properties support
-3. Both *value-* and *getter-*/*setter-*injection supported
-4. Inject both *ivar*-backed and `@dynamic` properties (over association)
-5. Easily access *ivar* and original method implementation inside injected method
+2. Objective-C **class** properties support
+3. Both **value-** and **getter-/setter-** injection supported
+4. Inject both **ivar**-backed and `@dynamic` properties (over association)
+5. Easily access **ivar** and original method implementation inside injected method
 
 ## Table of contents
 
