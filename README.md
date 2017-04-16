@@ -7,6 +7,9 @@
 [![License](https://img.shields.io/cocoapods/l/DeluxeInjection.svg?style=flat)](http://cocoapods.org/pods/DeluxeInjection)
 [![Platform](https://img.shields.io/cocoapods/p/DeluxeInjection.svg?style=flat)](http://cocoapods.org/pods/DeluxeInjection)
 
+[![Apps Using](https://img.shields.io/cocoapods/at/DeluxeInjection.svg?label=Apps%20Using%20DeluxeInjection&colorB=28B9FE)](http://cocoapods.org/pods/DeluxeInjection)
+[![Downloads](https://img.shields.io/cocoapods/dt/DeluxeInjection.svg?label=Total%20Downloads&colorB=28B9FE)](http://cocoapods.org/pods/DeluxeInjection)
+
 <img src="./images/Relax.png" align="right" height="300px" hspace="10px" vspace="10px">
 
 ## Features
