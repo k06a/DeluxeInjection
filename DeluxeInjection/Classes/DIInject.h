@@ -163,14 +163,14 @@ DIImperativeSetter DIImperativeSetterFromSetter(DISetter getter);
  *
  *  @param getterValue Value to be injected
  */
-- (instancetype)getterValue:(id)getterValue;
+- (instancetype)getterValue:(nullable id)getterValue;
 
 /**
  *  Set value to be injected by lazy block
  *
  *  @param lazyBlock Block to be called on first access only
  */
-- (instancetype)getterValueLazy:(id(^)())lazyBlock;
+- (instancetype)getterValueLazy:(id(^)(void))lazyBlock;
 
 /**
  *  Set value to be injected by class
