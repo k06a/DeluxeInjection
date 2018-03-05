@@ -139,8 +139,8 @@ DIImperativeSetter DIImperativeSetterFromSetter(DISetter di_setter) {
     }];
 }
 
-- (instancetype)getterValueLazy:(id(^)())lazyBlock {
-    __block id(^lazyBlockCopy)() = [lazyBlock copy];
+- (instancetype)getterValueLazy:(id(^)(void))lazyBlock {
+    __block id(^lazyBlockCopy)(void) = [lazyBlock copy];
     __block id lazyValue = nil;
     __block dispatch_once_t onceToken = 0;
     [self getterBlock:^id(Class targetClass, SEL getter, NSString *propertyName, Class propertyClass, NSSet<Protocol *> *propertyProtocols, id target, id *ivar, DIOriginalGetter originalGetter) {

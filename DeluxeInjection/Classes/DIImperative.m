@@ -70,18 +70,18 @@ static NSMutableArray<Protocol *> *DIImperativeProtocols;
             holder.propertyProtocols = propertyProtocols;
             
             if (propertyClass) {
-                if (_byClass[(id)propertyClass] == nil) {
-                    _byClass[(id)propertyClass] = [NSMutableArray array];
+                if (self->_byClass[(id)propertyClass] == nil) {
+                    self->_byClass[(id)propertyClass] = [NSMutableArray array];
                 }
-                [_byClass[(id)propertyClass] addObject:holder];
+                [self->_byClass[(id)propertyClass] addObject:holder];
             }
             
             for (Protocol *protocol in propertyProtocols) {
                 NSValue *key = [NSValue valueWithPointer:(__bridge void *)(protocol)];
-                if (_byProtocol[key] == nil) {
-                    _byProtocol[key] = [NSMutableArray array];
+                if (self->_byProtocol[key] == nil) {
+                    self->_byProtocol[key] = [NSMutableArray array];
                 }
-                [_byProtocol[key] addObject:holder];
+                [self->_byProtocol[key] addObject:holder];
             }
             
             return @[[DeluxeInjection doNotInject],

@@ -7,38 +7,38 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		039F13D8CEA4C2274EA549F982A529DD /* DILazy.m in Sources */ = {isa = PBXBuildFile; fileRef = 685B80BC57F50525D76BBD8C2755C732 /* DILazy.m */; };
-		077D2EA9A4938B0DCBFD3D00C6E8B943 /* DIDeluxeInjectionPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 2C8B44E773954FCA34D8D29BBD944EEE /* DIDeluxeInjectionPlugin.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		0943FA4067B6CA245DAF4FD9A7BD74DE /* Pods-DeluxeInjection_Example-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 1564B2918F20A52BFCC0D9CA99C87E10 /* Pods-DeluxeInjection_Example-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		14B4C0112482271CC5A091298A47AC47 /* DeluxeInjection.h in Headers */ = {isa = PBXBuildFile; fileRef = F900D648A4DE48B285901C763EE91DB9 /* DeluxeInjection.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0325FAFA72A8E8F9CA81159120C3430F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 80D38AA32EBE1C05439CCEAD34A3C575 /* Foundation.framework */; };
+		0943FA4067B6CA245DAF4FD9A7BD74DE /* Pods-DeluxeInjection_Example-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = FD6B8E0B03A8ECD595C309483F716F94 /* Pods-DeluxeInjection_Example-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0CA3FAC441A705DC65ABB8D513AF7A53 /* DeluxeInjection-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = AD8F34D5798C7FD1DEF4ED31AE773599 /* DeluxeInjection-dummy.m */; };
+		10EB1CEF56862DF7A7648BEC437C8517 /* DILazy.h in Headers */ = {isa = PBXBuildFile; fileRef = EA7F995EFB2BC9C49B24C738FA0CC20D /* DILazy.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		16E3AF5DA8515220B7315301089B16F0 /* RuntimeRoutines.m in Sources */ = {isa = PBXBuildFile; fileRef = 91394A00B011101A17FE19DA352CA94F /* RuntimeRoutines.m */; };
+		16E9E66951F322BE53803AAEFEEBC2B4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 80D38AA32EBE1C05439CCEAD34A3C575 /* Foundation.framework */; };
 		1DE310A72221728201491DE44DD3865D /* RuntimeRoutines.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E028E7FB904A6C92E2A10AAA1EF118E /* RuntimeRoutines.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		36AABA4C963B3FC2F4B90CE23E824987 /* DIDefaults.h in Headers */ = {isa = PBXBuildFile; fileRef = E1A384B749E518EA229F26DA6864BFF2 /* DIDefaults.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		429E27FB4AD7D991CBEB405D7868CDA8 /* DIForceInject.m in Sources */ = {isa = PBXBuildFile; fileRef = 911710E865676FA64D7B6129A8584836 /* DIForceInject.m */; };
-		452FC58C69C2B67742277AFF9DBE1044 /* DIDeluxeInjection.h in Headers */ = {isa = PBXBuildFile; fileRef = 6841B659D8951D1B0AB0206CBE59BA22 /* DIDeluxeInjection.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		58B0E3F6CDC7A14052ED977153596AB5 /* DIAssociate.h in Headers */ = {isa = PBXBuildFile; fileRef = 230DCCB996D6E819400041390D9DF954 /* DIAssociate.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		5CCBCFBD0BE852D23BB9E06C49C41561 /* DeluxeInjection-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = E3E8651CF6E4A3E0E849783D39BCF1E9 /* DeluxeInjection-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		6500792E5D1051AFD21357BF28E3A032 /* DIForceInject.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AD0E794AAA1A155642C8BE1A633B47D /* DIForceInject.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		65FD8F79202983B3A77670449A5D260F /* RuntimeRoutines-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 43C5BC76858EBF84CB3A63E4799A6A96 /* RuntimeRoutines-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		6A9AEFC12CBEEF5E059B0103D22775EA /* Pods-DeluxeInjection_Example-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 27CE5DE0F3B8CC8120AB20D22A172DA2 /* Pods-DeluxeInjection_Example-dummy.m */; };
-		7003A74D354DFC9A8791A59BD70D6D2D /* DIDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = 002D24CDF9BC2423BF17FC20B89E2461 /* DIDefaults.m */; };
-		71E71F2FC84500EDFAE06F100B153091 /* DILazy.h in Headers */ = {isa = PBXBuildFile; fileRef = 2532A6DDF13E3ECD4CB968F7943DA0E2 /* DILazy.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7322D7D826D7C6C43AFE60E239C97D21 /* DeluxeInjection-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 6782DCFF68A7C5CE3A84F51F2CEA5858 /* DeluxeInjection-dummy.m */; };
-		7C6AE785F73D2C6BEF00705F054CD63B /* DIAssociate.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F13D41AA4D10D626C137D828E70A29 /* DIAssociate.m */; };
-		8071F9C6F508AD7069ACA380A236F0FD /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 23B7F213500B9E4767C680803A90F6E0 /* Foundation.framework */; };
-		81A4F608CB22476D060E4FF7155E20B9 /* Pods-DeluxeInjection_Tests-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = E340804C33D8ADEDE2B58053129F4ED3 /* Pods-DeluxeInjection_Tests-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		88BB35D4C1DA1D09E552A63D8D77F1BF /* Pods-DeluxeInjection_Tests-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A9A444657A47916613BA5B638FC3327 /* Pods-DeluxeInjection_Tests-dummy.m */; };
-		8EA022C223C1CEF529573E7D186C5E88 /* DIDeluxeInjection.m in Sources */ = {isa = PBXBuildFile; fileRef = 9583EF8A564ED0F4E0182E147031EC4F /* DIDeluxeInjection.m */; };
-		9733DD9A7D2C2A29C798CFC9EE1F506F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 23B7F213500B9E4767C680803A90F6E0 /* Foundation.framework */; };
-		A34ADFADC0C565BD11DB3AA84D7AAD18 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 23B7F213500B9E4767C680803A90F6E0 /* Foundation.framework */; };
-		A9E83E2915949097712A1D0C4FCE42AA /* DIImperativePlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = C35471145640653699F654EA8976E252 /* DIImperativePlugin.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		AAE4606658C57B9DD0B81D9FA3BCE5EF /* DIInject.m in Sources */ = {isa = PBXBuildFile; fileRef = 636CDB58DFB24EC6C12D5C9AD64B767A /* DIInject.m */; };
-		AEAE94C6EDABA98C9943918147C594A5 /* DIImperative.h in Headers */ = {isa = PBXBuildFile; fileRef = 1EA1DCD5E11CD2EFE01B0D77AF4586A9 /* DIImperative.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		B16D7DF85BF5D35A1837C7AB6760324E /* RuntimeRoutines-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F47291CC3F6CD739E9EF5163E609B27 /* RuntimeRoutines-dummy.m */; };
-		C806C9F6AC7D9D4C833D794274406D67 /* DIInjectPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = DEDB0FFAECCD968F03DEA9E5F00207DA /* DIInjectPlugin.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		CC513E212E14814746A70B31978B2210 /* DIImperative.m in Sources */ = {isa = PBXBuildFile; fileRef = 0557F64840AB6CC47F48661A734A5347 /* DIImperative.m */; };
-		D52B39A7F74B21AD7F0217ED4CC810A1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 23B7F213500B9E4767C680803A90F6E0 /* Foundation.framework */; };
-		E51F98A9699C4232CEE8C9D072F7FFD7 /* DIInject.h in Headers */ = {isa = PBXBuildFile; fileRef = C51AD4B3EF44365FFAE5DBDBBC6E3CFF /* DIInject.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1F9EE2EC590813EA40573536F5178FFC /* DIForceInject.h in Headers */ = {isa = PBXBuildFile; fileRef = 6BB0D7EA76BEAB9CAB3EE3131CB85E0B /* DIForceInject.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		24D786AA9277CB716E6FC7AD55B94E3E /* DIImperative.m in Sources */ = {isa = PBXBuildFile; fileRef = 23D8498468B8B78EA7CF5CCB5D8C58EA /* DIImperative.m */; };
+		29030A68FDD38DF6EADD008B45CF147E /* DeluxeInjection.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E3CC99036E7CA4AD2E1E86B89BC207F /* DeluxeInjection.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		29907F13608FE0312F216864D650A10F /* DIImperative.h in Headers */ = {isa = PBXBuildFile; fileRef = 4F27B9A790B3E604A1A68BAAEEDF076F /* DIImperative.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2B7E6EA367C8E6AC4080498202EA382F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 80D38AA32EBE1C05439CCEAD34A3C575 /* Foundation.framework */; };
+		353AA70C798CBFF11B75B2502F84C856 /* DIAssociate.h in Headers */ = {isa = PBXBuildFile; fileRef = 7DA3CDD21DF08277FDA33CEF642E3A76 /* DIAssociate.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		549CB862D56FB8BA617B4F3A2C82C398 /* DeluxeInjection-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = C952C9588DFB3910B46D932F20CA44E6 /* DeluxeInjection-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		5E851B0836CD59A1611E7121B6F8A7DD /* DIImperativePlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = CF633ABF7D5F0B0B90AE42DCA25B3757 /* DIImperativePlugin.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		626AC6DFC91BFA43A2F63E03E6E0D1D4 /* DIAssociate.m in Sources */ = {isa = PBXBuildFile; fileRef = B5D6F45B539D1C7D2306AA194788831E /* DIAssociate.m */; };
+		65FD8F79202983B3A77670449A5D260F /* RuntimeRoutines-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 19B5ADAC2FB9DE98600E6D89CF8440A6 /* RuntimeRoutines-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6A9AEFC12CBEEF5E059B0103D22775EA /* Pods-DeluxeInjection_Example-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C5486A92E756F5CDD8386D472353E31 /* Pods-DeluxeInjection_Example-dummy.m */; };
+		77ED6A72ADC1BB744841C5D688435237 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 80D38AA32EBE1C05439CCEAD34A3C575 /* Foundation.framework */; };
+		81A4F608CB22476D060E4FF7155E20B9 /* Pods-DeluxeInjection_Tests-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 5AF3D49AFA974BF53D71A1B7A84EBC75 /* Pods-DeluxeInjection_Tests-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		844495455A33DD51FEF1B03526EFE453 /* DIDeluxeInjection.m in Sources */ = {isa = PBXBuildFile; fileRef = 43A174C9B4959727CB6B4AE3DFDC1F69 /* DIDeluxeInjection.m */; };
+		88BB35D4C1DA1D09E552A63D8D77F1BF /* Pods-DeluxeInjection_Tests-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DFC0C40B5ADCB538FEC05BE744A40A9 /* Pods-DeluxeInjection_Tests-dummy.m */; };
+		896D02A3A505B1F1E0683D806266035E /* DIDeluxeInjectionPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = D718EB4EEDE6A45A614B5354336B8C45 /* DIDeluxeInjectionPlugin.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9DC385AA25981684581A5F235F2F53E8 /* DILazy.m in Sources */ = {isa = PBXBuildFile; fileRef = C437E8FCDBF9ED9C2DFB3713C521DDF1 /* DILazy.m */; };
+		AB299B68446ADF0855877434CFB844BF /* DIDefaults.h in Headers */ = {isa = PBXBuildFile; fileRef = AD20F6DB33506E459BE56B4CCB5AF4F2 /* DIDefaults.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		AEAEFC5D219AD57E9E094568795C7686 /* DIForceInject.m in Sources */ = {isa = PBXBuildFile; fileRef = F1058852B58ED5AC801F6A6BB5C38D3B /* DIForceInject.m */; };
+		B16D7DF85BF5D35A1837C7AB6760324E /* RuntimeRoutines-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = B1415068866B48C77B7ADD69E9796A78 /* RuntimeRoutines-dummy.m */; };
+		C9ADB4634232DAC356DA1F811C7B13D2 /* DIInject.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A35436ACD6D294EF736E9D6C6A4B2E1 /* DIInject.m */; };
+		CD74CAE7FEBE97AF32635C2347CEB37F /* DIDeluxeInjection.h in Headers */ = {isa = PBXBuildFile; fileRef = FF909BDB32B68D2B1B3A221AC4B5F963 /* DIDeluxeInjection.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D06A3E01D1ACB71513AD9C8DF695DB80 /* DIInjectPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 272E5C31236968B490279AEF2DCBC3D6 /* DIInjectPlugin.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E0650CAF81EE4A03326B0346EF3863A0 /* DIInject.h in Headers */ = {isa = PBXBuildFile; fileRef = C380FCC3E7E64C917BB97686A93DD89C /* DIInject.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F22BEAE4F6F7EB1D5A44273D62341691 /* DIDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = 8F485A7BCC7F1ACCA006A85E7EFF3F38 /* DIDefaults.m */; };
 		F5608C0BF3CE72299626BDA127AB4EC5 /* RuntimeRoutines.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A8F8401EE181E7916CF986B80F1A4995 /* RuntimeRoutines.framework */; };
 /* End PBXBuildFile section */
 
@@ -67,65 +67,68 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		002D24CDF9BC2423BF17FC20B89E2461 /* DIDefaults.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DIDefaults.m; sourceTree = "<group>"; };
-		05088510D495C7AADD09A6A22D0CBB52 /* Pods-DeluxeInjection_Example-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-DeluxeInjection_Example-resources.sh"; sourceTree = "<group>"; };
-		0557F64840AB6CC47F48661A734A5347 /* DIImperative.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DIImperative.m; sourceTree = "<group>"; };
-		0A7853CDAFAF79F6BEF91EDBF99C299F /* Pods-DeluxeInjection_Example.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = "Pods-DeluxeInjection_Example.modulemap"; sourceTree = "<group>"; };
-		122A46C9589A760B40132D3EBBEBAC82 /* Pods-DeluxeInjection_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-DeluxeInjection_Tests.debug.xcconfig"; sourceTree = "<group>"; };
-		12A95297C09F9A6B8B3C6502FCD27694 /* RuntimeRoutines-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "RuntimeRoutines-prefix.pch"; sourceTree = "<group>"; };
-		1564B2918F20A52BFCC0D9CA99C87E10 /* Pods-DeluxeInjection_Example-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-DeluxeInjection_Example-umbrella.h"; sourceTree = "<group>"; };
-		18689D776AC34FF2B0257DDE06630113 /* Pods-DeluxeInjection_Example-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-DeluxeInjection_Example-frameworks.sh"; sourceTree = "<group>"; };
-		1A0650F7C334CE59BE95627355DA8690 /* Pods-DeluxeInjection_Example-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-DeluxeInjection_Example-acknowledgements.plist"; sourceTree = "<group>"; };
-		1EA1DCD5E11CD2EFE01B0D77AF4586A9 /* DIImperative.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DIImperative.h; sourceTree = "<group>"; };
-		1EC162C2A566F9DB745D426B0518D38D /* RuntimeRoutines.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = RuntimeRoutines.xcconfig; sourceTree = "<group>"; };
-		1F47291CC3F6CD739E9EF5163E609B27 /* RuntimeRoutines-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "RuntimeRoutines-dummy.m"; sourceTree = "<group>"; };
-		230DCCB996D6E819400041390D9DF954 /* DIAssociate.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DIAssociate.h; sourceTree = "<group>"; };
-		23B7F213500B9E4767C680803A90F6E0 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
-		2532A6DDF13E3ECD4CB968F7943DA0E2 /* DILazy.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DILazy.h; sourceTree = "<group>"; };
-		27CE5DE0F3B8CC8120AB20D22A172DA2 /* Pods-DeluxeInjection_Example-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-DeluxeInjection_Example-dummy.m"; sourceTree = "<group>"; };
-		28235174898A24DC1013C811BDAAA57F /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		2C8B44E773954FCA34D8D29BBD944EEE /* DIDeluxeInjectionPlugin.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DIDeluxeInjectionPlugin.h; sourceTree = "<group>"; };
-		39D6D36C32C30889110EA6D772FCCEB2 /* DeluxeInjection.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = DeluxeInjection.xcconfig; sourceTree = "<group>"; };
+		0B30F64D965750F96F80E81F3C90FA14 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		10CEFE9B91285984ABF6ED02D83E583A /* Pods-DeluxeInjection_Tests-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-DeluxeInjection_Tests-frameworks.sh"; sourceTree = "<group>"; };
+		125CB511FD6E8D39A559AAC5E05A50FD /* Pods-DeluxeInjection_Example.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-DeluxeInjection_Example.modulemap"; sourceTree = "<group>"; };
+		19B5ADAC2FB9DE98600E6D89CF8440A6 /* RuntimeRoutines-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "RuntimeRoutines-umbrella.h"; sourceTree = "<group>"; };
+		23D8498468B8B78EA7CF5CCB5D8C58EA /* DIImperative.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = DIImperative.m; path = DeluxeInjection/Classes/DIImperative.m; sourceTree = "<group>"; };
+		259CB49FDDDFD07CC47DE3FD88600FC1 /* RuntimeRoutines-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "RuntimeRoutines-prefix.pch"; sourceTree = "<group>"; };
+		272E5C31236968B490279AEF2DCBC3D6 /* DIInjectPlugin.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DIInjectPlugin.h; path = DeluxeInjection/Classes/DIInjectPlugin.h; sourceTree = "<group>"; };
+		3A35436ACD6D294EF736E9D6C6A4B2E1 /* DIInject.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = DIInject.m; path = DeluxeInjection/Classes/DIInject.m; sourceTree = "<group>"; };
+		3C5486A92E756F5CDD8386D472353E31 /* Pods-DeluxeInjection_Example-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-DeluxeInjection_Example-dummy.m"; sourceTree = "<group>"; };
 		3E5B60DC7B4F4627D60993346C8530E3 /* RuntimeRoutines.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = RuntimeRoutines.framework; path = RuntimeRoutines.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		40982DC197B4DC631AFD1AAB49A9D36B /* Pods-DeluxeInjection_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-DeluxeInjection_Example.release.xcconfig"; sourceTree = "<group>"; };
-		43C5BC76858EBF84CB3A63E4799A6A96 /* RuntimeRoutines-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "RuntimeRoutines-umbrella.h"; sourceTree = "<group>"; };
-		4DF364A85E573D5459D729FCA83AFB58 /* Pods-DeluxeInjection_Example-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-DeluxeInjection_Example-acknowledgements.markdown"; sourceTree = "<group>"; };
+		43A174C9B4959727CB6B4AE3DFDC1F69 /* DIDeluxeInjection.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = DIDeluxeInjection.m; path = DeluxeInjection/Classes/DIDeluxeInjection.m; sourceTree = "<group>"; };
+		476A296F79589C350126504EBC45A552 /* DeluxeInjection.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; lastKnownFileType = text; path = DeluxeInjection.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		4DFC0C40B5ADCB538FEC05BE744A40A9 /* Pods-DeluxeInjection_Tests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-DeluxeInjection_Tests-dummy.m"; sourceTree = "<group>"; };
 		4E028E7FB904A6C92E2A10AAA1EF118E /* RuntimeRoutines.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RuntimeRoutines.h; path = Pod/Classes/RuntimeRoutines.h; sourceTree = "<group>"; };
+		4F27B9A790B3E604A1A68BAAEEDF076F /* DIImperative.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DIImperative.h; path = DeluxeInjection/Classes/DIImperative.h; sourceTree = "<group>"; };
 		500B618E4E395898D96280CC96BA387D /* DeluxeInjection.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = DeluxeInjection.framework; path = DeluxeInjection.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		55F13D41AA4D10D626C137D828E70A29 /* DIAssociate.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DIAssociate.m; sourceTree = "<group>"; };
-		58E1C0D689DF24083EC5F53822F4D956 /* Pods-DeluxeInjection_Tests-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-DeluxeInjection_Tests-resources.sh"; sourceTree = "<group>"; };
-		59F83B737E9636966CCDAF84CEEB455E /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		636CDB58DFB24EC6C12D5C9AD64B767A /* DIInject.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DIInject.m; sourceTree = "<group>"; };
-		652CC4AEDCAAC819EF7983B60AC00B2C /* Pods-DeluxeInjection_Tests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = "Pods-DeluxeInjection_Tests.modulemap"; sourceTree = "<group>"; };
-		6782DCFF68A7C5CE3A84F51F2CEA5858 /* DeluxeInjection-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "DeluxeInjection-dummy.m"; sourceTree = "<group>"; };
-		6841B659D8951D1B0AB0206CBE59BA22 /* DIDeluxeInjection.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DIDeluxeInjection.h; sourceTree = "<group>"; };
-		685B80BC57F50525D76BBD8C2755C732 /* DILazy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DILazy.m; sourceTree = "<group>"; };
-		6A9A444657A47916613BA5B638FC3327 /* Pods-DeluxeInjection_Tests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-DeluxeInjection_Tests-dummy.m"; sourceTree = "<group>"; };
-		738E2652ED1B4DB715B27716B2DB8793 /* RuntimeRoutines.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = RuntimeRoutines.modulemap; sourceTree = "<group>"; };
-		8AD0E794AAA1A155642C8BE1A633B47D /* DIForceInject.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DIForceInject.h; sourceTree = "<group>"; };
-		911710E865676FA64D7B6129A8584836 /* DIForceInject.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DIForceInject.m; sourceTree = "<group>"; };
+		535C049506124F9BC9FB35AD64444853 /* RuntimeRoutines.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = RuntimeRoutines.modulemap; sourceTree = "<group>"; };
+		5504B1C5469CC7956B3082008FBC3583 /* Pods-DeluxeInjection_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-DeluxeInjection_Tests.debug.xcconfig"; sourceTree = "<group>"; };
+		5AF3D49AFA974BF53D71A1B7A84EBC75 /* Pods-DeluxeInjection_Tests-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-DeluxeInjection_Tests-umbrella.h"; sourceTree = "<group>"; };
+		696ED4303783CDB215DCDD29E7527907 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; path = LICENSE; sourceTree = "<group>"; };
+		69BA2FE6058D75049CFDCE3BF2D10CE2 /* Pods-DeluxeInjection_Tests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-DeluxeInjection_Tests-acknowledgements.plist"; sourceTree = "<group>"; };
+		6B8742ACEAA5DD855375783B2240AB20 /* Pods-DeluxeInjection_Example-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-DeluxeInjection_Example-acknowledgements.plist"; sourceTree = "<group>"; };
+		6BB0D7EA76BEAB9CAB3EE3131CB85E0B /* DIForceInject.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DIForceInject.h; path = DeluxeInjection/Classes/DIForceInject.h; sourceTree = "<group>"; };
+		6ECC83AB705C538E1B9E960D3AF1AF3C /* Pods-DeluxeInjection_Example-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-DeluxeInjection_Example-frameworks.sh"; sourceTree = "<group>"; };
+		711AC33FBDCE0F0B574730539641F54B /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		743D5F2847321FF0B6D02431AD42150D /* Pods-DeluxeInjection_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-DeluxeInjection_Example.release.xcconfig"; sourceTree = "<group>"; };
+		7DA3CDD21DF08277FDA33CEF642E3A76 /* DIAssociate.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DIAssociate.h; path = DeluxeInjection/Classes/DIAssociate.h; sourceTree = "<group>"; };
+		80D38AA32EBE1C05439CCEAD34A3C575 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.3.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		8790835B81160F4BE90AB3B38BE6A63C /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; path = README.md; sourceTree = "<group>"; };
+		8F485A7BCC7F1ACCA006A85E7EFF3F38 /* DIDefaults.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = DIDefaults.m; path = DeluxeInjection/Classes/DIDefaults.m; sourceTree = "<group>"; };
 		91394A00B011101A17FE19DA352CA94F /* RuntimeRoutines.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RuntimeRoutines.m; path = Pod/Classes/RuntimeRoutines.m; sourceTree = "<group>"; };
+		92AD9BAF1E42EFB3287E76B27937D472 /* Pods-DeluxeInjection_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-DeluxeInjection_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
-		9583EF8A564ED0F4E0182E147031EC4F /* DIDeluxeInjection.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DIDeluxeInjection.m; sourceTree = "<group>"; };
-		9888A13FE615B7C5DF6A7A279A43FF28 /* Pods-DeluxeInjection_Tests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-DeluxeInjection_Tests-acknowledgements.plist"; sourceTree = "<group>"; };
-		9D60172841451B2D95733AA5AF831A4D /* DeluxeInjection-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "DeluxeInjection-prefix.pch"; sourceTree = "<group>"; };
-		A15A0406567C7D99464B5A2966CE82B5 /* Pods-DeluxeInjection_Tests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-DeluxeInjection_Tests-acknowledgements.markdown"; sourceTree = "<group>"; };
-		A237881353E88112DA9EE3DCF2DFD96D /* Pods-DeluxeInjection_Tests-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-DeluxeInjection_Tests-frameworks.sh"; sourceTree = "<group>"; };
+		9B5803E7FB32890193E6A8F4EB32B9A7 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9E3CC99036E7CA4AD2E1E86B89BC207F /* DeluxeInjection.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DeluxeInjection.h; path = DeluxeInjection/Classes/DeluxeInjection.h; sourceTree = "<group>"; };
+		A17416C84F05EA461DCF94FA8B9E191D /* Pods-DeluxeInjection_Tests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-DeluxeInjection_Tests-acknowledgements.markdown"; sourceTree = "<group>"; };
+		A33A431E28420560BDC7D27E6081DD7E /* Pods-DeluxeInjection_Tests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-DeluxeInjection_Tests.modulemap"; sourceTree = "<group>"; };
 		A8F8401EE181E7916CF986B80F1A4995 /* RuntimeRoutines.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RuntimeRoutines.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		B418953E68183BC2AFEEC1B4236DC381 /* DeluxeInjection.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = DeluxeInjection.modulemap; sourceTree = "<group>"; };
-		C35471145640653699F654EA8976E252 /* DIImperativePlugin.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DIImperativePlugin.h; sourceTree = "<group>"; };
-		C51AD4B3EF44365FFAE5DBDBBC6E3CFF /* DIInject.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DIInject.h; sourceTree = "<group>"; };
+		A90780114F0D5116A573476033A3B864 /* RuntimeRoutines.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = RuntimeRoutines.xcconfig; sourceTree = "<group>"; };
+		AD20F6DB33506E459BE56B4CCB5AF4F2 /* DIDefaults.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DIDefaults.h; path = DeluxeInjection/Classes/DIDefaults.h; sourceTree = "<group>"; };
+		AD8F34D5798C7FD1DEF4ED31AE773599 /* DeluxeInjection-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "DeluxeInjection-dummy.m"; sourceTree = "<group>"; };
+		B0729F28E76ED9514BACB19DC1C55A51 /* Pods-DeluxeInjection_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-DeluxeInjection_Example.debug.xcconfig"; sourceTree = "<group>"; };
+		B1415068866B48C77B7ADD69E9796A78 /* RuntimeRoutines-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "RuntimeRoutines-dummy.m"; sourceTree = "<group>"; };
+		B5D6F45B539D1C7D2306AA194788831E /* DIAssociate.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = DIAssociate.m; path = DeluxeInjection/Classes/DIAssociate.m; sourceTree = "<group>"; };
+		BD8CDF9F98C2E82703CA1109884D4F41 /* DeluxeInjection-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "DeluxeInjection-prefix.pch"; sourceTree = "<group>"; };
+		BE9F5241D805C658ABFC76344E7BB829 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C380FCC3E7E64C917BB97686A93DD89C /* DIInject.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DIInject.h; path = DeluxeInjection/Classes/DIInject.h; sourceTree = "<group>"; };
+		C437E8FCDBF9ED9C2DFB3713C521DDF1 /* DILazy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = DILazy.m; path = DeluxeInjection/Classes/DILazy.m; sourceTree = "<group>"; };
+		C5EDE4E81375B43F2547D1D832F5CE25 /* Pods-DeluxeInjection_Tests-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-DeluxeInjection_Tests-resources.sh"; sourceTree = "<group>"; };
 		C79B112B9B0D4DEEB22770E710F0717B /* Pods_DeluxeInjection_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_DeluxeInjection_Tests.framework; path = "Pods-DeluxeInjection_Tests.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
-		C8795269503CEE63BB30B47D693C5573 /* Pods-DeluxeInjection_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-DeluxeInjection_Example.debug.xcconfig"; sourceTree = "<group>"; };
+		C855C33F7FBD4FE486AB95B1EBBBF38A /* DeluxeInjection.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = DeluxeInjection.modulemap; sourceTree = "<group>"; };
+		C952C9588DFB3910B46D932F20CA44E6 /* DeluxeInjection-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "DeluxeInjection-umbrella.h"; sourceTree = "<group>"; };
 		C983354FBAF95156CB607EF39A45EAD2 /* Pods_DeluxeInjection_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_DeluxeInjection_Example.framework; path = "Pods-DeluxeInjection_Example.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
-		CE31F09173D4722D2634108E0A6E0FA3 /* Pods-DeluxeInjection_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-DeluxeInjection_Tests.release.xcconfig"; sourceTree = "<group>"; };
-		D7CBEBE21A319EF8686AF54AC2612A95 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		D8137B1810956F123E9480BCA256BAFA /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		DEDB0FFAECCD968F03DEA9E5F00207DA /* DIInjectPlugin.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DIInjectPlugin.h; sourceTree = "<group>"; };
-		E1A384B749E518EA229F26DA6864BFF2 /* DIDefaults.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DIDefaults.h; sourceTree = "<group>"; };
-		E340804C33D8ADEDE2B58053129F4ED3 /* Pods-DeluxeInjection_Tests-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-DeluxeInjection_Tests-umbrella.h"; sourceTree = "<group>"; };
-		E3E8651CF6E4A3E0E849783D39BCF1E9 /* DeluxeInjection-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "DeluxeInjection-umbrella.h"; sourceTree = "<group>"; };
-		F900D648A4DE48B285901C763EE91DB9 /* DeluxeInjection.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DeluxeInjection.h; sourceTree = "<group>"; };
+		CF633ABF7D5F0B0B90AE42DCA25B3757 /* DIImperativePlugin.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DIImperativePlugin.h; path = DeluxeInjection/Classes/DIImperativePlugin.h; sourceTree = "<group>"; };
+		D718EB4EEDE6A45A614B5354336B8C45 /* DIDeluxeInjectionPlugin.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DIDeluxeInjectionPlugin.h; path = DeluxeInjection/Classes/DIDeluxeInjectionPlugin.h; sourceTree = "<group>"; };
+		E6ECDFD79A7CF16FC1A9B808FE999378 /* Pods-DeluxeInjection_Example-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-DeluxeInjection_Example-resources.sh"; sourceTree = "<group>"; };
+		EA012B96562C65F3FEB988D528B9AF1C /* DeluxeInjection.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = DeluxeInjection.xcconfig; sourceTree = "<group>"; };
+		EA7F995EFB2BC9C49B24C738FA0CC20D /* DILazy.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DILazy.h; path = DeluxeInjection/Classes/DILazy.h; sourceTree = "<group>"; };
+		F1058852B58ED5AC801F6A6BB5C38D3B /* DIForceInject.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = DIForceInject.m; path = DeluxeInjection/Classes/DIForceInject.m; sourceTree = "<group>"; };
+		F4096AE067BA832FBCE324D97E84DD11 /* Pods-DeluxeInjection_Example-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-DeluxeInjection_Example-acknowledgements.markdown"; sourceTree = "<group>"; };
+		FD6B8E0B03A8ECD595C309483F716F94 /* Pods-DeluxeInjection_Example-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-DeluxeInjection_Example-umbrella.h"; sourceTree = "<group>"; };
+		FF909BDB32B68D2B1B3A221AC4B5F963 /* DIDeluxeInjection.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DIDeluxeInjection.h; path = DeluxeInjection/Classes/DIDeluxeInjection.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -133,7 +136,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D52B39A7F74B21AD7F0217ED4CC810A1 /* Foundation.framework in Frameworks */,
+				0325FAFA72A8E8F9CA81159120C3430F /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -141,7 +144,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9733DD9A7D2C2A29C798CFC9EE1F506F /* Foundation.framework in Frameworks */,
+				77ED6A72ADC1BB744841C5D688435237 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -149,7 +152,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8071F9C6F508AD7069ACA380A236F0FD /* Foundation.framework in Frameworks */,
+				2B7E6EA367C8E6AC4080498202EA382F /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -157,7 +160,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A34ADFADC0C565BD11DB3AA84D7AAD18 /* Foundation.framework in Frameworks */,
+				16E9E66951F322BE53803AAEFEEBC2B4 /* Foundation.framework in Frameworks */,
 				F5608C0BF3CE72299626BDA127AB4EC5 /* RuntimeRoutines.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -165,22 +168,36 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		193FE498BD7711D6B5346040369A48D7 /* DeluxeInjection */ = {
+		0279306672CB17F12BC3927BA85760E0 /* Pods-DeluxeInjection_Example */ = {
 			isa = PBXGroup;
 			children = (
-				5F422C2D0D392C460D49BE4B7243D2FC /* DeluxeInjection */,
-				6E1EBFDBAE83554859E18422412536ED /* Support Files */,
+				9B5803E7FB32890193E6A8F4EB32B9A7 /* Info.plist */,
+				125CB511FD6E8D39A559AAC5E05A50FD /* Pods-DeluxeInjection_Example.modulemap */,
+				F4096AE067BA832FBCE324D97E84DD11 /* Pods-DeluxeInjection_Example-acknowledgements.markdown */,
+				6B8742ACEAA5DD855375783B2240AB20 /* Pods-DeluxeInjection_Example-acknowledgements.plist */,
+				3C5486A92E756F5CDD8386D472353E31 /* Pods-DeluxeInjection_Example-dummy.m */,
+				6ECC83AB705C538E1B9E960D3AF1AF3C /* Pods-DeluxeInjection_Example-frameworks.sh */,
+				E6ECDFD79A7CF16FC1A9B808FE999378 /* Pods-DeluxeInjection_Example-resources.sh */,
+				FD6B8E0B03A8ECD595C309483F716F94 /* Pods-DeluxeInjection_Example-umbrella.h */,
+				B0729F28E76ED9514BACB19DC1C55A51 /* Pods-DeluxeInjection_Example.debug.xcconfig */,
+				743D5F2847321FF0B6D02431AD42150D /* Pods-DeluxeInjection_Example.release.xcconfig */,
 			);
-			name = DeluxeInjection;
-			path = ../..;
+			name = "Pods-DeluxeInjection_Example";
+			path = "Target Support Files/Pods-DeluxeInjection_Example";
 			sourceTree = "<group>";
 		};
-		1AF5296D6758178BC6894B405F2D22CD /* iOS */ = {
+		07C07FA2B17090D8930F26119BAC2FA1 /* Support Files */ = {
 			isa = PBXGroup;
 			children = (
-				23B7F213500B9E4767C680803A90F6E0 /* Foundation.framework */,
+				BE9F5241D805C658ABFC76344E7BB829 /* Info.plist */,
+				535C049506124F9BC9FB35AD64444853 /* RuntimeRoutines.modulemap */,
+				A90780114F0D5116A573476033A3B864 /* RuntimeRoutines.xcconfig */,
+				B1415068866B48C77B7ADD69E9796A78 /* RuntimeRoutines-dummy.m */,
+				259CB49FDDDFD07CC47DE3FD88600FC1 /* RuntimeRoutines-prefix.pch */,
+				19B5ADAC2FB9DE98600E6D89CF8440A6 /* RuntimeRoutines-umbrella.h */,
 			);
-			name = iOS;
+			name = "Support Files";
+			path = "../Target Support Files/RuntimeRoutines";
 			sourceTree = "<group>";
 		};
 		28838C29CF18AD2622796DC57C31C6C6 /* Products */ = {
@@ -194,66 +211,97 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		4ABF1DBD21B477F652B32B27F7C3F68C /* Pods-DeluxeInjection_Example */ = {
+		34F75ECEF710C880111B13A8AB69926A /* iOS */ = {
 			isa = PBXGroup;
 			children = (
-				D7CBEBE21A319EF8686AF54AC2612A95 /* Info.plist */,
-				0A7853CDAFAF79F6BEF91EDBF99C299F /* Pods-DeluxeInjection_Example.modulemap */,
-				4DF364A85E573D5459D729FCA83AFB58 /* Pods-DeluxeInjection_Example-acknowledgements.markdown */,
-				1A0650F7C334CE59BE95627355DA8690 /* Pods-DeluxeInjection_Example-acknowledgements.plist */,
-				27CE5DE0F3B8CC8120AB20D22A172DA2 /* Pods-DeluxeInjection_Example-dummy.m */,
-				18689D776AC34FF2B0257DDE06630113 /* Pods-DeluxeInjection_Example-frameworks.sh */,
-				05088510D495C7AADD09A6A22D0CBB52 /* Pods-DeluxeInjection_Example-resources.sh */,
-				1564B2918F20A52BFCC0D9CA99C87E10 /* Pods-DeluxeInjection_Example-umbrella.h */,
-				C8795269503CEE63BB30B47D693C5573 /* Pods-DeluxeInjection_Example.debug.xcconfig */,
-				40982DC197B4DC631AFD1AAB49A9D36B /* Pods-DeluxeInjection_Example.release.xcconfig */,
+				80D38AA32EBE1C05439CCEAD34A3C575 /* Foundation.framework */,
 			);
-			name = "Pods-DeluxeInjection_Example";
-			path = "Target Support Files/Pods-DeluxeInjection_Example";
+			name = iOS;
 			sourceTree = "<group>";
 		};
-		5F422C2D0D392C460D49BE4B7243D2FC /* DeluxeInjection */ = {
+		3766B824C9C4286745B8427FB543C90E /* Development Pods */ = {
 			isa = PBXGroup;
 			children = (
-				C09CD0E3E4DD9FABD486C8134243EB90 /* Classes */,
+				7D4EA786338ECD952F8C8135C21FBE3E /* DeluxeInjection */,
 			);
-			name = DeluxeInjection;
-			path = DeluxeInjection;
+			name = "Development Pods";
+			sourceTree = "<group>";
+		};
+		3C1C2580B3BF82E5CDDD80528E71E9AF /* Pod */ = {
+			isa = PBXGroup;
+			children = (
+				476A296F79589C350126504EBC45A552 /* DeluxeInjection.podspec */,
+				696ED4303783CDB215DCDD29E7527907 /* LICENSE */,
+				8790835B81160F4BE90AB3B38BE6A63C /* README.md */,
+			);
+			name = Pod;
 			sourceTree = "<group>";
 		};
 		6C04CB11122E6313016BA585EAD7306F /* Targets Support Files */ = {
 			isa = PBXGroup;
 			children = (
-				4ABF1DBD21B477F652B32B27F7C3F68C /* Pods-DeluxeInjection_Example */,
-				C9BDC06802734C064B7107C8FABCCC1D /* Pods-DeluxeInjection_Tests */,
+				0279306672CB17F12BC3927BA85760E0 /* Pods-DeluxeInjection_Example */,
+				87DA296D0CC1EC605EBF50E1EFE42BD1 /* Pods-DeluxeInjection_Tests */,
 			);
 			name = "Targets Support Files";
 			sourceTree = "<group>";
 		};
-		6E1EBFDBAE83554859E18422412536ED /* Support Files */ = {
+		7D4EA786338ECD952F8C8135C21FBE3E /* DeluxeInjection */ = {
 			isa = PBXGroup;
 			children = (
-				B418953E68183BC2AFEEC1B4236DC381 /* DeluxeInjection.modulemap */,
-				39D6D36C32C30889110EA6D772FCCEB2 /* DeluxeInjection.xcconfig */,
-				6782DCFF68A7C5CE3A84F51F2CEA5858 /* DeluxeInjection-dummy.m */,
-				9D60172841451B2D95733AA5AF831A4D /* DeluxeInjection-prefix.pch */,
-				E3E8651CF6E4A3E0E849783D39BCF1E9 /* DeluxeInjection-umbrella.h */,
-				28235174898A24DC1013C811BDAAA57F /* Info.plist */,
+				9E3CC99036E7CA4AD2E1E86B89BC207F /* DeluxeInjection.h */,
+				7DA3CDD21DF08277FDA33CEF642E3A76 /* DIAssociate.h */,
+				B5D6F45B539D1C7D2306AA194788831E /* DIAssociate.m */,
+				AD20F6DB33506E459BE56B4CCB5AF4F2 /* DIDefaults.h */,
+				8F485A7BCC7F1ACCA006A85E7EFF3F38 /* DIDefaults.m */,
+				FF909BDB32B68D2B1B3A221AC4B5F963 /* DIDeluxeInjection.h */,
+				43A174C9B4959727CB6B4AE3DFDC1F69 /* DIDeluxeInjection.m */,
+				D718EB4EEDE6A45A614B5354336B8C45 /* DIDeluxeInjectionPlugin.h */,
+				6BB0D7EA76BEAB9CAB3EE3131CB85E0B /* DIForceInject.h */,
+				F1058852B58ED5AC801F6A6BB5C38D3B /* DIForceInject.m */,
+				4F27B9A790B3E604A1A68BAAEEDF076F /* DIImperative.h */,
+				23D8498468B8B78EA7CF5CCB5D8C58EA /* DIImperative.m */,
+				CF633ABF7D5F0B0B90AE42DCA25B3757 /* DIImperativePlugin.h */,
+				C380FCC3E7E64C917BB97686A93DD89C /* DIInject.h */,
+				3A35436ACD6D294EF736E9D6C6A4B2E1 /* DIInject.m */,
+				272E5C31236968B490279AEF2DCBC3D6 /* DIInjectPlugin.h */,
+				EA7F995EFB2BC9C49B24C738FA0CC20D /* DILazy.h */,
+				C437E8FCDBF9ED9C2DFB3713C521DDF1 /* DILazy.m */,
+				3C1C2580B3BF82E5CDDD80528E71E9AF /* Pod */,
+				E04B421D883B81990F367F31A9CBE2B2 /* Support Files */,
 			);
-			name = "Support Files";
-			path = "Example/Pods/Target Support Files/DeluxeInjection";
+			name = DeluxeInjection;
+			path = ../..;
 			sourceTree = "<group>";
 		};
 		7DB346D0F39D3F0E887471402A8071AB = {
 			isa = PBXGroup;
 			children = (
 				93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */,
-				8D6D38A35B0DC2C168D6A349A6F0D0EF /* Development Pods */,
+				3766B824C9C4286745B8427FB543C90E /* Development Pods */,
 				C14BC218F2A663C78A48D491B0D2318D /* Frameworks */,
 				8D0BBA8C099EBD606046DF638C3CEA78 /* Pods */,
 				28838C29CF18AD2622796DC57C31C6C6 /* Products */,
 				6C04CB11122E6313016BA585EAD7306F /* Targets Support Files */,
 			);
+			sourceTree = "<group>";
+		};
+		87DA296D0CC1EC605EBF50E1EFE42BD1 /* Pods-DeluxeInjection_Tests */ = {
+			isa = PBXGroup;
+			children = (
+				711AC33FBDCE0F0B574730539641F54B /* Info.plist */,
+				A33A431E28420560BDC7D27E6081DD7E /* Pods-DeluxeInjection_Tests.modulemap */,
+				A17416C84F05EA461DCF94FA8B9E191D /* Pods-DeluxeInjection_Tests-acknowledgements.markdown */,
+				69BA2FE6058D75049CFDCE3BF2D10CE2 /* Pods-DeluxeInjection_Tests-acknowledgements.plist */,
+				4DFC0C40B5ADCB538FEC05BE744A40A9 /* Pods-DeluxeInjection_Tests-dummy.m */,
+				10CEFE9B91285984ABF6ED02D83E583A /* Pods-DeluxeInjection_Tests-frameworks.sh */,
+				C5EDE4E81375B43F2547D1D832F5CE25 /* Pods-DeluxeInjection_Tests-resources.sh */,
+				5AF3D49AFA974BF53D71A1B7A84EBC75 /* Pods-DeluxeInjection_Tests-umbrella.h */,
+				5504B1C5469CC7956B3082008FBC3583 /* Pods-DeluxeInjection_Tests.debug.xcconfig */,
+				92AD9BAF1E42EFB3287E76B27937D472 /* Pods-DeluxeInjection_Tests.release.xcconfig */,
+			);
+			name = "Pods-DeluxeInjection_Tests";
+			path = "Target Support Files/Pods-DeluxeInjection_Tests";
 			sourceTree = "<group>";
 		};
 		8D0BBA8C099EBD606046DF638C3CEA78 /* Pods */ = {
@@ -264,79 +312,27 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
-		8D6D38A35B0DC2C168D6A349A6F0D0EF /* Development Pods */ = {
-			isa = PBXGroup;
-			children = (
-				193FE498BD7711D6B5346040369A48D7 /* DeluxeInjection */,
-			);
-			name = "Development Pods";
-			sourceTree = "<group>";
-		};
-		C09CD0E3E4DD9FABD486C8134243EB90 /* Classes */ = {
-			isa = PBXGroup;
-			children = (
-				F900D648A4DE48B285901C763EE91DB9 /* DeluxeInjection.h */,
-				230DCCB996D6E819400041390D9DF954 /* DIAssociate.h */,
-				55F13D41AA4D10D626C137D828E70A29 /* DIAssociate.m */,
-				E1A384B749E518EA229F26DA6864BFF2 /* DIDefaults.h */,
-				002D24CDF9BC2423BF17FC20B89E2461 /* DIDefaults.m */,
-				6841B659D8951D1B0AB0206CBE59BA22 /* DIDeluxeInjection.h */,
-				9583EF8A564ED0F4E0182E147031EC4F /* DIDeluxeInjection.m */,
-				2C8B44E773954FCA34D8D29BBD944EEE /* DIDeluxeInjectionPlugin.h */,
-				8AD0E794AAA1A155642C8BE1A633B47D /* DIForceInject.h */,
-				911710E865676FA64D7B6129A8584836 /* DIForceInject.m */,
-				1EA1DCD5E11CD2EFE01B0D77AF4586A9 /* DIImperative.h */,
-				0557F64840AB6CC47F48661A734A5347 /* DIImperative.m */,
-				C35471145640653699F654EA8976E252 /* DIImperativePlugin.h */,
-				C51AD4B3EF44365FFAE5DBDBBC6E3CFF /* DIInject.h */,
-				636CDB58DFB24EC6C12D5C9AD64B767A /* DIInject.m */,
-				DEDB0FFAECCD968F03DEA9E5F00207DA /* DIInjectPlugin.h */,
-				2532A6DDF13E3ECD4CB968F7943DA0E2 /* DILazy.h */,
-				685B80BC57F50525D76BBD8C2755C732 /* DILazy.m */,
-			);
-			name = Classes;
-			path = Classes;
-			sourceTree = "<group>";
-		};
 		C14BC218F2A663C78A48D491B0D2318D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 				A8F8401EE181E7916CF986B80F1A4995 /* RuntimeRoutines.framework */,
-				1AF5296D6758178BC6894B405F2D22CD /* iOS */,
+				34F75ECEF710C880111B13A8AB69926A /* iOS */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		C9BDC06802734C064B7107C8FABCCC1D /* Pods-DeluxeInjection_Tests */ = {
+		E04B421D883B81990F367F31A9CBE2B2 /* Support Files */ = {
 			isa = PBXGroup;
 			children = (
-				59F83B737E9636966CCDAF84CEEB455E /* Info.plist */,
-				652CC4AEDCAAC819EF7983B60AC00B2C /* Pods-DeluxeInjection_Tests.modulemap */,
-				A15A0406567C7D99464B5A2966CE82B5 /* Pods-DeluxeInjection_Tests-acknowledgements.markdown */,
-				9888A13FE615B7C5DF6A7A279A43FF28 /* Pods-DeluxeInjection_Tests-acknowledgements.plist */,
-				6A9A444657A47916613BA5B638FC3327 /* Pods-DeluxeInjection_Tests-dummy.m */,
-				A237881353E88112DA9EE3DCF2DFD96D /* Pods-DeluxeInjection_Tests-frameworks.sh */,
-				58E1C0D689DF24083EC5F53822F4D956 /* Pods-DeluxeInjection_Tests-resources.sh */,
-				E340804C33D8ADEDE2B58053129F4ED3 /* Pods-DeluxeInjection_Tests-umbrella.h */,
-				122A46C9589A760B40132D3EBBEBAC82 /* Pods-DeluxeInjection_Tests.debug.xcconfig */,
-				CE31F09173D4722D2634108E0A6E0FA3 /* Pods-DeluxeInjection_Tests.release.xcconfig */,
-			);
-			name = "Pods-DeluxeInjection_Tests";
-			path = "Target Support Files/Pods-DeluxeInjection_Tests";
-			sourceTree = "<group>";
-		};
-		E7421C8E5D00AFB696DF09FF6584D135 /* Support Files */ = {
-			isa = PBXGroup;
-			children = (
-				D8137B1810956F123E9480BCA256BAFA /* Info.plist */,
-				738E2652ED1B4DB715B27716B2DB8793 /* RuntimeRoutines.modulemap */,
-				1EC162C2A566F9DB745D426B0518D38D /* RuntimeRoutines.xcconfig */,
-				1F47291CC3F6CD739E9EF5163E609B27 /* RuntimeRoutines-dummy.m */,
-				12A95297C09F9A6B8B3C6502FCD27694 /* RuntimeRoutines-prefix.pch */,
-				43C5BC76858EBF84CB3A63E4799A6A96 /* RuntimeRoutines-umbrella.h */,
+				C855C33F7FBD4FE486AB95B1EBBBF38A /* DeluxeInjection.modulemap */,
+				EA012B96562C65F3FEB988D528B9AF1C /* DeluxeInjection.xcconfig */,
+				AD8F34D5798C7FD1DEF4ED31AE773599 /* DeluxeInjection-dummy.m */,
+				BD8CDF9F98C2E82703CA1109884D4F41 /* DeluxeInjection-prefix.pch */,
+				C952C9588DFB3910B46D932F20CA44E6 /* DeluxeInjection-umbrella.h */,
+				0B30F64D965750F96F80E81F3C90FA14 /* Info.plist */,
 			);
 			name = "Support Files";
-			path = "../Target Support Files/RuntimeRoutines";
+			path = "Example/Pods/Target Support Files/DeluxeInjection";
 			sourceTree = "<group>";
 		};
 		FEF848218AE3953BA74E6A81375AB1A3 /* RuntimeRoutines */ = {
@@ -344,7 +340,7 @@
 			children = (
 				4E028E7FB904A6C92E2A10AAA1EF118E /* RuntimeRoutines.h */,
 				91394A00B011101A17FE19DA352CA94F /* RuntimeRoutines.m */,
-				E7421C8E5D00AFB696DF09FF6584D135 /* Support Files */,
+				07C07FA2B17090D8930F26119BAC2FA1 /* Support Files */,
 			);
 			name = RuntimeRoutines;
 			path = RuntimeRoutines;
@@ -378,22 +374,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		C16F92BECE70EABE3C4A66BA999E3173 /* Headers */ = {
+		7C330B244937AB9F908D3CDF57086C10 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5CCBCFBD0BE852D23BB9E06C49C41561 /* DeluxeInjection-umbrella.h in Headers */,
-				14B4C0112482271CC5A091298A47AC47 /* DeluxeInjection.h in Headers */,
-				58B0E3F6CDC7A14052ED977153596AB5 /* DIAssociate.h in Headers */,
-				36AABA4C963B3FC2F4B90CE23E824987 /* DIDefaults.h in Headers */,
-				452FC58C69C2B67742277AFF9DBE1044 /* DIDeluxeInjection.h in Headers */,
-				077D2EA9A4938B0DCBFD3D00C6E8B943 /* DIDeluxeInjectionPlugin.h in Headers */,
-				6500792E5D1051AFD21357BF28E3A032 /* DIForceInject.h in Headers */,
-				AEAE94C6EDABA98C9943918147C594A5 /* DIImperative.h in Headers */,
-				A9E83E2915949097712A1D0C4FCE42AA /* DIImperativePlugin.h in Headers */,
-				E51F98A9699C4232CEE8C9D072F7FFD7 /* DIInject.h in Headers */,
-				C806C9F6AC7D9D4C833D794274406D67 /* DIInjectPlugin.h in Headers */,
-				71E71F2FC84500EDFAE06F100B153091 /* DILazy.h in Headers */,
+				549CB862D56FB8BA617B4F3A2C82C398 /* DeluxeInjection-umbrella.h in Headers */,
+				29030A68FDD38DF6EADD008B45CF147E /* DeluxeInjection.h in Headers */,
+				353AA70C798CBFF11B75B2502F84C856 /* DIAssociate.h in Headers */,
+				AB299B68446ADF0855877434CFB844BF /* DIDefaults.h in Headers */,
+				CD74CAE7FEBE97AF32635C2347CEB37F /* DIDeluxeInjection.h in Headers */,
+				896D02A3A505B1F1E0683D806266035E /* DIDeluxeInjectionPlugin.h in Headers */,
+				1F9EE2EC590813EA40573536F5178FFC /* DIForceInject.h in Headers */,
+				29907F13608FE0312F216864D650A10F /* DIImperative.h in Headers */,
+				5E851B0836CD59A1611E7121B6F8A7DD /* DIImperativePlugin.h in Headers */,
+				E0650CAF81EE4A03326B0346EF3863A0 /* DIInject.h in Headers */,
+				D06A3E01D1ACB71513AD9C8DF695DB80 /* DIInjectPlugin.h in Headers */,
+				10EB1CEF56862DF7A7648BEC437C8517 /* DILazy.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -421,9 +417,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = E3BB701E7478F72B6FE38DF2CF754C2D /* Build configuration list for PBXNativeTarget "DeluxeInjection" */;
 			buildPhases = (
-				203A090833C96A65EA765EA876D81808 /* Sources */,
+				B72DF5090A6A8CABB5B7A078BFCCC587 /* Sources */,
 				B68A0586093696C82C97893B87A97AE7 /* Frameworks */,
-				C16F92BECE70EABE3C4A66BA999E3173 /* Headers */,
+				7C330B244937AB9F908D3CDF57086C10 /* Headers */,
 			);
 			buildRules = (
 			);
@@ -477,8 +473,8 @@
 		D41D8CD98F00B204E9800998ECF8427E /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0730;
-				LastUpgradeCheck = 0700;
+				LastSwiftUpdateCheck = 0930;
+				LastUpgradeCheck = 0930;
 			};
 			buildConfigurationList = 2D8E8EC45A3A1A1D94AE762CB5028504 /* Build configuration list for PBXProject "Pods" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -501,21 +497,6 @@
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
-		203A090833C96A65EA765EA876D81808 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				7322D7D826D7C6C43AFE60E239C97D21 /* DeluxeInjection-dummy.m in Sources */,
-				7C6AE785F73D2C6BEF00705F054CD63B /* DIAssociate.m in Sources */,
-				7003A74D354DFC9A8791A59BD70D6D2D /* DIDefaults.m in Sources */,
-				8EA022C223C1CEF529573E7D186C5E88 /* DIDeluxeInjection.m in Sources */,
-				429E27FB4AD7D991CBEB405D7868CDA8 /* DIForceInject.m in Sources */,
-				CC513E212E14814746A70B31978B2210 /* DIImperative.m in Sources */,
-				AAE4606658C57B9DD0B81D9FA3BCE5EF /* DIInject.m in Sources */,
-				039F13D8CEA4C2274EA549F982A529DD /* DILazy.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		5E0B52FA4F11FCA5FB3886B73415D028 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -529,6 +510,21 @@
 			buildActionMask = 2147483647;
 			files = (
 				88BB35D4C1DA1D09E552A63D8D77F1BF /* Pods-DeluxeInjection_Tests-dummy.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B72DF5090A6A8CABB5B7A078BFCCC587 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0CA3FAC441A705DC65ABB8D513AF7A53 /* DeluxeInjection-dummy.m in Sources */,
+				626AC6DFC91BFA43A2F63E03E6E0D1D4 /* DIAssociate.m in Sources */,
+				F22BEAE4F6F7EB1D5A44273D62341691 /* DIDefaults.m in Sources */,
+				844495455A33DD51FEF1B03526EFE453 /* DIDeluxeInjection.m in Sources */,
+				AEAEFC5D219AD57E9E094568795C7686 /* DIForceInject.m in Sources */,
+				24D786AA9277CB716E6FC7AD55B94E3E /* DIImperative.m in Sources */,
+				C9ADB4634232DAC356DA1F811C7B13D2 /* DIInject.m in Sources */,
+				9DC385AA25981684581A5F235F2F53E8 /* DILazy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -565,59 +561,234 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		15C2E9F66218EBD0E72A264FF46158D9 /* Debug */ = {
+		14F7D944D7B286BD1857107A04C6CA50 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 39D6D36C32C30889110EA6D772FCCEB2 /* DeluxeInjection.xcconfig */;
+			baseConfigurationReference = A90780114F0D5116A573476033A3B864 /* RuntimeRoutines.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
 				CURRENT_PROJECT_VERSION = 1;
-				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_PREFIX_HEADER = "Target Support Files/DeluxeInjection/DeluxeInjection-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/DeluxeInjection/Info.plist";
+				GCC_PREFIX_HEADER = "Target Support Files/RuntimeRoutines/RuntimeRoutines-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/RuntimeRoutines/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/DeluxeInjection/DeluxeInjection.modulemap";
-				MTL_ENABLE_DEBUG_INFO = YES;
-				PRODUCT_NAME = DeluxeInjection;
+				MODULEMAP_FILE = "Target Support Files/RuntimeRoutines/RuntimeRoutines.modulemap";
+				PRODUCT_NAME = RuntimeRoutines;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
 			name = Debug;
 		};
-		2FF93CBFA9EAA1BEABB15277BC62E3F2 /* Debug */ = {
+		1A53AE87C21326AD03B4C32A67B9738F /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 122A46C9589A760B40132D3EBBEBAC82 /* Pods-DeluxeInjection_Tests.debug.xcconfig */;
+			baseConfigurationReference = 92AD9BAF1E42EFB3287E76B27937D472 /* Pods-DeluxeInjection_Tests.release.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
 				CURRENT_PROJECT_VERSION = 1;
-				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = "Target Support Files/Pods-DeluxeInjection_Tests/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MACH_O_TYPE = staticlib;
 				MODULEMAP_FILE = "Target Support Files/Pods-DeluxeInjection_Tests/Pods-DeluxeInjection_Tests.modulemap";
-				MTL_ENABLE_DEBUG_INFO = YES;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = Pods_DeluxeInjection_Tests;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		20291A8AED6F41FB94EA3ABC7B7D0EE5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = A90780114F0D5116A573476033A3B864 /* RuntimeRoutines.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/RuntimeRoutines/RuntimeRoutines-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/RuntimeRoutines/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/RuntimeRoutines/RuntimeRoutines.modulemap";
+				PRODUCT_NAME = RuntimeRoutines;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		26F954BA177A9A46FFFD4E23ED11D67A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGNING_REQUIRED = NO;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"POD_CONFIGURATION_RELEASE=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = NO_SIGNING/;
+				STRIP_INSTALLED_PRODUCT = NO;
+				SYMROOT = "${SRCROOT}/../build";
+			};
+			name = Release;
+		};
+		55225271ED55BD816A95B95F081577D4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = EA012B96562C65F3FEB988D528B9AF1C /* DeluxeInjection.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/DeluxeInjection/DeluxeInjection-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/DeluxeInjection/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/DeluxeInjection/DeluxeInjection.modulemap";
+				PRODUCT_NAME = DeluxeInjection;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		5F2839E174D50A781AA61EDEA44419EE /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = EA012B96562C65F3FEB988D528B9AF1C /* DeluxeInjection.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/DeluxeInjection/DeluxeInjection-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/DeluxeInjection/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/DeluxeInjection/DeluxeInjection.modulemap";
+				PRODUCT_NAME = DeluxeInjection;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		61D7F53C3FA1E19AF290D188F24A29FF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5504B1C5469CC7956B3082008FBC3583 /* Pods-DeluxeInjection_Tests.debug.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Target Support Files/Pods-DeluxeInjection_Tests/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-DeluxeInjection_Tests/Pods-DeluxeInjection_Tests.modulemap";
 				OTHER_LDFLAGS = "";
 				OTHER_LIBTOOLFLAGS = "";
 				PODS_ROOT = "$(SRCROOT)";
@@ -631,72 +802,25 @@
 			};
 			name = Debug;
 		};
-		59B042A655B7C20CBAB90E385BF4E4C7 /* Debug */ = {
+		668E35CD5C51FBBEF320234BAB5EA7FF /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 743D5F2847321FF0B6D02431AD42150D /* Pods-DeluxeInjection_Example.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGNING_REQUIRED = NO;
-				COPY_PHASE_STRIP = NO;
-				ENABLE_TESTABILITY = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"POD_CONFIGURATION_DEBUG=1",
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE_SPECIFIER = NO_SIGNING/;
-				STRIP_INSTALLED_PRODUCT = NO;
-				SYMROOT = "${SRCROOT}/../build";
-			};
-			name = Debug;
-		};
-		8EBC98247E021711A8C988DD93F91D77 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 40982DC197B4DC631AFD1AAB49A9D36B /* Pods-DeluxeInjection_Example.release.xcconfig */;
-			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
 				CURRENT_PROJECT_VERSION = 1;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = "Target Support Files/Pods-DeluxeInjection_Example/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MACH_O_TYPE = staticlib;
 				MODULEMAP_FILE = "Target Support Files/Pods-DeluxeInjection_Example/Pods-DeluxeInjection_Example.modulemap";
-				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = "";
 				OTHER_LIBTOOLFLAGS = "";
 				PODS_ROOT = "$(SRCROOT)";
@@ -705,201 +829,94 @@
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
 			name = Release;
 		};
-		9413AA3CF84FC2DBCA2F7935AA2336AA /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = CE31F09173D4722D2634108E0A6E0FA3 /* Pods-DeluxeInjection_Tests.release.xcconfig */;
-			buildSettings = {
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = "Target Support Files/Pods-DeluxeInjection_Tests/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MACH_O_TYPE = staticlib;
-				MODULEMAP_FILE = "Target Support Files/Pods-DeluxeInjection_Tests/Pods-DeluxeInjection_Tests.modulemap";
-				MTL_ENABLE_DEBUG_INFO = NO;
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PODS_ROOT = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = Pods_DeluxeInjection_Tests;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
-		B7324857C38B065FEB1EEE3105C2367A /* Release */ = {
+		E2BF6D6731C31DE69900B7B24E6F0445 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGNING_REQUIRED = NO;
-				COPY_PHASE_STRIP = YES;
-				ENABLE_NS_ASSERTIONS = NO;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					"POD_CONFIGURATION_RELEASE=1",
+					"POD_CONFIGURATION_DEBUG=1",
+					"DEBUG=1",
 					"$(inherited)",
 				);
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = NO_SIGNING/;
 				STRIP_INSTALLED_PRODUCT = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SYMROOT = "${SRCROOT}/../build";
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
-		C34F189AF55C5F87F64F241945B1A89B /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1EC162C2A566F9DB745D426B0518D38D /* RuntimeRoutines.xcconfig */;
-			buildSettings = {
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_PREFIX_HEADER = "Target Support Files/RuntimeRoutines/RuntimeRoutines-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/RuntimeRoutines/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/RuntimeRoutines/RuntimeRoutines.modulemap";
-				MTL_ENABLE_DEBUG_INFO = NO;
-				PRODUCT_NAME = RuntimeRoutines;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
-		C6F18D2555FE6D68E832AD2DA58C363E /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1EC162C2A566F9DB745D426B0518D38D /* RuntimeRoutines.xcconfig */;
-			buildSettings = {
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_PREFIX_HEADER = "Target Support Files/RuntimeRoutines/RuntimeRoutines-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/RuntimeRoutines/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/RuntimeRoutines/RuntimeRoutines.modulemap";
-				MTL_ENABLE_DEBUG_INFO = YES;
-				PRODUCT_NAME = RuntimeRoutines;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
 			};
 			name = Debug;
 		};
-		DFA43FC18EABA2A97DAE14C29534B4A5 /* Release */ = {
+		E8CE77A45DF375D422079D55EE474377 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 39D6D36C32C30889110EA6D772FCCEB2 /* DeluxeInjection.xcconfig */;
+			baseConfigurationReference = B0729F28E76ED9514BACB19DC1C55A51 /* Pods-DeluxeInjection_Example.debug.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
 				CURRENT_PROJECT_VERSION = 1;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_PREFIX_HEADER = "Target Support Files/DeluxeInjection/DeluxeInjection-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/DeluxeInjection/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/DeluxeInjection/DeluxeInjection.modulemap";
-				MTL_ENABLE_DEBUG_INFO = NO;
-				PRODUCT_NAME = DeluxeInjection;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
-		F0721E1D49593BAE38E4B7304A094B87 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = C8795269503CEE63BB30B47D693C5573 /* Pods-DeluxeInjection_Example.debug.xcconfig */;
-			buildSettings = {
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = "Target Support Files/Pods-DeluxeInjection_Example/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MACH_O_TYPE = staticlib;
 				MODULEMAP_FILE = "Target Support Files/Pods-DeluxeInjection_Example/Pods-DeluxeInjection_Example.modulemap";
-				MTL_ENABLE_DEBUG_INFO = YES;
 				OTHER_LDFLAGS = "";
 				OTHER_LIBTOOLFLAGS = "";
 				PODS_ROOT = "$(SRCROOT)";
@@ -919,8 +936,8 @@
 		04D8E795794FB831B8AD0342E09E94D1 /* Build configuration list for PBXNativeTarget "RuntimeRoutines" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				C6F18D2555FE6D68E832AD2DA58C363E /* Debug */,
-				C34F189AF55C5F87F64F241945B1A89B /* Release */,
+				14F7D944D7B286BD1857107A04C6CA50 /* Debug */,
+				20291A8AED6F41FB94EA3ABC7B7D0EE5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -928,8 +945,8 @@
 		1CEF079141F322FFDD6DB47BA4EB3E86 /* Build configuration list for PBXNativeTarget "Pods-DeluxeInjection_Example" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				F0721E1D49593BAE38E4B7304A094B87 /* Debug */,
-				8EBC98247E021711A8C988DD93F91D77 /* Release */,
+				E8CE77A45DF375D422079D55EE474377 /* Debug */,
+				668E35CD5C51FBBEF320234BAB5EA7FF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -937,8 +954,8 @@
 		2D8E8EC45A3A1A1D94AE762CB5028504 /* Build configuration list for PBXProject "Pods" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				59B042A655B7C20CBAB90E385BF4E4C7 /* Debug */,
-				B7324857C38B065FEB1EEE3105C2367A /* Release */,
+				E2BF6D6731C31DE69900B7B24E6F0445 /* Debug */,
+				26F954BA177A9A46FFFD4E23ED11D67A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -946,8 +963,8 @@
 		75BADDD27E7B08151B6F224FFDA1419C /* Build configuration list for PBXNativeTarget "Pods-DeluxeInjection_Tests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				2FF93CBFA9EAA1BEABB15277BC62E3F2 /* Debug */,
-				9413AA3CF84FC2DBCA2F7935AA2336AA /* Release */,
+				61D7F53C3FA1E19AF290D188F24A29FF /* Debug */,
+				1A53AE87C21326AD03B4C32A67B9738F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -955,8 +972,8 @@
 		E3BB701E7478F72B6FE38DF2CF754C2D /* Build configuration list for PBXNativeTarget "DeluxeInjection" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				15C2E9F66218EBD0E72A264FF46158D9 /* Debug */,
-				DFA43FC18EABA2A97DAE14C29534B4A5 /* Release */,
+				55225271ED55BD816A95B95F081577D4 /* Debug */,
+				5F2839E174D50A781AA61EDEA44419EE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
