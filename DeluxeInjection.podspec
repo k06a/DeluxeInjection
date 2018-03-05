@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = "DeluxeInjection"
-  s.version          = "0.8.5"
+  s.version          = "0.8.6"
   s.summary          = "Simplest Objective-C Dependency Injection (DI:syringe:) implementation ever"
 
   s.description      = <<-DESC
@@ -15,8 +15,8 @@ Pod::Spec.new do |s|
   s.social_media_url = 'https://twitter.com/k06a'
 
   s.ios.deployment_target = '9.0'
-  s.osx.deployment_target = '10.7'
-  s.watchos.deployment_target = '1.0'
+  s.osx.deployment_target = '10.8'
+  s.watchos.deployment_target = '2.0'
   s.tvos.deployment_target = '9.0'
 
   s.source_files = 'DeluxeInjection/Classes/**/*'
